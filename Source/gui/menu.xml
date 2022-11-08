@@ -1,0 +1,66 @@
+<menu id="Options">
+  <menu id="Welcome" x="40;40;40" y="1;5" tooltip="This is the options menu's welcome tab.">
+    <title x="1" y="0" />
+    <txt x=".1" y="1.1" w="2.8" h=".8" just="topLeft" text=
+"Welcome to the options menu of my plugin :)
+
+This is where you find all the options
+that kinda have to exist, but shouldn't
+be in your way on the main interface.
+
+Click on the nav tabs to navigate
+to the different pages!"
+    />
+  </menu>
+  <menu id="Controls" x="1" y="1;5" tooltip="Get help! Literally.">
+    <title x="0" y="0" w="1" h="1" />
+    <juxtaposition x="0" y="1" w="1" h="1">
+		  <jux text="Knobs:"/>
+		  <jux textA="Left Click/Drag/Wheel"  textB="Modify Parameter Value"/>
+		  <jux textA="Hold Shift"             textB="Sensitive Parameter Changes"/>
+		  <jux textA="Alt-/Double Click"      textB="Back To Default Value"/>
+		  <jux textA="Right Click"            textB="Context Menu"/>
+      
+      <jux text="Mod Dials:"/>
+      <jux textA="Right Click"            textB="Switch between Mod Depth and Bias"/>
+      
+      <jux text="Buttons:"/>
+      <jux textA="Left Click/Wheel"       textB="Modify Parameter Value"/>
+		  <jux textA="Alt-/Double Click"      textB="Back To Default Value"/>
+    
+      <jux text="Text Fields:"/>
+      <jux textA="Enter"                  textB="Apply Changes"/>
+      <jux textA="Escape"                 textB="Discard Changes"/>
+      <jux textA="Ctrl + C/V"             textB="Copy / Paste"/>
+    </juxtaposition>
+  </menu>
+  <menu id="Colours" x="1" y="1;5" tooltip="Individualize the colour sheme of the plugin here.">
+    <title y="0" />
+    <colourscheme y="1" id="colourscheme"/>
+  </menu>
+  <menu id=
+"Manifest of Wisdom" x="1" y="1;13" tooltip="Use the manifest of wisdom to let your inspiration flow.">
+    <title y="0" />
+    <erkenntnisse y="1" id="erkenntnisse"/>
+  </menu>
+  <menu id="Thank You" x="40;40;40" y="3;13;2" tooltip="I always wanted to become a VST Developer. Thanks to everyone who makes this possible.">
+    <title y="0" w="2" />
+    <txt id="ThanksText" x=".1" y="1" w="2.8" h="1" just="topLeft" text=
+"Hi,
+
+my name is Florian Mrugalla and I am making beats and designing
+sound since I was a child. VST is a technology and trademark owned by
+Steinberg. But it's actually much more than that. VST plugins
+enable us to come together and engage in passionate discourse about
+art. I am very grateful for the opportunity to be part of this.
+
+That is why I consider VST a lifestyle!
+
+I always wanted to make my own VST plugins and here I am!
+Let's go on a journey together with my creations now.
+
+:)"/>
+    <link id="Community" x="0" y="2" w="1.5" h="1" link="https://discord.gg/PFnAsvMW5f" tooltip="come to my discord to receive news or to tell me about bugs or feature requests!"/>
+    <link id="Buy Me A Coffee" x="1.5" y="2" w="1.5" h="1" link="https://www.buymeacoffee.com/traderjoesR" tooltip="Consider a donation if you continuously find yourself enjoying the experience :>"/>
+  </menu>
+</menu>
