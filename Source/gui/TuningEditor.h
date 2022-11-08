@@ -1,4 +1,6 @@
 #pragma once
+#if PPDHasTuningEditor
+
 #include "Knob.h"
 #include "KeyboardComp.h"
 
@@ -301,3 +303,5 @@ namespace gui
 		Knob gain;
 	};
 }
+
+#endif

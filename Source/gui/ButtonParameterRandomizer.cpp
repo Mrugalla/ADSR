@@ -38,7 +38,11 @@ namespace gui
 		if(isAbsolute)
         {
             for (auto randomizable : randomizables)
-                if (randomizable->id != PID::Power && randomizable->id != PID::Clipper)
+                if (randomizable->id != PID::Power
+#if PPDHasClipper
+                    && randomizable->id != PID::Clipper
+#endif
+					)
                 {
                     const auto& range = randomizable->range;
 
@@ -53,7 +57,11 @@ namespace gui
 		else
 		{
 			for (auto randomizable : randomizables)
-				if (randomizable->id != PID::Power && randomizable->id != PID::Clipper)
+				if (randomizable->id != PID::Power
+#if PPDHasClipper
+                    && randomizable->id != PID::Clipper
+#endif
+                    )
 				{
 					const auto valNorm = randomizable->getValue();
                     const auto valRand = rand.nextFloat() * .05f - .025f;

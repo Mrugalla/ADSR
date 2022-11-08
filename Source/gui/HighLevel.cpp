@@ -2,9 +2,9 @@
 
 namespace gui
 {
-	Notify HighLevel::makeNotify(HighLevel& hl, CompWidgetable* te)
+	Notify HighLevel::makeNotify(HighLevel& hl)
 	{
-		return [&highLevel = hl, &tuningEditor = *te](EvtType t, const void*)
+		return [&highLevel = hl](EvtType t, const void*)
 		{
 			if (t == EvtType::ClickedEmpty)
 			{
@@ -26,15 +26,23 @@ namespace gui
 		};
 	}
 
-	HighLevel::HighLevel(Utils& u, LowLevel* _lowLevel, CompWidgetable* tuningEditor) :
-		Comp(u, "", makeNotify(*this, tuningEditor), CursorType::Default),
+	HighLevel::HighLevel(Utils& u, LowLevel* _lowLevel
+#if PPDHasTuningEditor
+		, CompWidgetable* tuningEditor
+#endif
+	) :
+		Comp(u, "", makeNotify(*this), CursorType::Default),
 #if PPDHasPatchBrowser
 		patchBrowser(u),
 		patchBrowserButton(u, patchBrowser),
 #endif
+#if PPDHasTuningEditor
 		tuningEditorButton(u, tuningEditor),
+#endif
 		macro(u),
+#if PPDHasClipper
 		clipper(u),
+#endif
 		modDepthLocked(u, "(Un-)Lock this patch's modulation patch."),
 		swapParamWithModDepth(u, "Swap parameter patch with modulation patch."),
 		saveModPatch(u, "Save the current Modulation Patch to disk."),
@@ -45,7 +53,9 @@ namespace gui
 #if PPDHasGainIn
 		gainIn(u),
 #endif
+#if PPDHasGainOut
 		gainOut(u),
+#endif
 		mix(u),
 #if PPDHasUnityGain && PPDHasGainIn
 		unityGain(u, param::toTooltip(PID::UnityGain)),
@@ -283,13 +293,17 @@ namespace gui
 
 		makeParameter(macro, PID::Macro, "Macro", false);
 
+#if PPDHasClipper
 		makeParameter(clipper, { PID::Clipper }, "Clip", true);
 		addAndMakeVisible(clipper);
+#endif
 
 #if PPDHasPatchBrowser
 		addAndMakeVisible(patchBrowserButton);
 #endif
+#if PPDHasTuningEditor
 		addAndMakeVisible(tuningEditorButton);
+#endif
 
 		addAndMakeVisible(macro);
 		addAndMakeVisible(parameterRandomizer);
@@ -302,8 +316,10 @@ namespace gui
 		addAndMakeVisible(unityGain);
 #endif
 #endif
+#if PPDHasGainOut
 		makeParameter(gainOut, PID::Gain, "Out", true, &utils.getMeter(PPDHasGainIn ? 1 : 0));
 		addAndMakeVisible(gainOut);
+#endif
 #if PPD_MixOrGainDry == 0
 		makeParameter(mix, PID::Mix, "Mix");
 #else
@@ -322,7 +338,7 @@ namespace gui
 #endif
 		buttonsBottom.push_back(std::make_unique<Button>(u, param::toTooltip(PID::Power)));
 		makeParameter(*buttonsBottom.back(), PID::Power, ButtonSymbol::Power);
-#if PPDHasPolarity
+#if PPDHasPolarity && PPDHasGainOut
 		buttonsBottom.push_back(std::make_unique<Button>(u, param::toTooltip(PID::Polarity)));
 		makeParameter(*buttonsBottom.back(), PID::Polarity, ButtonSymbol::Polarity);
 #endif
@@ -407,7 +423,7 @@ namespace gui
 		g.drawFittedText("Modulation:", macroArea.toNearestInt(), Just::centredTop, 1);
 		drawRectEdges(g, macroArea, thicc3, stroke);
 
-#if PPDHasGainIn
+#if PPDHasGainIn || PPDHasGainOut
 		const auto gainArea = layout(1.f, 7.f, 7.f, 1.f);
 		g.drawFittedText("Gain:", gainArea.toNearestInt(), Just::centredTop, 1);
 		drawRectEdges(g, gainArea, thicc3, stroke);
@@ -418,10 +434,14 @@ namespace gui
 	{
 		layout.resized();
 
+#if PPDHasTuningEditor
 		layout.place(tuningEditorButton, 1.f, 1.f, 1.f, 1.f, true);
+#endif
 		layout.place(menuButton, 3.f, 1.f, 1.f, 1.f, true);
 		layout.place(parameterRandomizer, 5.f, 1.f, 1.f, 1.f, true);
+#if PPDHasClipper
 		layout.place(clipper, 7.f, 1.f, 1.f, 1.f, true);
+#endif
 
 #if PPDHasPatchBrowser
 		layout.place(patchBrowserButton, 1.f, 3.f, 7.f, 1.f, false);
@@ -444,7 +464,9 @@ namespace gui
 #endif
 		layout.place(gainOut, 5.5f, 5.f + patchBrowserOffset, 2.5f, 2.f, true);
 #else
+#if PPDHasGainOut
 		layout.place(gainOut, 3.f, 5.2f + patchBrowserOffset, 3.f, 1.6f, true);
+#endif
 #endif
 
 		layout.place(mix, 3.f, 7.f + patchBrowserOffset, 3.f, 1.f, true);

@@ -26,7 +26,9 @@ namespace param
 		switch (pID)
 		{
 		case PID::Macro: return "Macro";
+#if PPDHasClipper
 		case PID::Clipper: return "Clipper";
+#endif
 #if PPDHasGainIn
 		case PID::GainIn: return "Gain In";
 #endif
@@ -36,12 +38,14 @@ namespace param
 		case PID::Mix: return "Gain Dry";
 		case PID::MuteDry: return "Mute Dry";
 #endif
-		case PID::Gain: return "Gain Out";
 #if PPDHasHQ
 		case PID::HQ: return "HQ";
 #endif
+#if PPDHasGainOut
+		case PID::Gain: return "Gain Out";
 #if PPDHasPolarity
 		case PID::Polarity: return "Polarity";
+#endif
 #endif
 #if PPDHasUnityGain && PPDHasGainIn
 		case PID::UnityGain: return "Unity Gain";
@@ -56,11 +60,13 @@ namespace param
 		case PID::Delta: return "Delta";
 #endif
 			
+#if PPDHasTuningEditor
 		// TUNING PARAM:
 		case PID::Xen: return "Xen";
 		case PID::MasterTune: return "Master Tune";
 		case PID::BaseNote: return "Base Note";
 		case PID::PitchbendRange: return "Pitchbend Range";
+#endif
 
 		case PID::Power: return "Power";
 
@@ -105,7 +111,9 @@ namespace param
 		switch (pID)
 		{
 		case PID::Macro: return "Dial in the desired amount of macro modulation depth.";
+#if PPDHasClipper
 		case PID::Clipper: return "A soft clipper on the wet signal.";
+#endif
 #if PPDHasGainIn
 		case PID::GainIn: return "Apply input gain to the wet signal.";
 #endif
@@ -115,12 +123,14 @@ namespace param
 		case PID::Mix: return "Apply output gain to the dry signal.";
 		case PID::MuteDry: return "Mute the dry signal.";
 #endif
-		case PID::Gain: return "Apply output gain to the wet signal.";
 #if PPDHasHQ
 		case PID::HQ: return "Turn on HQ to apply 2x Oversampling to the signal.";
 #endif
+#if PPDHasGainOut
+		case PID::Gain: return "Apply output gain to the wet signal.";
 #if PPDHasPolarity
 		case PID::Polarity: return "Invert the wet signal's polarity.";
+#endif
 #endif
 #if PPDHasUnityGain && PPDHasGainIn
 		case PID::UnityGain: return "If enabled the inversed input gain gets added to the output gain.";
@@ -135,11 +145,13 @@ namespace param
 		case PID::Delta: return "Listen to the difference between the dry and the wet signal.";
 #endif
 		
+#if PPDHasTuningEditor
 		// TUNING PARAMS:
 		case PID::Xen: return "Define the xenharmonic scale.";
 		case PID::MasterTune: return "Retune the entire plugin to a different chamber pitch.";
 		case PID::BaseNote: return "Define the base note of the scale.";
 		case PID::PitchbendRange: return "Define the pitchbend range in semitones.";
+#endif
 			
 		case PID::Power: return "Bypass the plugin with this parameter.";
 
@@ -1104,7 +1116,9 @@ namespace param
 	{
 		{ // HIGH LEVEL PARAMS:
 			params.push_back(makeParam(PID::Macro, state, 0.f));
+#if PPDHasClipper
 			params.push_back(makeParam(PID::Clipper, state, 0.f, makeRange::toggle(), Unit::Power));
+#endif
 #if PPDHasGainIn
 			params.push_back(makeParam(PID::GainIn, state, 0.f, makeRange::withCentre(PPD_GainIn_Min, PPD_GainIn_Max, 0.f), Unit::Decibel));
 #endif
@@ -1114,9 +1128,11 @@ namespace param
 			params.push_back(makeParam(PID::Mix, state, 0.f, makeRange::withCentre(-80.f, 0.f, -6.f), Unit::Decibel));
 			params.push_back(makeParam(PID::MuteDry, state, 0.f, makeRange::toggle(), Unit::Mute));
 #endif
+#if PPDHasGainOut
 			params.push_back(makeParam(PID::Gain, state, 0.f, makeRange::withCentre(PPD_GainOut_Min, PPD_GainOut_Max, 0.f), Unit::Decibel));
 #if PPDHasPolarity
 			params.push_back(makeParam(PID::Polarity, state, 0.f, makeRange::toggle(), Unit::Polarity));
+#endif
 #endif
 #if PPDHasUnityGain && PPDHasGainIn
 			params.push_back(makeParam(PID::UnityGain, state, (PPD_UnityGainDefault ? 1.f : 0.f), makeRange::toggle(), Unit::Polarity));
@@ -1133,11 +1149,14 @@ namespace param
 #if PPDHasDelta
 			params.push_back(makeParam(PID::Delta, state, 0.f, makeRange::toggle(), Unit::Power));
 #endif
+
+#if PPDHasTuningEditor
 			// TUNING PARAMS:
 			params.push_back(makeParam(PID::Xen, state, 12.f, makeRange::withCentre(2.f, PPD_MaxXen, 12.f), Unit::Xen));
 			params.push_back(makeParam(PID::MasterTune, state, 440.f, makeRange::withCentre(420.f, 460.f, 440.f), Unit::Hz));
 			params.push_back(makeParam(PID::BaseNote, state, 69.f, makeRange::withCentre(0.f, 127.f, 69.f), Unit::Note));
 			params.push_back(makeParam(PID::PitchbendRange, state, 2.f, makeRange::stepped(0.f, 48.f, 1.f), Unit::Semi));
+#endif
 
 			params.push_back(makeParam(PID::Power, state, 1.f, makeRange::toggle(), Unit::Power));
 		}

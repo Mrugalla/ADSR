@@ -41,8 +41,10 @@ namespace audio
 #if PPDHasLookahead
 		, lookaheadEnabled(false)
 #endif
-		, midiVoices(midiManager),
-        tuningEditorSynth(xenManager)
+		, midiVoices(midiManager)
+#if PPDHasTuningEditor
+        , tuningEditorSynth(xenManager)
+#endif
     {
         {
             juce::PropertiesFile::Options options;
@@ -122,14 +124,18 @@ namespace audio
     {
         params.savePatch(props);
         midiManager.savePatch();
+#if PPDHasTuningEditor
         tuningEditorSynth.savePatch(state);
+#endif
     }
 
     void ProcessorBackEnd::loadPatch()
     {
         params.loadPatch(props);
         midiManager.loadPatch();
+#if PPDHasTuningEditor
         tuningEditorSynth.loadPatch(state);
+#endif
     }
 
     bool ProcessorBackEnd::hasEditor() const { return PPDHasEditor; }
@@ -212,7 +218,9 @@ namespace audio
         const auto sampleRateF = static_cast<float>(sampleRate);
 
         midiVoices.prepare(blockSizeUp);
+#if PPDHasTuningEditor
 		tuningEditorSynth.prepare(sampleRateF, maxBlockSize);
+#endif
 
 		envGenMIDI.prepare(sampleRateF, maxBlockSize);
 
@@ -241,6 +249,7 @@ namespace audio
         if (numSamples == 0)
             return;
 
+#if PPDHasTuningEditor
         xenManager
         (
             std::round(params[PID::Xen]->getValModDenorm()),
@@ -248,8 +257,9 @@ namespace audio
             std::round(params[PID::BaseNote]->getValModDenorm())
         );
 
+
         midiVoices.pitchbendRange = std::round(params[PID::PitchbendRange]->getValModDenorm());
-		
+#endif	
         midiManager(midi, numSamples);
 
         if (params[PID::Power]->getValMod() < .5f)
@@ -274,13 +284,15 @@ namespace audio
 #endif
 #endif
 #if PPD_MixOrGainDry == 0
-            params[PID::Mix]->getValMod(),
+            params[PID::Mix]->getValMod()
 #else
-			params[PID::Mix]->getValModDenorm(),
+			, params[PID::Mix]->getValModDenorm()
 #endif
-            params[PID::Gain]->getValModDenorm()
+#if PPDHasGainOut
+            , params[PID::Gain]->getValModDenorm()
 #if PPDHasPolarity
             , (params[PID::Polarity]->getValMod() > .5f ? -1.f : 1.f)
+#endif
 #endif
         );
 
@@ -353,9 +365,13 @@ namespace audio
 #endif
         }
 #endif
-        
+#if PPDHasGainOut
         dryWetMix.processOutGain(samples, numChannels, numSamples);
+#endif
+#if PPDHasTuningEditor
         tuningEditorSynth(samples, numChannels, numSamples);
+#endif
+#if PPDHasClipper
         {
             const auto isClipping = params[PID::Clipper]->getValMod() > .5f ? 1.f : 0.f;
             if (isClipping)
@@ -365,7 +381,10 @@ namespace audio
                         samples[ch][s] = softclip(samples[ch][s], .6f);
             }
         }
+#endif
+#if PPDHasGainOut
         meters.processOut(constSamples, numChannels, numSamples);
+#endif
 #if PPD_MixOrGainDry
         if (!muteDry)
 #endif

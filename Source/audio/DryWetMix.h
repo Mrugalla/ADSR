@@ -12,7 +12,9 @@ namespace audio
 			GainIn,
 #endif
 			Mix,
+#if PPDHasGainOut
 			GainOut,
+#endif
 			NumBufs
 		};
 
@@ -22,7 +24,7 @@ namespace audio
 		/* sampleRate, blockSize, latency */
 		void prepare(float, int, int);
 
-		/* samples, numChannels, numSamples, gainInP, unityGainP, mixP, gainOutP, polarityP*/
+		/* samples, numChannels, numSamples, gainInP, unityGainP, mixP, gainOutP, polarityP */
 		void saveDry
 		(
 			float**, int, int,
@@ -32,17 +34,22 @@ namespace audio
 			float,
 #endif
 #endif
-			float, float
+			float
+#if PPDHasGainOut
+			, float
 #if PPDHasPolarity
 			, float
+#endif
 #endif
 		) noexcept;
 
 		/* samples, numChannels, numSamples */
 		void processBypass(float**, int, int) noexcept;
 
+#if PPDHasGainOut
 		/* samples, numChannels, numSamples */
 		void processOutGain(float**, int, int) const noexcept;
+#endif
 
 		/* samples, numChannels, numSamples, delta */
 		void processMix(float**, int, int
@@ -59,7 +66,10 @@ namespace audio
 #if PPDHasGainIn
 		Smooth gainInSmooth;
 #endif
-		Smooth mixSmooth, gainOutSmooth;
+		Smooth mixSmooth;
+#if PPDHasGainOut
+		gainOutSmooth;
+#endif
 
 		AudioBuffer dryBuf;
 	};

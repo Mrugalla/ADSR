@@ -1,5 +1,7 @@
 #include "PitchGlitcher.h"
 
+#define PPDPitchShifterSizeMs 70
+
 namespace audio
 {
 	// PitchGlitcher::Phasor
@@ -310,3 +312,5 @@ namespace audio
 			SIMD::multiply(samples[ch], gain, numSamples);
 	}
 }
+
+#undef PPDPitchShifterSizeMs

@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<JUCERPROJECT id="j9fiOT" name="Project" projectType="audioplug" useAppConfig="0"
+<JUCERPROJECT id="j9fiOT" name="ADSR" projectType="audioplug" useAppConfig="0"
               addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1" companyName="Mrugalla"
               companyWebsite="https://github.com/Mrugalla" pluginFormats="buildStandalone,buildVST3"
-              pluginCharacteristicsValue="pluginWantsMidiIn" pluginDesc="XYXYXY"
-              pluginManufacturer="Mrugalla" pluginManufacturerCode="Mrug" pluginCode="ID01"
-              pluginVSTNumMidiInputs="1" pluginVST3Category="Fx" cppLanguageStandard="20"
-              pluginName="Project" defines="PPDEditorWidth=946&#10;PPDEditorHeight=574&#10;&#10;PPDHasEditor=true&#10;PPDHasPatchBrowser=true&#10;&#10;PPDHasSidechain=false&#10;&#10;PPDHasGainIn=true&#10;PPDHasUnityGain=true&#10;PPDHasHQ=true&#10;PPDHasStereoConfig=true&#10;PPDHasPolarity=true&#10;PPDHasLookahead=false&#10;PPDHasDelta=false&#10;&#10;PPDFPSKnobs=40&#10;PPDFPSMeters=40&#10;PPDFPSTextEditor=3&#10;&#10;PPDMetersUseRMS=true&#10;&#10;PPD_GainIn_Min=-12&#10;PPD_GainIn_Max=12&#10;PPD_GainOut_Min=-60&#10;PPD_GainOut_Max=60&#10;PPD_UnityGainDefault=true&#10;&#10;PPD_MixOrGainDry=0&#10;PPD_MIDINumVoices=8&#10;PPD_MaxXen=128&#10;&#10;PPDPitchShifterSizeMs=1000&#10;PPDPitchShifterNumVoices=7"
-              maxBinaryFileSize="20971520">
-  <MAINGROUP id="c82PPq" name="Project">
+              pluginCharacteristicsValue="pluginWantsMidiIn" pluginDesc="Outputs a MIDI-triggered ADSR modulator as audio signal"
+              pluginManufacturer="Mrugalla" pluginManufacturerCode="Mrug" pluginCode="ID12"
+              pluginVSTNumMidiInputs="1" pluginVST3Category="Fx,Generator,Modulation,Tools"
+              cppLanguageStandard="20" pluginName="ADSR" defines="PPDEditorWidth=946&#10;PPDEditorHeight=574&#10;&#10;PPDHasEditor=true&#10;PPDHasPatchBrowser=true&#10;&#10;PPDHasSidechain=false&#10;&#10;PPDHasGainIn=false&#10;PPDHasUnityGain=false&#10;PPDHasGainOut=false&#10;PPDHasHQ=false&#10;PPDHasStereoConfig=false&#10;PPDHasPolarity=false&#10;PPDHasLookahead=false&#10;PPDHasDelta=false&#10;PPDHasClipper=false&#10;&#10;PPDFPSKnobs=40&#10;PPDFPSMeters=40&#10;PPDFPSTextEditor=3&#10;&#10;PPDMetersUseRMS=true&#10;&#10;PPD_GainIn_Min=-12&#10;PPD_GainIn_Max=12&#10;PPD_GainOut_Min=-60&#10;PPD_GainOut_Max=60&#10;PPD_UnityGainDefault=true&#10;&#10;PPD_MixOrGainDry=0&#10;PPD_MIDINumVoices=1&#10;PPDHasTuningEditor=false&#10;PPD_MaxXen=128"
+              maxBinaryFileSize="20971520" pluginAAXCategory="2048,32" pluginVSTCategory="kPlugCategGenerator">
+  <MAINGROUP id="c82PPq" name="ADSR">
     <GROUP id="{329F0704-CF49-5A90-357A-72806BBA6C7A}" name="Source">
       <GROUP id="{D379AB76-3EAE-A37D-31CD-FC91511F3FC1}" name="arch">
         <FILE id="Rwen3L" name="Conversion.h" compile="0" resource="0" file="Source/arch/Conversion.h"/>

@@ -6,6 +6,8 @@
 
 #include <array>
 
+#define PPDPitchShifterNumVoices 5
+
 namespace audio
 {
 	class PitchGlitcher
@@ -137,7 +139,7 @@ namespace audio
 	};
 }
 
-
+#undef PPDPitchShifterNumVoices
 
 /*
 

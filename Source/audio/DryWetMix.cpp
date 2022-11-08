@@ -12,7 +12,9 @@ namespace audio
 		gainInSmooth(0.f),
 #endif
 		mixSmooth(1.f),
+#if PPDHasGainOut
 		gainOutSmooth(1.f),
+#endif
 
 		dryBuf()
 	{}
@@ -25,7 +27,9 @@ namespace audio
 		gainInSmooth.makeFromDecayInMs(20.f, sampleRate);
 #endif
 		mixSmooth.makeFromDecayInMs(20.f, sampleRate);
+#if PPDHasGainOut
 		gainOutSmooth.makeFromDecayInMs(20.f, sampleRate);
+#endif
 
 		dryBuf.setSize(2, blockSize, false, true, false);
 
@@ -39,9 +43,12 @@ namespace audio
 		float unityGainP,
 #endif
 #endif
-		float mixP, float gainP
+		float mixP
+#if PPDHasGainOut
+		, float gainP
 #if PPDHasPolarity
 		, float polarityP
+#endif
 #endif
 	) noexcept
 	{
@@ -72,12 +79,13 @@ namespace audio
 #else
 		mixSmooth(mixBuf, decibelToGain(mixP, -80.f), numSamples);
 #endif
-
+#if PPDHasGainOut
 		gainP = Decibels::decibelsToGain(gainP);
 #if PPDHasPolarity
 		gainP *= polarityP;
 #endif
 		gainOutSmooth(bufs[GainOut], gainP, numSamples);
+#endif
 	}
 
 	void DryWetMix::processBypass(float** samples, int numChannels, int numSamples) noexcept
@@ -99,6 +107,7 @@ namespace audio
 		}
 	}
 
+#if PPDHasGainOut
 	void DryWetMix::processOutGain(float** samples, int numChannels, int numSamples) const noexcept
 	{
 		auto bufs = buffers.getArrayOfReadPointers();
@@ -107,6 +116,7 @@ namespace audio
 		for (auto ch = 0; ch < numChannels; ++ch)
 			SIMD::multiply(samples[ch], gainBuf, numSamples);
 	}
+#endif
 
 	void DryWetMix::processMix(float** samples, int numChannels, int numSamples
 #if PPDHasDelta

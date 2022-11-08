@@ -33,8 +33,14 @@ namespace gui
         pluginTitle(utils, JucePlugin_Name),
 
         lowLevel(utils),
+#if PPDHasTuningEditor
         tuningEditor(utils),
-        highLevel(utils, &lowLevel, &tuningEditor),
+#endif
+        highLevel(utils, &lowLevel
+#if PPDHasTuningEditor
+            , &tuningEditor   
+#endif
+        ),
 
         contextMenuKnobs(utils),
         contextMenuButtons(utils),
@@ -72,7 +78,9 @@ namespace gui
         addAndMakeVisible(lowLevel);
         addAndMakeVisible(highLevel);
 
+#if PPDHasTuningEditor
         addAndMakeVisible(tuningEditor);
+#endif
 
         highLevel.init();
 
@@ -120,9 +128,10 @@ namespace gui
         layout.place(lowLevel, 1, 1, 1, 1, false);
         layout.place(highLevel, 0, 0, 1, 2, false);
         
+#if PPDHasTuningEditor
         {
             const auto bnds = lowLevel.getBounds().toFloat();
-
+			
             tuningEditor.defineBounds
             (
                 bnds.withX(static_cast<float>(getRight())),
@@ -131,6 +140,7 @@ namespace gui
 
             tuningEditor.updateBounds();
         }
+#endif
 
         tooltip.setBounds(layout.bottom().toNearestInt());
 

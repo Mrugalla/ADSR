@@ -11,7 +11,10 @@
 #include "MIDICCMonitor.h"
 #include "MIDIVoicesComp.h"
 #include "LowLevel.h"
+
+#if PPDHasTuningEditor
 #include "TuningEditor.h"
+#endif
 
 namespace gui
 {
@@ -19,7 +22,11 @@ namespace gui
 		public Comp
 	{
 		/* utils, lowlevel, tuningEditor */
-		HighLevel(Utils&, LowLevel*, CompWidgetable*);
+		HighLevel(Utils&, LowLevel*
+#if PPDHasTuningEditor
+			, CompWidgetable*
+#endif
+		);
 
 		void init();
 
@@ -32,10 +39,14 @@ namespace gui
 		PatchBrowser patchBrowser;
 		ButtonPatchBrowser patchBrowserButton;
 #endif
+#if PPDHasTuningEditor
 		TuningEditorButton tuningEditorButton;
+#endif
 
 		Knob macro;
+#if PPDHasClipper
 		Button clipper;
+#endif
 		Button modDepthLocked;
 		Button swapParamWithModDepth;
 		Button saveModPatch, loadModPatch, removeCurModPatch;
@@ -44,7 +55,9 @@ namespace gui
 #if PPDHasGainIn
 		Knob gainIn;
 #endif
+#if PPDHasGainOut
 		Knob gainOut;
+#endif
 		Knob mix;
 #if PPDHasUnityGain && PPDHasGainIn
 		Button unityGain;
@@ -60,6 +73,6 @@ namespace gui
 		
 		std::unique_ptr<FileChooser> fileChooser;
 
-		Notify makeNotify(HighLevel&, CompWidgetable*);
+		Notify makeNotify(HighLevel&);
 	};
 }

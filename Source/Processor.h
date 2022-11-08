@@ -67,7 +67,9 @@ namespace audio
 #endif
         Meters meters;
         MIDIVoices midiVoices;
+#if PPDHasTuningEditor
         TuningEditorSynth tuningEditorSynth;
+#endif
 
         void forcePrepareToPlay();
 

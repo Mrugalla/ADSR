@@ -19,7 +19,9 @@ namespace param
 	{
 		// high level params
 		Macro,
+#if PPDHasClipper
 		Clipper,
+#endif
 #if PPDHasGainIn
 		GainIn,
 #endif
@@ -27,9 +29,11 @@ namespace param
 #if PPD_MixOrGainDry
 		MuteDry,
 #endif
+#if PPDHasGainOut
 		Gain,
 #if PPDHasPolarity
 		Polarity,
+#endif
 #endif
 #if PPDHasUnityGain && PPDHasGainIn
 		UnityGain,
@@ -48,10 +52,12 @@ namespace param
 #endif
 
 		// tuning parameters
+#if PPDHasTuningEditor
 		Xen,
 		MasterTune,
 		BaseNote,
 		PitchbendRange,
+#endif
 		
 		Power,
 
