@@ -19,4 +19,7 @@ namespace makeRange
 	/* start, end, centre */
 	Range withCentre(float, float, float) noexcept;
 
+	/* min, max */
+	Range foleysLogRange(float, float) noexcept;
+
 }

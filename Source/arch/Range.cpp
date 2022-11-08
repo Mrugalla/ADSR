@@ -79,4 +79,32 @@ namespace makeRange
 
 		return makeRange::biased(start, end, 2.f * v - 1.f);
 	}
+
+	Range foleysLogRange(float min, float max) noexcept
+	{
+		return
+		{
+			min, max,
+			[](float start, float end, float normalised)
+			{
+				return start + (std::pow(2.f, normalised * 10.f) - 1.f) * (end - start) / 1023.f;
+			},
+			[](float start, float end, float value)
+			{
+				return (std::log(((value - start) * 1023.f / (end - start)) + 1.f) / std::log(2.f)) * .1f;
+			},
+			[](float start, float end, float value)
+			{
+				// optimised for frequencies: >3 kHz: 2 decimals
+				if (value > 3000.f)
+					return juce::jlimit(start, end, 100.f * juce::roundToInt(value / 100.f));
+
+				// optimised for frequencies: 1-3 kHz: 1 decimal
+				if (value > 1000.f)
+					return juce::jlimit(start, end, 10.f * juce::roundToInt(value * .1f));
+
+				return juce::jlimit(start, end, std::round(value));
+			}
+		};
+	}
 }
