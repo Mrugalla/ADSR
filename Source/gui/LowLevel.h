@@ -19,8 +19,7 @@ namespace gui
             atk(u),
 			dcy(u),
 			sus(u),
-			rls(u),
-            legato(u)
+			rls(u)
         {
             addAndMakeVisible(envGen);
 
@@ -36,12 +35,9 @@ namespace gui
 			makeParameter(rls, PID::EnvGenRelease, "Release", true);
 			addAndMakeVisible(rls);
 
-			makeParameter(legato, PID::EnvGenLegato, "Legato", true);
-			addAndMakeVisible(legato);
-
             layout.init
             (
-                { 1, 2, 2, 2, 2, 2, 1 },
+                { 1, 2, 2, 2, 2, 1 },
                 { 5, 2 }
             );
         }
@@ -54,19 +50,16 @@ namespace gui
         {
             layout.resized();
 
-            layout.place(envGen, 1, 0, 5, 1);
+            layout.place(envGen, 1, 0, 4, 1);
 
             layout.place(atk, 1, 1, 1, 1);
 			layout.place(dcy, 2, 1, 1, 1);
 			layout.place(sus, 3, 1, 1, 1);
 			layout.place(rls, 4, 1, 1, 1, true);
-			
-            layout.place(legato, 5, 1, 1, 1);
         }
 
     protected:
         EnvGenComp envGen;
         Knob atk, dcy, sus, rls;
-        Button legato;
     };
 }

@@ -11,8 +11,13 @@ namespace gui
 		using MIDI = juce::MidiBuffer;
 		using EnvGen = audio::EnvGenMIDI;
 
-		static constexpr int NumParameters = 7;
-		enum State { kAtk, kDcy, kSus, kRls, kAtkShape, kDcyShape, kRlsShape };
+		enum State
+		{
+			kAtk, kDcy, kSus, kRls,
+			kAtkShape, kDcyShape, kRlsShape, NumParameters,
+			kAtkShapeMod, kDcyShapeMod, kRlsShapeMod,
+			NumParamsPlus
+		};
 
 		struct StateComp :
 			public Knob
@@ -111,7 +116,8 @@ namespace gui
 		};
 		
 		EnvGenComp(Utils& u, PID _atk, PID _dcy, PID _sus, PID _rls, PID _atkShape, PID _dcyShape, PID _rlsShape) :
-			Comp(u, "Click here to interact with the envelope generator.", CursorType::Interact),
+			Comp(u, "Click here to interact with the envelope generator.", CursorType::Default),
+			bounds(),
 			pIDs{ _atk, _dcy, _sus, _rls, _atkShape, _dcyShape, _rlsShape },
 			pVals(),
 			stateComps
@@ -120,16 +126,25 @@ namespace gui
 				StateComp(u, "Decay", kDcy, _dcyShape),
 				StateComp(u, "Sustain", kSus, _sus),
 				StateComp(u, "Release", kRls, _rlsShape)
-			}
+			},
+			legato(u)
 		{
 			for (auto& v : pVals)
 				v = 0.f;
-			setInterceptsMouseClicks(true, true);
-
+			
 			for (auto& s : stateComps)
 				addAndMakeVisible(s);
+			
+			makeParameter(legato, PID::EnvGenLegato, "LGT", true);
+			addAndMakeVisible(legato);
 
-			startTimerHz(24);
+			layout.init
+			(
+				{ 1, 21, 3, 1 },
+				{ 1, 3, 21, 1 }
+			);
+
+			startTimerHz(PPDFPSKnobs);
 		}
 
 		void paint(Graphics& g) override
@@ -141,15 +156,22 @@ namespace gui
 		
 		void resized() override
 		{
-			const auto thicc = utils.thicc;
-			bounds = getLocalBounds().toFloat().reduced(thicc * 2.f);
+			layout.resized();
+
+			//const auto thicc = utils.thicc;
+			//bounds = getLocalBounds().toFloat().reduced(thicc * 2.f);
+			bounds = layout(1, 1, 2, 2, false);
+			
+			layout.place(legato, 2, 1, 1, 1, true);
+
 			update();
 		}
 
 		BoundsF bounds;
 		std::array<PID, NumParameters> pIDs;
-		std::array<float, NumParameters + 4> pVals;
+		std::array<float, NumParamsPlus> pVals;
 		std::array<StateComp, 4> stateComps;
+		Button legato;
 
 		void timerCallback() override
 		{
@@ -164,37 +186,80 @@ namespace gui
 		{
 			bool e = false;
 			
-			for (auto i = 0; i < NumParameters; ++i)
-			{
-				const auto pID = pIDs[i];
-				const auto& param = *utils.getParam(pID);
-				const auto val = param.getValue();
-				if (pVals[i] != val)
+			{ // ATTACK
+				auto pID = pIDs[kAtk];
+				auto param = utils.getParam(pID);
+				auto val = param->getValue();
+				if (pVals[kAtk] != val)
 				{
-					pVals[i] = val;
+					pVals[kAtk] = val;
+					e = true;
+				}
+				const auto iShape = kAtkShape;
+				pID = pIDs[iShape];
+				param = utils.getParam(pID);
+				val = param->getValue();
+				const auto valMod = param->getValMod();
+				const auto iMod = kAtkShapeMod;
+				if (pVals[iShape] != val || pVals[iMod] != valMod)
+				{
+					pVals[iShape] = val;
+					pVals[iMod] = valMod;
 					e = true;
 				}
 			}
-
-			for (auto i = NumParameters; i < NumParameters + 3; ++i)
-			{
-				const auto pID = pIDs[i - 3];
-				const auto& param = *utils.getParam(pID);
-				const auto val = param.getValMod();
-				if (pVals[i] != val)
+			{ // DECAY
+				auto pID = pIDs[kDcy];
+				auto param = utils.getParam(pID);
+				auto val = param->getValue();
+				if (pVals[kDcy] != val)
 				{
-					pVals[i] = val;
+					pVals[kDcy] = val;
+					e = true;
+				}
+				const auto iShape = kDcyShape;
+				pID = pIDs[iShape];
+				param = utils.getParam(pID);
+				val = param->getValue();
+				const auto valMod = param->getValMod();
+				const auto iMod = kDcyShapeMod;
+				if (pVals[iShape] != val || pVals[iMod] != valMod)
+				{
+					pVals[iShape] = val;
+					pVals[iMod] = valMod;
 					e = true;
 				}
 			}
-
-			{
-				const auto pID = pIDs[kSus];
-				const auto& param = *utils.getParam(pID);
-				const auto val = param.getValMod();
-				if (pVals.back() != val)
+			{ // RELEASE
+				auto pID = pIDs[kRls];
+				auto param = utils.getParam(pID);
+				auto val = param->getValue();
+				if (pVals[kRls] != val)
 				{
-					pVals[pVals.size() - 1] = val;
+					pVals[kRls] = val;
+					e = true;
+				}
+				const auto iShape = kRlsShape;
+				pID = pIDs[iShape];
+				param = utils.getParam(pID);
+				val = param->getValue();
+				const auto valMod = param->getValMod();
+				const auto iMod = kRlsShapeMod;
+				if (pVals[iShape] != val || pVals[iMod] != valMod)
+				{
+					pVals[iShape] = val;
+					pVals[iMod] = valMod;
+					e = true;
+				}
+			}
+			
+			{ // SUSTAIN
+				auto pID = pIDs[kSus];
+				auto param = utils.getParam(pID);
+				auto val = param->getValue();
+				if (pVals[kSus] != val)
+				{
+					pVals[kSus] = val;
 					e = true;
 				}
 			}
@@ -222,31 +287,17 @@ namespace gui
 			const auto time = noteOnTime + noteOffTime;
 			if (time < 1.f)
 			{
-				const auto susMod = 1.f - pVals.back();
-
 				stateComps[kAtk].setVisible(false);
 				stateComps[kDcy].setVisible(false);
 				stateComps[kSus].setVisible(true);
 				stateComps[kRls].setVisible(false);
 				stateComps[kSus].setBounds(bounds.toNearestInt());
-				stateComps[kSus].update(sus, susMod, 0.f, 0.f);
+				stateComps[kSus].update(sus, sus, 0.f, 0.f);
 				return;
 			}
 			else
 			{
 				stateComps[kSus].setVisible(false);
-				
-				const auto& atkShapeParam = *utils.getParam(pIDs[kAtkShape]);
-				const auto atkShapeDenorm = atkShapeParam.range.convertFrom0to1(pVals[kAtkShape]);
-				const auto atkShapeModDenorm = atkShapeParam.range.convertFrom0to1(pVals[kAtkShape + 3]);
-
-				const auto& dcyShapeParam = *utils.getParam(pIDs[kDcyShape]);
-				const auto dcyShapeDenorm = dcyShapeParam.range.convertFrom0to1(pVals[kDcyShape]);
-				const auto dcyShapeModDenorm = dcyShapeParam.range.convertFrom0to1(pVals[kDcyShape + 3]);
-
-				const auto& rlsShapeParam = *utils.getParam(pIDs[kRlsShape]);
-				const auto rlsShapeDenorm = rlsShapeParam.range.convertFrom0to1(pVals[kRlsShape]);
-				const auto rlsShapeModDenorm = rlsShapeParam.range.convertFrom0to1(pVals[kRlsShape + 3]);
 				
 				const auto timeInv = 1.f / time;
 
@@ -254,8 +305,10 @@ namespace gui
 				const auto dcyNorm = dcyDenorm * timeInv;
 				const auto rlsNorm = rlsDenorm * timeInv;
 
-				const auto width = getWidth();
-				const auto widthF = static_cast<float>(width);
+				const auto widthF = bounds.getWidth();
+				const auto bX = bounds.getX();
+				const auto bY = bounds.getY();
+				const auto width = static_cast<int>(widthF);
 
 				const auto atkSize = atkNorm * widthF;
 				const auto dcySize = dcyNorm * widthF;
@@ -263,14 +316,12 @@ namespace gui
 
 				if (atkSize > 0.f)
 				{
+					const auto& atkShapeParam = *utils.getParam(pIDs[kAtkShape]);
+					const auto atkShapeDenorm = atkShapeParam.range.convertFrom0to1(pVals[kAtkShape]);
+					const auto atkShapeModDenorm = atkShapeParam.range.convertFrom0to1(pVals[kAtkShapeMod]);
+
 					stateComps[kAtk].setVisible(true);
-					stateComps[kAtk].setBounds
-					(BoundsF(
-						bounds.getX(),
-						bounds.getY(),
-						atkSize,
-						h
-					).toNearestInt());
+					stateComps[kAtk].setBounds(BoundsF(bX, bY, atkSize, h).toNearestInt());
 					stateComps[kAtk].update(1.f, 0.f, atkShapeDenorm, atkShapeModDenorm);
 				}
 				else
@@ -278,14 +329,12 @@ namespace gui
 				
 				if (dcySize > 0.f)
 				{
+					const auto& dcyShapeParam = *utils.getParam(pIDs[kDcyShape]);
+					const auto dcyShapeDenorm = dcyShapeParam.range.convertFrom0to1(pVals[kDcyShape]);
+					const auto dcyShapeModDenorm = dcyShapeParam.range.convertFrom0to1(pVals[kDcyShapeMod]);
+
 					stateComps[kDcy].setVisible(true);
-					stateComps[kDcy].setBounds
-					(BoundsF(
-						static_cast<float>(stateComps[kAtk].getRight()),
-						bounds.getY(),
-						dcySize,
-						h
-					).toNearestInt());
+					stateComps[kDcy].setBounds(BoundsF(bX + atkSize, bY, dcySize, h).toNearestInt());
 					stateComps[kDcy].update(0.f, sus, dcyShapeDenorm, dcyShapeModDenorm);
 				}
 				else
@@ -293,14 +342,12 @@ namespace gui
 				
 				if (rlsSize > 0.f)
 				{
+					const auto& rlsShapeParam = *utils.getParam(pIDs[kRlsShape]);
+					const auto rlsShapeDenorm = rlsShapeParam.range.convertFrom0to1(pVals[kRlsShape]);
+					const auto rlsShapeModDenorm = rlsShapeParam.range.convertFrom0to1(pVals[kRlsShapeMod]);
+
 					stateComps[kRls].setVisible(true);
-					stateComps[kRls].setBounds
-					(BoundsF(
-						static_cast<float>(stateComps[kDcy].getRight()),
-						bounds.getY(),
-						rlsSize,
-						h
-					).toNearestInt());
+					stateComps[kRls].setBounds(BoundsF(bX + atkSize + dcySize, bY, rlsSize, h).toNearestInt());
 					stateComps[kRls].update(sus, 1.f, rlsShapeDenorm, rlsShapeModDenorm);
 				}
 				else
