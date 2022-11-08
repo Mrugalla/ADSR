@@ -1176,11 +1176,11 @@ namespace param
 		}
 
 		// LOW LEVEL PARAMS:
-		auto envGenCentre = 120.f;
-		params.push_back(makeParam(PID::EnvGenAttack, state, envGenCentre, makeRange::withCentre(0.f, 32000.f, envGenCentre), Unit::Ms));
-		params.push_back(makeParam(PID::EnvGenDecay, state, envGenCentre, makeRange::withCentre(0.f, 32000.f, envGenCentre), Unit::Ms));
+		auto envGenDefaultTime = 2000.f;
+		params.push_back(makeParam(PID::EnvGenAttack, state, envGenDefaultTime, makeRange::quad(0.f, 32000.f, 2), Unit::Ms));
+		params.push_back(makeParam(PID::EnvGenDecay, state, envGenDefaultTime, makeRange::quad(0.f, 32000.f, 2), Unit::Ms));
 		params.push_back(makeParam(PID::EnvGenSustain, state, 1.f, makeRange::lin(0.f, 1.f), Unit::Percent));
-		params.push_back(makeParam(PID::EnvGenRelease, state, envGenCentre, makeRange::withCentre(0.f, 32000.f, envGenCentre), Unit::Ms));
+		params.push_back(makeParam(PID::EnvGenRelease, state, envGenDefaultTime, makeRange::quad(0.f, 32000.f, 2), Unit::Ms));
 		params.push_back(makeParam(PID::EnvGenAtkShape, state, 0.f, makeRange::lin(-1.f, 1.f)));
 		params.push_back(makeParam(PID::EnvGenDcyShape, state, 0.f, makeRange::lin(-1.f, 1.f)));
 		params.push_back(makeParam(PID::EnvGenRlsShape, state, 0.f, makeRange::lin(-1.f, 1.f)));

@@ -107,4 +107,29 @@ namespace makeRange
 			}
 		};
 	}
+
+	Range quad(float min, float max, int numSteps) noexcept
+	{
+		return
+		{
+			min, max,
+			[numSteps](float start, float end, float x)
+			{
+				for (auto i = 0; i < numSteps; ++i)
+					x *= x;
+				return start + x * (end - start);
+			},
+			[numSteps](float start, float end, float x)
+			{
+				x = (x - start) / (end - start);
+				for (auto i = 0; i < numSteps; ++i)
+					x = std::sqrt(x);
+				return x;
+			},
+			[](float start, float end, float x)
+			{
+				return juce::jlimit(start, end, x);
+			}
+		};
+	}
 }

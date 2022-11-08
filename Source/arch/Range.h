@@ -21,5 +21,8 @@ namespace makeRange
 
 	/* min, max */
 	Range foleysLogRange(float, float) noexcept;
+	
+	/* min, max, numSteps ]1, N] */
+	Range quad(float, float, int) noexcept;
 
 }
