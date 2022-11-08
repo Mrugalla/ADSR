@@ -113,15 +113,15 @@ namespace makeRange
 		return
 		{
 			min, max,
-			[numSteps](float start, float end, float x)
+			[numSteps, range = max - min](float start, float end, float x)
 			{
 				for (auto i = 0; i < numSteps; ++i)
 					x *= x;
-				return start + x * (end - start);
+				return start + x * range;
 			},
-			[numSteps](float start, float end, float x)
+			[numSteps, rangeInv = 1.f / (max - min)](float start, float end, float x)
 			{
-				x = (x - start) / (end - start);
+				x = (x - start) * rangeInv;
 				for (auto i = 0; i < numSteps; ++i)
 					x = std::sqrt(x);
 				return x;

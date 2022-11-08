@@ -298,6 +298,4 @@ namespace audio
 
 todo:
 
-atk dcy rls range ist kacke. 25% soll 5-25ms sein. aber 75% muss schon etwa bei 10sek sein.
-
 */
