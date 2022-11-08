@@ -64,7 +64,8 @@ namespace audio
 
 #if PPDHasGainIn
 		auto gainInBuf = bufs[GainIn];
-		gainInSmooth(gainInBuf, juce::Decibels::decibelsToGain(gainInP), numSamples);
+		const auto gainInVal = PPDGainInDecibels ? Decibels::decibelsToGain(gainInP) : gainInP;
+		gainInSmooth(gainInBuf, gainInVal, numSamples);
 		for (auto ch = 0; ch < numChannels; ++ch)
 			for (auto s = 0; s < numSamples; ++s)
 				samples[ch][s] *= gainInBuf[s];
@@ -80,7 +81,7 @@ namespace audio
 		mixSmooth(mixBuf, decibelToGain(mixP, -80.f), numSamples);
 #endif
 #if PPDHasGainOut
-		gainP = Decibels::decibelsToGain(gainP);
+		gainP = PPDGainInDecibels ? Decibels::decibelsToGain(gainP) : gainP;
 #if PPDHasPolarity
 		gainP *= polarityP;
 #endif

@@ -69,6 +69,7 @@ namespace param
 		EnvGenAtkShape,
 		EnvGenDcyShape,
 		EnvGenRlsShape,
+		EnvGenLegato,
 
 		NumParams
 	};

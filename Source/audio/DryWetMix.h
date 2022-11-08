@@ -68,9 +68,9 @@ namespace audio
 #endif
 		Smooth mixSmooth;
 #if PPDHasGainOut
-		gainOutSmooth;
+		Smooth gainOutSmooth;
 #endif
-
+		
 		AudioBuffer dryBuf;
 	};
 }

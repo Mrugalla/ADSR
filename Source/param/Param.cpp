@@ -78,6 +78,7 @@ namespace param
 		case PID::EnvGenAtkShape: return "EnvGen Atk Shape";
 		case PID::EnvGenDcyShape: return "EnvGen Dcy Shape";
 		case PID::EnvGenRlsShape: return "EnvGen Rls Shape";
+		case PID::EnvGenLegato: return "EnvGen Legato";
 
 		default: return "Invalid Parameter Name";
 		}
@@ -156,6 +157,14 @@ namespace param
 		case PID::Power: return "Bypass the plugin with this parameter.";
 
 		// LOW LEVEL PARAMS:
+		case PID::EnvGenAttack: return "Define the attack time of the envelope generator.";
+		case PID::EnvGenDecay: return "Define the decay time of the envelope generator.";
+		case PID::EnvGenSustain: return "Define the sustain level of the envelope generator.";
+		case PID::EnvGenRelease: return "Define the release time of the envelope generator.";
+		case PID::EnvGenAtkShape: return "Define the attack shape of the envelope generator.";
+		case PID::EnvGenDcyShape: return "Define the decay shape of the envelope generator.";
+		case PID::EnvGenRlsShape: return "Define the release shape of the envelope generator.";
+		case PID::EnvGenLegato: return "Switch on or off legato mode of the envelope generator.";
 
 		default: return "Invalid Tooltip.";
 		}
@@ -1115,12 +1124,17 @@ namespace param
 		modDepthLocked(false)
 	{
 		{ // HIGH LEVEL PARAMS:
+			const auto gainUnit = PPDGainInDecibels ? Unit::Decibel : Unit::Percent;
+			const auto gainDefaultVal = PPDGainInDecibels ? 0.f : 1.f;
+			const auto gainInRange = PPDGainInDecibels ? makeRange::withCentre(PPD_GainIn_Min, PPD_GainIn_Max, 0.f) : makeRange::lin(0.f, 1.f);
+			const auto gainOutRange = PPDGainInDecibels ? makeRange::withCentre(PPD_GainOut_Min, PPD_GainOut_Max, 0.f) : makeRange::lin(0.f, 1.f);
+
 			params.push_back(makeParam(PID::Macro, state, 0.f));
 #if PPDHasClipper
 			params.push_back(makeParam(PID::Clipper, state, 0.f, makeRange::toggle(), Unit::Power));
 #endif
 #if PPDHasGainIn
-			params.push_back(makeParam(PID::GainIn, state, 0.f, makeRange::withCentre(PPD_GainIn_Min, PPD_GainIn_Max, 0.f), Unit::Decibel));
+			params.push_back(makeParam(PID::GainIn, state, gainDefaultVal, gainInRange, gainUnit));
 #endif
 #if PPD_MixOrGainDry == 0
 			params.push_back(makeParam(PID::Mix, state));
@@ -1129,7 +1143,7 @@ namespace param
 			params.push_back(makeParam(PID::MuteDry, state, 0.f, makeRange::toggle(), Unit::Mute));
 #endif
 #if PPDHasGainOut
-			params.push_back(makeParam(PID::Gain, state, 0.f, makeRange::withCentre(PPD_GainOut_Min, PPD_GainOut_Max, 0.f), Unit::Decibel));
+			params.push_back(makeParam(PID::Gain, state, gainDefaultVal, gainOutRange, gainUnit));
 #if PPDHasPolarity
 			params.push_back(makeParam(PID::Polarity, state, 0.f, makeRange::toggle(), Unit::Polarity));
 #endif
@@ -1170,6 +1184,7 @@ namespace param
 		params.push_back(makeParam(PID::EnvGenAtkShape, state, 0.f, makeRange::lin(-1.f, 1.f)));
 		params.push_back(makeParam(PID::EnvGenDcyShape, state, 0.f, makeRange::lin(-1.f, 1.f)));
 		params.push_back(makeParam(PID::EnvGenRlsShape, state, 0.f, makeRange::lin(-1.f, 1.f)));
+		params.push_back(makeParam(PID::EnvGenLegato, state, 0.f, makeRange::toggle(), Unit::Power));
 		// LOW LEVEL PARAMS END
 
 		for (auto param : params)

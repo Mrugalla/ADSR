@@ -201,7 +201,7 @@ namespace audio
     void Processor::prepareToPlay(double sampleRate, int maxBlockSize)
     {
         auto latency = 0;
-        auto sampleRateUp = sampleRate;
+        //auto sampleRateUp = sampleRate;
         auto blockSizeUp = maxBlockSize;
 #if PPDHasHQ
         oversampler.setEnabled(params[PID::HQ]->getValMod() > .5f);
@@ -266,7 +266,9 @@ namespace audio
             return processBlockBypassed(buffer, midi);
 
         const auto samples = mainBuffer.getArrayOfWritePointers();
+#if PPDHasGainIn || PPDHasGainOut
         const auto constSamples = mainBuffer.getArrayOfReadPointers();
+#endif
         const auto numChannels = mainBuffer.getNumChannels();
 
 #if PPD_MixOrGainDry
@@ -426,7 +428,8 @@ namespace audio
 			params[PID::EnvGenRelease]->getValModDenorm(),
 			params[PID::EnvGenAtkShape]->getValModDenorm(),
 			params[PID::EnvGenDcyShape]->getValModDenorm(),
-			params[PID::EnvGenRlsShape]->getValModDenorm()
+			params[PID::EnvGenRlsShape]->getValModDenorm(),
+			params[PID::EnvGenLegato]->getValModDenorm() > .5f
         );
 		
         for (auto ch = 0; ch < numChannels; ++ch)

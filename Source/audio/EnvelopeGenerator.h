@@ -18,12 +18,19 @@ namespace audio
 
 		EnvGen() :
 			state(State::Release),
-			noteOn(false),
+			noteOn(false), legato(false),
 			envRaw(1.f), env(0.f), noteOffVal(0.f), noteOnVal(0.f),
 			atkP(0.f), dcyP(0.f), susP(0.f), rlsP(0.f),
 			atkShapeP(0.f), dcyShapeP(0.f), rlsShapeP(0.f)
 		{
 			
+		}
+
+		void setNoteOn(bool e) noexcept
+		{
+			noteOn = e;
+			if(!legato && !noteOn)
+				state = State::Release;
 		}
 
 		void prepare(float Fs, int blockSize)
@@ -80,7 +87,7 @@ namespace audio
 		}
 
 		State state;
-		bool noteOn;
+		bool noteOn, legato;
 		float envRaw, env, noteOffVal, noteOnVal;
 		PRM atkP, dcyP, susP, rlsP;
 		PRM atkShapeP, dcyShapeP, rlsShapeP;
@@ -210,10 +217,11 @@ namespace audio
 		}
 		
 		/* midiBuffer, numSamples, atk [0, N]ms, dcy [0, N]ms, sus [0, 1], rls [0, N]ms,
-		attackShape [-1,1], decayShape [-1,1], releaseShape [-1,1] */
+		attackShape [-1,1], decayShape [-1,1], releaseShape [-1,1], legato [0, 1] */
 		void operator()(MIDIBuffer& midi, int numSamples,
 			float _atk, float _dcy, float _sus, float _rls,
-			float _atkShape, float _dcyShape, float _rlsShape)
+			float _atkShape, float _dcyShape, float _rlsShape,
+			bool _legato)
 		{
 			if (_atk == 0.f)
 				envGen.atkP(1.1f, numSamples);
@@ -239,6 +247,8 @@ namespace audio
 				return;
 			}
 
+			envGen.legato = _legato;
+
 			auto evt = midi.begin();
 			auto ref = *evt;
 			auto ts = ref.samplePosition;
@@ -249,7 +259,8 @@ namespace audio
 				{
 					const auto msg = ref.getMessage();
 					if (msg.isNoteOnOrOff())
-						envGen.noteOn = msg.isNoteOn();
+						envGen.setNoteOn(msg.isNoteOn());
+						
 					++evt;
 					if (evt == midi.end())
 						break;
@@ -287,6 +298,6 @@ namespace audio
 
 todo:
 
-make GUI interface
+atk dcy rls range ist kacke. 25% soll 5-25ms sein. aber 75% muss schon etwa bei 10sek sein.
 
 */
