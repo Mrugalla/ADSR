@@ -885,6 +885,54 @@ namespace gui
 				PointF pt4(x4, y4);
 				g.drawLine({ pt3, pt4 }, thicc);
 			}
+			else if (symbol == ButtonSymbol::Legato)
+			{
+				const auto thicc3 = thicc * 3.f;
+				bounds = maxQuadIn(bounds).reduced(thicc3);
+
+				Stroke stroke(thicc, Stroke::JointStyle::beveled, Stroke::EndCapStyle::butt);
+
+				const auto x = bounds.getX();
+				const auto y = bounds.getY();
+				const auto w = bounds.getWidth();
+				const auto h = bounds.getHeight();
+				
+				const auto xStartR = .1f;
+				const auto xEndR = .7f;
+				const auto xRangeR = xEndR - xStartR;
+
+				auto bowStartX = x + w * xStartR;
+				auto bowStartY = y + h * .3f;
+				auto bowControlX = x + w * xRangeR * .5f;
+				auto bowControlY = y - w * .2f;
+				auto bowEndX = x + w * xEndR;
+				auto bowEndY = y + h * .1f;
+
+				Path bow;
+				bow.startNewSubPath(bowStartX, bowStartY);
+				bow.quadraticTo(bowControlX, bowControlY, bowEndX, bowEndY);
+				g.strokePath(bow, stroke);
+				
+				const auto bowXDist = bowEndX - bowStartX;
+				const auto bowYDist = bowEndY - bowStartY;
+				const auto yOff = w * .1f;
+				const auto ellipseWidth = thicc3;
+				const auto ellipseRad = thicc3 * .5f;
+				const auto lineLen = w * .4f;
+
+				for (auto i = 0.f; i < 2.f; ++i)
+				{
+					const auto ellipseX = bowStartX + i * bowXDist;
+					const auto ellipseY = bowStartY + i * bowYDist + yOff;
+					g.fillEllipse(ellipseX, ellipseY, ellipseWidth, ellipseWidth);
+					
+					const auto lineStartX = ellipseX;
+					const auto lineStartY = ellipseY + ellipseRad;
+					const auto lineEndX = ellipseX;
+					const auto lineEndY = lineStartY + lineLen;
+					g.drawLine({ lineStartX, lineStartY, lineEndX, lineEndY }, thicc);
+				}
+			}
 		});
 
 		b.toggleNext = withToggle || symbol == ButtonSymbol::StereoConfig ? 1 : 0;

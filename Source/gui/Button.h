@@ -100,6 +100,7 @@ namespace gui
 		TuningFork,
 		Lookahead,
 		Img,
+		Legato,
 		NumSymbols
 	};
 

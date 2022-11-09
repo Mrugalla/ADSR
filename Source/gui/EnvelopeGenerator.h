@@ -135,13 +135,13 @@ namespace gui
 			for (auto& s : stateComps)
 				addAndMakeVisible(s);
 			
-			makeParameter(legato, PID::EnvGenLegato, "LGT", true);
+			makeParameter(legato, PID::EnvGenLegato, ButtonSymbol::Legato);
 			addAndMakeVisible(legato);
 
 			layout.init
 			(
-				{ 1, 21, 3, 1 },
-				{ 1, 3, 21, 1 }
+				{ 1, 21, 5, 1 },
+				{ 1, 5, 21, 1 }
 			);
 
 			startTimerHz(PPDFPSKnobs);
@@ -166,13 +166,7 @@ namespace gui
 
 			update();
 		}
-
-		BoundsF bounds;
-		std::array<PID, NumParameters> pIDs;
-		std::array<float, NumParamsPlus> pVals;
-		std::array<StateComp, 4> stateComps;
-		Button legato;
-
+		
 		void timerCallback() override
 		{
 			if (needsUpdate())
@@ -308,7 +302,6 @@ namespace gui
 				const auto widthF = bounds.getWidth();
 				const auto bX = bounds.getX();
 				const auto bY = bounds.getY();
-				const auto width = static_cast<int>(widthF);
 
 				const auto atkSize = atkNorm * widthF;
 				const auto dcySize = dcyNorm * widthF;
@@ -354,5 +347,21 @@ namespace gui
 					stateComps[kRls].setVisible(false);
 			}
 		}
+
+		BoundsF bounds;
+		std::array<PID, NumParameters> pIDs;
+		std::array<float, NumParamsPlus> pVals;
+		std::array<StateComp, 4> stateComps;
+		Button legato;
 	};
 }
+
+/*
+
+todo:
+
+legato modulatable
+
+inverse button
+
+*/
