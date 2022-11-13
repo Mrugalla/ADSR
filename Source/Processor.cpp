@@ -429,7 +429,9 @@ namespace audio
 			params[PID::EnvGenAtkShape]->getValModDenorm(),
 			params[PID::EnvGenDcyShape]->getValModDenorm(),
 			params[PID::EnvGenRlsShape]->getValModDenorm(),
-			params[PID::EnvGenLegato]->getValModDenorm() > .5f
+			params[PID::EnvGenLegato]->getValModDenorm() > .5f,
+			params[PID::EnvGenInverse]->getValModDenorm() > .5f,
+            params[PID::EnvGenVelocity]->getValMod()
         );
 		
         for (auto ch = 0; ch < numChannels; ++ch)

@@ -127,7 +127,9 @@ namespace gui
 				StateComp(u, "Sustain", kSus, _sus),
 				StateComp(u, "Release", kRls, _rlsShape)
 			},
-			legato(u)
+			legato(u),
+			inverse(u),
+			velo(u)
 		{
 			for (auto& v : pVals)
 				v = 0.f;
@@ -138,10 +140,16 @@ namespace gui
 			makeParameter(legato, PID::EnvGenLegato, ButtonSymbol::Legato);
 			addAndMakeVisible(legato);
 
+			makeParameter(inverse, PID::EnvGenInverse, "Inverse", true);
+			addAndMakeVisible(inverse);
+
+			makeParameter(velo, PID::EnvGenVelocity, "Velo");
+			addAndMakeVisible(velo);
+
 			layout.init
 			(
-				{ 1, 21, 5, 1 },
-				{ 1, 5, 21, 1 }
+				{ 1, 21, 3, 1 },
+				{ 1, 8, 8, 13, 21, 1 }
 			);
 
 			startTimerHz(PPDFPSKnobs);
@@ -158,11 +166,11 @@ namespace gui
 		{
 			layout.resized();
 
-			//const auto thicc = utils.thicc;
-			//bounds = getLocalBounds().toFloat().reduced(thicc * 2.f);
-			bounds = layout(1, 1, 2, 2, false);
+			bounds = layout(1, 1, 2, 4, false);
 			
-			layout.place(legato, 2, 1, 1, 1, true);
+			layout.place(legato, 2, 1, 1, 1, false);
+			layout.place(inverse, 2, 2, 1, 1, false);
+			layout.place(velo, 2, 3, 1, 1, false);
 
 			update();
 		}
@@ -352,7 +360,8 @@ namespace gui
 		std::array<PID, NumParameters> pIDs;
 		std::array<float, NumParamsPlus> pVals;
 		std::array<StateComp, 4> stateComps;
-		Button legato;
+		Button legato, inverse;
+		Knob velo;
 	};
 }
 

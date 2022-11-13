@@ -79,6 +79,8 @@ namespace param
 		case PID::EnvGenDcyShape: return "EnvGen Dcy Shape";
 		case PID::EnvGenRlsShape: return "EnvGen Rls Shape";
 		case PID::EnvGenLegato: return "EnvGen Legato";
+		case PID::EnvGenInverse: return "EnvGen Inverse";
+		case PID::EnvGenVelocity: return "EnvGen Velocity";
 
 		default: return "Invalid Parameter Name";
 		}
@@ -165,6 +167,8 @@ namespace param
 		case PID::EnvGenDcyShape: return "Define the decay shape of the envelope generator.";
 		case PID::EnvGenRlsShape: return "Define the release shape of the envelope generator.";
 		case PID::EnvGenLegato: return "Switch on or off legato mode of the envelope generator.";
+		case PID::EnvGenInverse: return "Flips the envelope generator's output upside down.";
+		case PID::EnvGenVelocity: return "Define the velocity sensitivity of the envelope generator.";
 
 		default: return "Invalid Tooltip.";
 		}
@@ -1185,6 +1189,8 @@ namespace param
 		params.push_back(makeParam(PID::EnvGenDcyShape, state, -.5f, makeRange::lin(-1.f, 1.f)));
 		params.push_back(makeParam(PID::EnvGenRlsShape, state, -.5f, makeRange::lin(-1.f, 1.f)));
 		params.push_back(makeParam(PID::EnvGenLegato, state, 0.f, makeRange::toggle(), Unit::Power));
+		params.push_back(makeParam(PID::EnvGenInverse, state, 0.f, makeRange::toggle(), Unit::Power));
+		params.push_back(makeParam(PID::EnvGenVelocity, state, 0.f));
 		// LOW LEVEL PARAMS END
 
 		for (auto param : params)

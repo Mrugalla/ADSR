@@ -70,6 +70,8 @@ namespace param
 		EnvGenDcyShape,
 		EnvGenRlsShape,
 		EnvGenLegato,
+		EnvGenInverse,
+		EnvGenVelocity,
 
 		NumParams
 	};

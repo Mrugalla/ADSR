@@ -20,17 +20,24 @@ namespace audio
 			state(State::Release),
 			noteOn(false), legato(false),
 			envRaw(1.f), env(0.f), noteOffVal(0.f), noteOnVal(0.f),
+			velocitySens(0.f), gain(1.f),
 			atkP(0.f), dcyP(0.f), susP(0.f), rlsP(0.f),
 			atkShapeP(0.f), dcyShapeP(0.f), rlsShapeP(0.f)
 		{
 			
 		}
 
-		void setNoteOn(bool e) noexcept
+		void setNoteOn(float velo) noexcept
 		{
-			noteOn = e;
-			if(!legato && !noteOn)
-				state = State::Release;
+			noteOn = true;
+			gain = 1.f + velocitySens * (velo - 1.f);
+		}
+		
+		void setNoteOff() noexcept
+		{
+			noteOn = false;
+			if (!legato)
+				triggerRelease();
 		}
 
 		void prepare(float Fs, int blockSize)
@@ -83,12 +90,13 @@ namespace audio
 				break;
 			}
 			
-			return env;
+			return env * gain;
 		}
 
 		State state;
 		bool noteOn, legato;
 		float envRaw, env, noteOffVal, noteOnVal;
+		float velocitySens, gain;
 		PRM atkP, dcyP, susP, rlsP;
 		PRM atkShapeP, dcyShapeP, rlsShapeP;
 
@@ -156,12 +164,17 @@ namespace audio
 		}
 
 		//
-		
-		void triggerRelease(int s) noexcept
+
+		void triggerRelease() noexcept
 		{
 			noteOffVal = env;
 			envRaw = 0.f;
 			state = State::Release;
+		}
+		
+		void triggerRelease(int s) noexcept
+		{
+			triggerRelease();
 			synthesizeRelease(s);
 		}
 		
@@ -217,11 +230,12 @@ namespace audio
 		}
 		
 		/* midiBuffer, numSamples, atk [0, N]ms, dcy [0, N]ms, sus [0, 1], rls [0, N]ms,
-		attackShape [-1,1], decayShape [-1,1], releaseShape [-1,1], legato [0, 1] */
+		attackShape [-1,1], decayShape [-1,1], releaseShape [-1,1], legato [0, 1], inverse [0, 1],
+		velocitySensitivity [0, 1] */
 		void operator()(MIDIBuffer& midi, int numSamples,
 			float _atk, float _dcy, float _sus, float _rls,
 			float _atkShape, float _dcyShape, float _rlsShape,
-			bool _legato)
+			bool _legato, bool _inverse, float _velo)
 		{
 			if (_atk == 0.f)
 				envGen.atkP(1.1f, numSamples);
@@ -244,32 +258,44 @@ namespace audio
 			{
 				for (auto s = 0; s < numSamples; ++s)
 					buffer[s] = envGen(s);
-				return;
 			}
-
-			envGen.legato = _legato;
-
-			auto evt = midi.begin();
-			auto ref = *evt;
-			auto ts = ref.samplePosition;
-
-			for (auto s = 0; s < numSamples; ++s)
+			else
 			{
-				while (s == ts)
-				{
-					const auto msg = ref.getMessage();
-					if (msg.isNoteOnOrOff())
-						envGen.setNoteOn(msg.isNoteOn());
-						
-					++evt;
-					if (evt == midi.end())
-						break;
-					ref = *evt;
-					ts = ref.samplePosition;
-				}
+				envGen.legato = _legato;
+				envGen.velocitySens = _velo;
 
-				buffer[s] = envGen(s);
+				auto evt = midi.begin();
+				auto ref = *evt;
+				auto ts = ref.samplePosition;
+
+				for (auto s = 0; s < numSamples; ++s)
+				{
+					while (s == ts)
+					{
+						const auto msg = ref.getMessage();
+						if (msg.isNoteOnOrOff())
+						{
+							auto noteOn = msg.isNoteOn();
+							if (noteOn)
+								envGen.setNoteOn(msg.getFloatVelocity());
+							else
+								envGen.setNoteOff();
+						}
+
+						++evt;
+						if (evt == midi.end())
+							break;
+						ref = *evt;
+						ts = ref.samplePosition;
+					}
+
+					buffer[s] = envGen(s);
+				}
 			}
+			
+			if(_inverse)
+				for (auto s = 0; s < numSamples; ++s)
+					buffer[s] = 1.f - buffer[s];
 		}
 
 		float operator[](int s) const noexcept

@@ -397,7 +397,7 @@ namespace gui
 
 			if (symbol == ButtonSymbol::Polarity)
 			{
-				const auto thicc3 = thicc * 3.f;
+				const auto thicc3 = thicc * Tau;
 
 				bounds = maxQuadIn(bounds).reduced(thicc3);
 				g.drawEllipse(bounds, thicc);
