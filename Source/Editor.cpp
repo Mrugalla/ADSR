@@ -223,7 +223,7 @@ namespace gui
         if (width == 0 || height == 0)
             return;
         
-        makeBGSpace(bgImage, utils.thicc, width, height);
+        makeBG(bgImage, utils.thicc, width, height);
 
         if (props != nullptr)
         {

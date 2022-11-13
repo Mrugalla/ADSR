@@ -325,7 +325,4 @@ namespace audio
 
 todo:
 
-trigger button
-reset button
-
 */

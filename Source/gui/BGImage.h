@@ -119,4 +119,44 @@ namespace gui
             }
         }
 	}
+
+	inline void makeBG(Image& bgImage, float thicc, int width, int height)
+	{
+        bgImage = Image(Image::ARGB, width / 4, height / 4, false);
+
+        Random rand;
+		
+		auto mainCol = rand.nextFloat() ?
+            Colours::c(ColourID::Bg) :
+			Colours::c(ColourID::Mod);
+
+		auto nextRand = [&r = rand](float v, float amt)
+        {
+            v += r.nextFloat() * amt * .5f - amt;
+            if (v >= 1.f)
+                --v;
+            else if (v < 0.f)
+                ++v;
+            return v;
+		};
+
+		auto wInv = 1.f / static_cast<float>(bgImage.getWidth());
+
+        for (auto y = 0; y < bgImage.getHeight(); ++y)
+        {
+            auto hue = mainCol.getHue();
+			
+            for (auto x = 0; x < bgImage.getWidth(); ++x)
+            {
+				hue = nextRand(hue, wInv * PiHalf);
+                const auto sat = .15f;
+                const auto light = .15f;
+                const auto alpha = 1.f;
+                const auto col = Colour::fromHSL(hue, sat, light, alpha);
+                bgImage.setPixelAt(x, y, col);
+            }
+        }
+        
+        bgImage = bgImage.rescaled(width, height, Graphics::lowResamplingQuality);
+	}
 }
