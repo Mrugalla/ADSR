@@ -160,6 +160,7 @@ namespace audio
 				noteOnVal = env;
 				envRaw = 0.f;
 				state = State::Attack;
+				synthesizeAttack(s);
 			}
 		}
 
@@ -323,5 +324,8 @@ namespace audio
 /*
 
 todo:
+
+trigger button
+reset button
 
 */
