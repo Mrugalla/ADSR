@@ -22,22 +22,36 @@ namespace audio
 			envRaw(1.f), env(0.f), noteOffVal(0.f), noteOnVal(0.f),
 			velocitySens(0.f), gain(1.f),
 			atkP(0.f), dcyP(0.f), susP(0.f), rlsP(0.f),
-			atkShapeP(0.f), dcyShapeP(0.f), rlsShapeP(0.f)
+			atkShapeP(0.f), dcyShapeP(0.f), rlsShapeP(0.f),
+			noteOns()
 		{
-			
+			for (auto& n : noteOns)
+				n = false;
 		}
 
-		void setNoteOn(float velo) noexcept
+		void setNoteOn(int noteIdx, float velo) noexcept
 		{
-			noteOn = true;
+			noteOns[noteIdx] = noteOn = true;
 			gain = 1.f + velocitySens * (velo - 1.f);
+			if (!legato)
+				triggerAttack();
 		}
 		
-		void setNoteOff() noexcept
+		void setNoteOff(int noteIdx) noexcept
 		{
-			noteOn = false;
-			if (!legato)
-				triggerRelease();
+  			noteOns[noteIdx] = false;
+			const auto notesLeft = noteOnLeft();
+			if (legato)
+			{
+				if (!notesLeft)
+					noteOn = false;
+			}
+			else
+				if (notesLeft)
+					triggerAttack();
+				else
+					triggerRelease();
+			
 		}
 
 		void prepare(float Fs, int blockSize)
@@ -99,6 +113,16 @@ namespace audio
 		float velocitySens, gain;
 		PRM atkP, dcyP, susP, rlsP;
 		PRM atkShapeP, dcyShapeP, rlsShapeP;
+	protected:
+		std::array<bool, 128> noteOns;
+
+		bool noteOnLeft() const noexcept
+		{
+			for (auto n : noteOns)
+				if (n)
+					return true;
+			return false;
+		}
 
 		// SYNTHESIZE
 		
@@ -150,27 +174,37 @@ namespace audio
 			if (!noteOn)
 			{
 				const auto rls = rlsP[s];
-				
+
 				envRaw += rls;
 				if (envRaw > 1.f)
 					envRaw = 1.f;
 			}
 			else
-			{
-				noteOnVal = env;
-				envRaw = 0.f;
-				state = State::Attack;
-				synthesizeAttack(s);
-			}
+				triggerAttack(s);
 		}
 
-		//
+		// TRIGGER STATES
+
+		void triggerAttack() noexcept
+		{
+			noteOnVal = env;
+			envRaw = 0.f;
+			state = State::Attack;
+			noteOn = true;
+		}
+
+		void triggerAttack(int s) noexcept
+		{
+			triggerAttack();
+			synthesizeAttack(s);
+		}
 
 		void triggerRelease() noexcept
 		{
 			noteOffVal = env;
 			envRaw = 0.f;
 			state = State::Release;
+			noteOn = false;
 		}
 		
 		void triggerRelease(int s) noexcept
@@ -203,6 +237,7 @@ namespace audio
  			env = noteOffVal - getSkewed(envRaw, rlsShapeP[s]) * noteOffVal;
 		}
 
+	public:
 		static float getSkewed(float x, float bias) noexcept
 		{
 			const auto b2 = 2.f * bias;
@@ -278,9 +313,9 @@ namespace audio
 						{
 							auto noteOn = msg.isNoteOn();
 							if (noteOn)
-								envGen.setNoteOn(msg.getFloatVelocity());
+								envGen.setNoteOn(msg.getNoteNumber(), msg.getFloatVelocity());
 							else
-								envGen.setNoteOff();
+								envGen.setNoteOff(msg.getNoteNumber());
 						}
 
 						++evt;

@@ -120,7 +120,7 @@ namespace gui
         }
 	}
 
-	inline void makeBG(Image& bgImage, float thicc, int width, int height)
+	inline void makeBG(Image& bgImage, float /*thicc*/, int width, int height)
 	{
         bgImage = Image(Image::ARGB, width / 4, height / 4, false);
 
