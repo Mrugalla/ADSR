@@ -118,7 +118,7 @@ namespace audio
 
 		bool noteOnLeft() const noexcept
 		{
-			for (auto n : noteOns)
+			for (const auto n : noteOns)
 				if (n)
 					return true;
 			return false;
@@ -359,5 +359,12 @@ namespace audio
 /*
 
 todo:
+
+more noteOn than noteOff values. what happens then?
+	panic button for stuck notes?
+
+test playhead jumps in different daws?
+
+what happens with lookahead?
 
 */
