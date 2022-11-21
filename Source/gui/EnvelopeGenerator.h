@@ -406,9 +406,4 @@ todo:
 
 legato modulatable?
 
-time knobs
-	new look and feel
-	decay knob
-		vertical drag needs sustain modulation
-
 */
