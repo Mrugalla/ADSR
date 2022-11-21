@@ -150,17 +150,17 @@ namespace gui
 			makeParameter(velo, PID::EnvGenVelocity, "Velo");
 			addAndMakeVisible(velo);
 
-			makeParameter(atk, PID::EnvGenAttack, "", false);
+			makeParameter(atk, PID::EnvGenAttack, "", false, nullptr, Knob::LooksType::Knot);
 			addAndMakeVisible(atk);
-			atk.verticalDrag = false;
+			atk.dragMode = Knob::DragMode::Horizontal;
 
-			makeParameter(dcy, PID::EnvGenDecay, "", false);
+			makeParameter(dcy, PID::EnvGenDecay, PID::EnvGenSustain);
 			addAndMakeVisible(dcy);
-			dcy.verticalDrag = false;
+			atk.dragMode = Knob::DragMode::Both;
 
-			makeParameter(rls, PID::EnvGenRelease, "", false);
+			makeParameter(rls, PID::EnvGenRelease, "", false, nullptr, Knob::LooksType::Knot);
 			addAndMakeVisible(rls);
-			rls.verticalDrag = false;
+			atk.dragMode = Knob::DragMode::Horizontal;
 
 			layout.init
 			(
@@ -407,7 +407,8 @@ todo:
 legato modulatable?
 
 time knobs
-	horizontal drag?
 	new look and feel
+	decay knob
+		vertical drag needs sustain modulation
 
 */

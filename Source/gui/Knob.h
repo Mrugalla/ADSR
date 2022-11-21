@@ -15,6 +15,9 @@ namespace gui
         using OnTimer = std::function<bool(Knob&)>;
         using OnPaint = std::function<void(Knob&, Graphics&)>;
         using GetInfo = std::function<String(int)>;
+		
+		enum class DragMode { Vertical, Horizontal, Both, NumDragModes };
+        static constexpr int NumDragModes = static_cast<int>(DragMode::NumDragModes);
 
         /* utils, name, tooltip, cursorType */
         Knob(Utils&, const String& = "", const String& = "", CursorType = CursorType::Interact);
@@ -57,16 +60,20 @@ namespace gui
         std::vector<float> values;
         std::vector<std::unique_ptr<Comp>> comps;
         std::vector<int> states;
-        bool hidesCursor, locked, verticalDrag;
+        bool hidesCursor, locked;
+        DragMode dragMode;
         CursorType activeCursor;
 
         enum class LooksType
         {
             Default,
             VerticalSlider,
+			Knot,
             NumTypes
         };
     };
+	
+    bool isKnobLooksTypeModulatable(Knob::LooksType) noexcept;
 
     /* knob, name, tooltip, pseudo-parameter, looksType */
     void makePseudoParameter(Knob&, const String&, String&&, std::atomic<float>*, Knob::LooksType = Knob::LooksType::Default);
@@ -76,6 +83,12 @@ namespace gui
 
     /* knob, pIDs, name, modulatable, meter, looksType */
 	void makeParameter(Knob&, const std::vector<PID>&, const String&, bool = true, const std::atomic<float>* = nullptr, Knob::LooksType = Knob::LooksType::Default);
+
+    /* knob, pIDHorizontal, pIDVertical */
+    void makeParameter(Knob&, PID, PID);
+
+	/* knob, pIDsHorizontal, pIDsVertical */
+    void makeParameter(Knob&, const std::vector<PID>&, const std::vector<PID>&);
 
 	struct ContextMenuKnobs :
 		public ContextMenu

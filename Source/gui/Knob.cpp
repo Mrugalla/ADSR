@@ -25,7 +25,7 @@ namespace gui
         states(),
         hidesCursor(true),
         locked(false),
-        verticalDrag(true),
+		dragMode(DragMode::Vertical),
         activeCursor(_cursorType)
     {
         setInterceptsMouseClicks(true, true);
@@ -105,8 +105,8 @@ namespace gui
             if (hidesCursor)
                 hideCursor();
 			
-            auto nPosition = getPosition().toFloat();
-			auto posShift = nPosition - lastPos;
+            const auto nPosition = getPosition().toFloat();
+            const auto posShift = nPosition - lastPos;
             lastPos = nPosition;
 
 			dragXY -= posShift;
@@ -452,6 +452,72 @@ namespace gui
                 );
             }
         }
+
+        namespace knot
+        {
+            static std::function<void(Knob&, Graphics&)> paint()
+            {
+                return [](Knob& k, Graphics& g)
+                {
+                    const auto thicc = k.getUtils().thicc;
+                    const Stroke strokeType(thicc, Stroke::JointStyle::curved, Stroke::EndCapStyle::butt);
+                    const auto radius = k.knobBounds.getWidth() * .5f;
+                    
+                    const PointF centre
+                    (
+                        radius + k.knobBounds.getX(),
+                        radius + k.knobBounds.getY()
+                    );
+
+                    auto col = Colours::c(ColourID::Bg);
+
+                    g.fillEllipse(k.knobBounds);
+                    
+                    
+                    col = Colours::c(ColourID::Interact);
+                    g.setColour(col);
+
+                    const auto startAngle = PiHalf;
+
+                    Path arcs;
+                    for (auto i = 0.f; i < 3.f; ++i)
+                    {
+                        const auto rad = radius - thicc * i;
+                        const auto angle = startAngle + i * Pi;
+
+                        arcs.addCentredArc
+                        (
+							centre.x,
+                            centre.y,
+							rad,
+                            rad,
+                            angle,
+							0.f,
+							Pi,
+							true
+                        );
+                    }
+					
+                    g.strokePath(arcs, strokeType);
+                };
+            }
+
+            static void create(Knob& k)
+            {
+                k.onPaint = paint();
+
+                k.onResize = [](Knob& k)
+                {
+                    k.knobBounds = k.getLocalBounds().toFloat().reduced(k.utils.thicc);
+                };
+            }
+        }
+    }
+
+    bool isKnobLooksTypeModulatable(Knob::LooksType lt) noexcept
+    {
+		return lt == Knob::LooksType::Default
+			|| lt == Knob::LooksType::VerticalSlider;
     }
 
     // PARAMETER CREATION FREE FUNCS
@@ -497,7 +563,7 @@ namespace gui
 
             const auto speed = 1.f / k.getUtils().getDragSpeed();
 
-            const auto dragVal = k.verticalDrag ? -dragOffset.y : dragOffset.x;
+            const auto dragVal = k.dragMode == Knob::DragMode::Vertical ? -dragOffset.y : dragOffset.x;
             const auto newValue = juce::jlimit(0.f, 1.f, param->load() + dragVal * speed);
             param->store(newValue);
             k.values[0] = newValue;
@@ -570,6 +636,9 @@ namespace gui
         case Knob::LooksType::VerticalSlider:
             looks::vertSlidr::create(knob, modulatable, hasMeter);
             break;
+        case Knob::LooksType::Knot:
+            looks::knot::create(knob);
+            break;
         default:
             looks::def::create(knob, modulatable, hasMeter);
             break;
@@ -634,7 +703,7 @@ namespace gui
             for (const auto pID : pIDs)
             {
                 auto param = k.getUtils().getParam(pID);
-				const auto dragVal = k.verticalDrag ? -dragOffset.y : dragOffset.x;
+				const auto dragVal = k.dragMode == Knob::DragMode::Vertical ? -dragOffset.y : dragOffset.x;
                 const auto newValue = juce::jlimit(0.f, 1.f, param->getValue() + dragVal * speed);
                 param->setValueNotifyingHost(newValue);
             }
@@ -777,6 +846,8 @@ namespace gui
 
         knob.comps.reserve(looks::NumComps);
 
+        modulatable = modulatable && isKnobLooksTypeModulatable(looksType);
+		
         if (modulatable)
         {
             auto modDial = std::make_unique<Knob>(knob.getUtils(), "M", "Drag this to modulate the macro's modulation depth.", CursorType::Mod);
@@ -922,6 +993,238 @@ namespace gui
         knob.startTimerHz(PPDFPSKnobs);
     }
 
+    void makeParameter(Knob& knob, PID pIDHorizontal, PID pIDVertical)
+    {
+		makeParameter(knob, std::vector<PID>{ pIDHorizontal }, std::vector<PID>{ pIDVertical });
+    }
+
+    void makeParameter(Knob& knob, const std::vector<PID>& pIDsHorizontal, const std::vector<PID>& pIDsVertical)
+    {
+        looks::knot::create(knob);
+
+        knob.getInfo = [pIDsHorizontal](int i)
+        {
+            if (i == 0)
+            {
+                String idsStr;
+                for (auto pid : pIDsHorizontal)
+                    idsStr += toString(pid) + "\n";
+                return idsStr;
+            }
+
+            return String();
+        };
+
+        auto mainPID = pIDsHorizontal[0];
+
+        knob.setTooltip(param::toTooltip(mainPID));
+
+        auto& utils = knob.getUtils();
+        auto mainParam = utils.getParam(mainPID);
+
+        knob.setLocked(mainParam->isLocked());
+
+        knob.onEnter = [mainParam](Knob& k)
+        {
+            k.label.setText(mainParam->getCurrentValueAsText());
+            k.label.repaint();
+        };
+
+        knob.onExit = [](Knob& k)
+        {
+            k.label.setText(k.getName());
+            k.label.repaint();
+        };
+
+        knob.onDown = [pIDsHorizontal, pIDsVertical, mainParam](Knob& k)
+        {
+            for (auto pID : pIDsHorizontal)
+            {
+                auto param = k.getUtils().getParam(pID);
+                if (!param->isInGesture())
+                    param->beginGesture();
+            }
+            for (auto pID : pIDsVertical)
+            {
+				auto param = k.getUtils().getParam(pID);
+				if (!param->isInGesture())
+					param->beginGesture();
+            }
+
+            k.label.setText(mainParam->getCurrentValueAsText());
+            k.label.repaint();
+        };
+
+        knob.onDrag = [pIDsHorizontal, pIDsVertical, mainParam](Knob& k, PointF& dragOffset, bool shiftDown)
+        {
+            if (shiftDown)
+                dragOffset *= SensitiveDrag;
+
+            const auto speed = 1.f / k.getUtils().getDragSpeed();
+
+            for (const auto pID : pIDsHorizontal)
+            {
+                auto param = k.getUtils().getParam(pID);
+                const auto dragVal = dragOffset.x;
+                const auto newValue = juce::jlimit(0.f, 1.f, param->getValue() + dragVal * speed);
+                param->setValueNotifyingHost(newValue);
+            }
+            for (const auto pID : pIDsVertical)
+            {
+                auto param = k.getUtils().getParam(pID);
+                const auto dragVal = -dragOffset.y;
+                const auto newValue = juce::jlimit(0.f, 1.f, param->getValue() + dragVal * speed);
+                param->setValueNotifyingHost(newValue);
+            }
+
+            k.label.setText(mainParam->getCurrentValueAsText());
+            k.label.repaint();
+
+            k.notify(EvtType::ParametrDragged, &k);
+        };
+
+        knob.onUp = [pIDsHorizontal, pIDsVertical, mainParam](Knob& k, const Mouse& mouse)
+        {
+            if (mouse.mods.isLeftButtonDown())
+            {
+                if (!mouse.mouseWasDraggedSinceMouseDown())
+                {
+                    if (mouse.mods.isAltDown())
+                    {
+                        for (auto& pID : pIDsHorizontal)
+                        {
+                            auto param = k.getUtils().getParam(pID);
+                            param->setValueNotifyingHost(param->getDefaultValue());
+                        }
+						for (auto& pID : pIDsVertical)
+						{
+							auto param = k.getUtils().getParam(pID);
+							param->setValueNotifyingHost(param->getDefaultValue());
+						}
+                    }
+                    else if (mouse.mods.isCtrlDown())
+                    {
+                        k.utils.getEventSystem().notify(EvtType::EnterParametrValue, &k);
+                    }
+                }
+                
+                for (auto pID : pIDsHorizontal)
+                {
+                    auto param = k.getUtils().getParam(pID);
+                    param->endGesture();
+                }
+				for (auto pID : pIDsVertical)
+				{
+					auto param = k.getUtils().getParam(pID);
+					param->endGesture();
+				}
+            }
+            else if (mouse.mods.isRightButtonDown())
+                if (!mouse.mouseWasDraggedSinceMouseDown())
+                    if (mouse.mods.isAltDown())
+                    {
+                        for (auto pID : pIDsHorizontal)
+                        {
+                            auto param = k.getUtils().getParam(pID);
+                            param->setValueWithGesture(param->getDefaultValue());
+                        }
+                        for (auto pID : pIDsVertical)
+                        {
+							auto param = k.getUtils().getParam(pID);
+							param->setValueWithGesture(param->getDefaultValue());
+						}
+                    }
+                        
+                    else
+                        k.notify(EvtType::ParametrRightClicked, &k);
+
+            k.label.setText(mainParam->getCurrentValueAsText());
+            k.label.repaint();
+        };
+
+        knob.onWheel = [pIDsVertical, mainParam](Knob& k)
+        {
+            for (auto pID : pIDsVertical)
+            {
+                auto param = k.getUtils().getParam(pID);
+                const auto& range = param->range;
+                const auto interval = range.interval;
+                if (interval > 0.f)
+                {
+                    const auto nStep = interval / range.getRange().getLength();
+                    k.dragXY.setY(k.dragXY.y > 0.f ? nStep : -nStep);
+                    auto newValue = juce::jlimit(0.f, 1.f, param->getValue() + k.dragXY.y);
+                    newValue = range.convertTo0to1(range.snapToLegalValue(range.convertFrom0to1(newValue)));
+                    param->setValueWithGesture(newValue);
+                }
+                else
+                {
+                    const auto newValue = juce::jlimit(0.f, 1.f, param->getValue() + k.dragXY.y);
+                    param->setValueWithGesture(newValue);
+                }
+            }
+
+            k.label.setText(mainParam->getCurrentValueAsText());
+            k.label.repaint();
+        };
+
+        knob.onDoubleClick = [pIDsHorizontal, pIDsVertical, mainParam](Knob& k)
+        {
+            for (auto pID : pIDsHorizontal)
+            {
+                auto param = k.getUtils().getParam(pID);
+                if (param->isInGesture())
+                    return;
+
+                const auto dVal = param->getDefaultValue();
+                param->setValueWithGesture(dVal);
+            }
+			for (auto pID : pIDsVertical)
+			{
+				auto param = k.getUtils().getParam(pID);
+                if (param->isInGesture())
+                    return;
+
+                const auto dVal = param->getDefaultValue();
+                param->setValueWithGesture(dVal);
+            }
+
+            k.label.setText(mainParam->getCurrentValueAsText());
+            k.label.repaint();
+
+            k.notify(EvtType::ParametrDragged, &k);
+        };
+
+        knob.values.reserve(looks::NumValues);
+        auto& values = knob.values;
+
+        values.emplace_back(mainParam->getValue());
+
+        knob.onTimer = [mainParam](Knob& k)
+        {
+            bool shallRepaint = false;
+
+            const auto lckd = mainParam->isLocked();
+            if (k.locked != lckd)
+                k.setLocked(lckd);
+
+            const auto vn = mainParam->getValue();
+            auto& vals = k.values;
+
+            if (vals[looks::Value] != vn)
+            {
+                vals[looks::Value] = vn;
+                shallRepaint = true;
+            }
+
+            return shallRepaint;
+        };
+
+        knob.comps.reserve(looks::NumComps);
+
+        knob.startTimerHz(PPDFPSKnobs);
+    }
+	
     // CONTEXT MENU
 
     Notify ContextMenuKnobs::makeNotify2(ContextMenuKnobs& popUp)
