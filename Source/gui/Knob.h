@@ -52,7 +52,7 @@ namespace gui
         OnPaint onPaint;
         GetInfo getInfo;
         Label label;
-        PointF dragXY;
+        PointF dragXY, lastPos;
         BoundsF knobBounds;
         std::vector<float> values;
         std::vector<std::unique_ptr<Comp>> comps;

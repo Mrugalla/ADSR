@@ -18,7 +18,7 @@ namespace gui
         onPaint([](Knob&, Graphics&) {}),
         getInfo([](int) { return ""; }),
         label(u, _name),
-        dragXY(),
+        dragXY(), lastPos(),
         knobBounds(),
         values(),
         comps(),
@@ -90,6 +90,7 @@ namespace gui
                 mouse.position.x,
                 mouse.position.y
             );
+            lastPos = getPosition().toFloat();
 
             onDown(*this);
         }
@@ -104,6 +105,11 @@ namespace gui
             if (hidesCursor)
                 hideCursor();
 			
+            auto nPosition = getPosition().toFloat();
+			auto posShift = nPosition - lastPos;
+            lastPos = nPosition;
+
+			dragXY -= posShift;
             auto dragOffset = mouse.position - dragXY;
             auto shiftDown = mouse.mods.isShiftDown();
             onDrag(*this, dragOffset, shiftDown);

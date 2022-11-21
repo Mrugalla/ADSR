@@ -152,12 +152,15 @@ namespace gui
 
 			makeParameter(atk, PID::EnvGenAttack, "", false);
 			addAndMakeVisible(atk);
+			atk.verticalDrag = false;
 
 			makeParameter(dcy, PID::EnvGenDecay, "", false);
 			addAndMakeVisible(dcy);
+			dcy.verticalDrag = false;
 
 			makeParameter(rls, PID::EnvGenRelease, "", false);
 			addAndMakeVisible(rls);
+			rls.verticalDrag = false;
 
 			layout.init
 			(
