@@ -25,6 +25,7 @@ namespace gui
         states(),
         hidesCursor(true),
         locked(false),
+        verticalDrag(true),
         activeCursor(_cursorType)
     {
         setInterceptsMouseClicks(true, true);
@@ -45,7 +46,8 @@ namespace gui
 
     void Knob::init(std::vector<int>&& distX, std::vector<int>&& distY)
     {
-        layout.init(
+        layout.init
+        (
             distX,
             distY
         );
@@ -113,7 +115,7 @@ namespace gui
     {
         onUp(*this, mouse);
 
-        if (hidesCursor)
+        if(hidesCursor)
 			if(mouse.mouseWasDraggedSinceMouseDown())
                 showCursor(*this);
     }
@@ -489,7 +491,8 @@ namespace gui
 
             const auto speed = 1.f / k.getUtils().getDragSpeed();
 
-            const auto newValue = juce::jlimit(0.f, 1.f, param->load() - dragOffset.y * speed);
+            const auto dragVal = k.verticalDrag ? -dragOffset.y : dragOffset.x;
+            const auto newValue = juce::jlimit(0.f, 1.f, param->load() + dragVal * speed);
             param->store(newValue);
             k.values[0] = newValue;
 
@@ -622,10 +625,11 @@ namespace gui
 
             const auto speed = 1.f / k.getUtils().getDragSpeed();
 
-            for (auto& pID : pIDs)
+            for (const auto pID : pIDs)
             {
                 auto param = k.getUtils().getParam(pID);
-                const auto newValue = juce::jlimit(0.f, 1.f, param->getValue() - dragOffset.y * speed);
+				const auto dragVal = k.verticalDrag ? -dragOffset.y : dragOffset.x;
+                const auto newValue = juce::jlimit(0.f, 1.f, param->getValue() + dragVal * speed);
                 param->setValueNotifyingHost(newValue);
             }
 

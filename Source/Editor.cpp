@@ -223,7 +223,7 @@ namespace gui
         if (width == 0 || height == 0)
             return;
         
-        makeBG(bgImage, utils.thicc, width, height);
+        makeBGBlurredCurves(bgImage, utils.thicc, width, height);
 
         if (props != nullptr)
         {

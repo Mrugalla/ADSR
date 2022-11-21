@@ -120,43 +120,123 @@ namespace gui
         }
 	}
 
-	inline void makeBG(Image& bgImage, float /*thicc*/, int width, int height)
+	inline void makeBGBlurredCurves(Image& bgImage, float thicc, int width, int height)
 	{
         bgImage = Image(Image::ARGB, width / 4, height / 4, false);
 
         Random rand;
 		
-		auto mainCol = rand.nextFloat() ?
-            Colours::c(ColourID::Bg) :
-			Colours::c(ColourID::Mod);
+        auto bgCol = Colours::c(ColourID::Bg);
 
-		auto nextRand = [&r = rand](float v, float amt)
+        Graphics g{ bgImage };
+        g.fillAll(bgCol);
+		
+        const auto srgbToLinear = [](float srgb)
         {
-            v += r.nextFloat() * amt * .5f - amt;
-            if (v >= 1.f)
-                --v;
-            else if (v < 0.f)
-                ++v;
-            return v;
-		};
+            if (srgb <= 0.0404482362771082f)
+                return srgb / 12.92f;
+             return std::pow((srgb + 0.055f) / 1.055f, 2.4f);
+        };
 
-		auto wInv = 1.f / static_cast<float>(bgImage.getWidth());
-
-        for (auto y = 0; y < bgImage.getHeight(); ++y)
+        const auto paintedPercentage = [srgbToLinear, bgCol](const Image& img)
         {
-            auto hue = mainCol.getHue();
+            const auto numPixels = static_cast<float>(img.getWidth() * img.getHeight());
 			
-            for (auto x = 0; x < bgImage.getWidth(); ++x)
+            const auto bgRedLinear = srgbToLinear(bgCol.getFloatRed());
+            const auto bgGreenLinear = srgbToLinear(bgCol.getFloatGreen());
+            const auto bgBlueLinear = srgbToLinear(bgCol.getFloatBlue());
+
+            auto z = 0.f;
+            for (auto y = 0; y < img.getHeight(); ++y)
             {
-				hue = nextRand(hue, wInv * PiHalf);
-                const auto sat = .15f;
-                const auto light = .15f;
-                const auto alpha = 1.f;
-                const auto col = Colour::fromHSL(hue, sat, light, alpha);
-                bgImage.setPixelAt(x, y, col);
+                for (auto x = 0; x < img.getWidth(); ++x)
+                {
+                    const auto pxl = img.getPixelAt(x, y);
+                    const auto redLinear = srgbToLinear(pxl.getFloatRed());
+                    const auto greenLinear = srgbToLinear(pxl.getFloatGreen());
+                    const auto blueLinear = srgbToLinear(pxl.getFloatBlue());
+
+					auto diff = std::abs(redLinear - bgRedLinear);
+					diff += std::abs(greenLinear - bgGreenLinear);
+					diff += std::abs(blueLinear - bgBlueLinear);
+					diff /= 3.f;
+					z += diff;
+                }
+            }
+            return z / numPixels;
+        };
+
+        const auto randPointAtEdge = [&r = rand](const Image& img)
+        {
+            const auto w = static_cast<float>(img.getWidth() - 1);
+            const auto h = static_cast<float>(img.getHeight() - 1);
+
+            PointF pt;
+            const auto edge = r.nextFloat();
+            if (edge < .25f)
+            {
+                pt.x = r.nextFloat() * w;
+                pt.y = 0.f;
+            }
+            else if (edge < .5f)
+            {
+                pt.x = r.nextFloat() * w;
+                pt.y = h;
+            }
+            else if (edge < .75f)
+            {
+                pt.x = 0.f;
+                pt.y = r.nextFloat() * h;
+            }
+            else
+            {
+                pt.x = w;
+                pt.y = r.nextFloat() * h;
+            }
+
+            return pt;
+        };
+
+        const auto w = static_cast<float>(bgImage.getWidth());
+        const auto h = static_cast<float>(bgImage.getHeight());
+        const auto maxDimen = std::max(w, h);
+		const auto maxDimenInv = 1.f / maxDimen;
+		
+        PointF centre
+        {
+            w * .5f,
+            h * .5f
+        };
+
+        while (paintedPercentage(bgImage) < .0008f)
+        {
+            auto ptStart = randPointAtEdge(bgImage);
+            auto dir = rand.nextFloat() * Tau;
+            auto curviness = .001f;
+
+			const auto mainCol = rand.nextBool() ? Colours::c(ColourID::Mod) : Colours::c(ColourID::Interact);
+			
+            while (ptStart.x >= 0.f && ptStart.x < w && ptStart.y >= 0.f && ptStart.y < h)
+            {
+				curviness += (rand.nextFloat() - .5f) * .1f;
+                dir += (rand.nextFloat() * PiHalf - Pi) * curviness;
+                auto dist = thicc;
+                PointF ptEnd
+                (
+                    ptStart.x + std::cos(dir) * dist,
+                    ptStart.y + std::sin(dir) * dist
+                );
+				const auto centreDist = centre.getDistanceFrom(ptEnd) * maxDimenInv;
+				const auto colZ = centreDist * centreDist * centreDist * centreDist;
+                const auto col = bgCol.interpolatedWith(mainCol, colZ);
+                g.setColour(col);
+                
+                g.drawLine({ ptStart, ptEnd }, thicc * rand.nextFloat());
+                
+                ptStart = ptEnd;
             }
         }
         
-        bgImage = bgImage.rescaled(width, height, Graphics::lowResamplingQuality);
+        bgImage = bgImage.rescaled(width, height, Graphics::mediumResamplingQuality);
 	}
 }

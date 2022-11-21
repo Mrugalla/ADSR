@@ -129,7 +129,11 @@ namespace gui
 			},
 			legato(u),
 			inverse(u),
-			velo(u)
+			velo(u),
+
+			atk(u),
+			dcy(u),
+			rls(u)
 		{
 			for (auto& v : pVals)
 				v = 0.f;
@@ -146,10 +150,19 @@ namespace gui
 			makeParameter(velo, PID::EnvGenVelocity, "Velo");
 			addAndMakeVisible(velo);
 
+			makeParameter(atk, PID::EnvGenAttack, "", false);
+			addAndMakeVisible(atk);
+
+			makeParameter(dcy, PID::EnvGenDecay, "", false);
+			addAndMakeVisible(dcy);
+
+			makeParameter(rls, PID::EnvGenRelease, "", false);
+			addAndMakeVisible(rls);
+
 			layout.init
 			(
-				{ 1, 21, 3, 1 },
-				{ 1, 8, 8, 13, 21, 1 }
+				{ 2, 21, 3, 2 },
+				{ 2, 8, 8, 13, 21, 2 }
 			);
 
 			startTimerHz(PPDFPSKnobs);
@@ -171,6 +184,11 @@ namespace gui
 			layout.place(legato, 2, 1, 1, 1, false);
 			layout.place(inverse, 2, 2, 1, 1, false);
 			layout.place(velo, 2, 3, 1, 1, false);
+
+			const auto timeParamsWidth = static_cast<int>(std::min(layout.getW(0), layout.getH(0)) * 2);
+			atk.setBounds(0, 0, timeParamsWidth, timeParamsWidth);
+			dcy.setBounds(0, 0, timeParamsWidth, timeParamsWidth);
+			rls.setBounds(0, 0, timeParamsWidth, timeParamsWidth);
 
 			update();
 		}
@@ -295,11 +313,17 @@ namespace gui
 				stateComps[kRls].setVisible(false);
 				stateComps[kSus].setBounds(bounds.toNearestInt());
 				stateComps[kSus].update(sus, sus, 0.f, 0.f);
+				atk.setVisible(false);
+				dcy.setVisible(false);
+				rls.setVisible(false);
 				return;
 			}
 			else
 			{
 				stateComps[kSus].setVisible(false);
+				atk.setVisible(true);
+				dcy.setVisible(true);
+				rls.setVisible(true);
 				
 				const auto timeInv = 1.f / time;
 
@@ -324,6 +348,8 @@ namespace gui
 					stateComps[kAtk].setVisible(true);
 					stateComps[kAtk].setBounds(BoundsF(bX, bY, atkSize, h).toNearestInt());
 					stateComps[kAtk].update(1.f, 0.f, atkShapeDenorm, atkShapeModDenorm);
+					
+					atk.setCentrePosition(stateComps[kAtk].getBounds().getTopRight());
 				}
 				else
 					stateComps[kAtk].setVisible(false);
@@ -337,6 +363,8 @@ namespace gui
 					stateComps[kDcy].setVisible(true);
 					stateComps[kDcy].setBounds(BoundsF(bX + atkSize, bY, dcySize, h).toNearestInt());
 					stateComps[kDcy].update(0.f, sus, dcyShapeDenorm, dcyShapeModDenorm);
+
+					dcy.setCentrePosition({ stateComps[kDcy].getRight(), static_cast<int>(bY + sus * h)});
 				}
 				else
 					stateComps[kDcy].setVisible(false);
@@ -350,6 +378,8 @@ namespace gui
 					stateComps[kRls].setVisible(true);
 					stateComps[kRls].setBounds(BoundsF(bX + atkSize + dcySize, bY, rlsSize, h).toNearestInt());
 					stateComps[kRls].update(sus, 1.f, rlsShapeDenorm, rlsShapeModDenorm);
+
+					rls.setCentrePosition(stateComps[kRls].getBounds().getBottomRight());
 				}
 				else
 					stateComps[kRls].setVisible(false);
@@ -362,6 +392,8 @@ namespace gui
 		std::array<StateComp, 4> stateComps;
 		Button legato, inverse;
 		Knob velo;
+
+		Knob atk, dcy, rls;
 	};
 }
 
@@ -369,8 +401,10 @@ namespace gui
 
 todo:
 
-legato modulatable
+legato modulatable?
 
-inverse button
+time knobs
+	horizontal drag?
+	new look and feel
 
 */

@@ -16,7 +16,8 @@ namespace gui
         using OnPaint = std::function<void(Knob&, Graphics&)>;
         using GetInfo = std::function<String(int)>;
 
-        Knob(Utils&, const String & /*name*/ = "", const String & /*tooltip*/ = "", CursorType = CursorType::Interact);
+        /* utils, name, tooltip, cursorType */
+        Knob(Utils&, const String& = "", const String& = "", CursorType = CursorType::Interact);
 
         ~Knob();
 
@@ -56,7 +57,7 @@ namespace gui
         std::vector<float> values;
         std::vector<std::unique_ptr<Comp>> comps;
         std::vector<int> states;
-        bool hidesCursor, locked;
+        bool hidesCursor, locked, verticalDrag;
         CursorType activeCursor;
 
         enum class LooksType

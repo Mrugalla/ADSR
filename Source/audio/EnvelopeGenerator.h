@@ -31,6 +31,8 @@ namespace audio
 
 		void setNoteOn(int noteIdx, float velo) noexcept
 		{
+			if (noteOns[noteIdx])
+				return;
 			noteOns[noteIdx] = noteOn = true;
 			gain = 1.f + velocitySens * (velo - 1.f);
 			if (!legato)
