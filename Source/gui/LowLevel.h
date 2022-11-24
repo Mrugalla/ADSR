@@ -37,11 +37,12 @@ namespace gui
 			addAndMakeVisible(rls);
 
 			addAndMakeVisible(oscope);
+            oscope.bipolar = false;
 
             layout.init
             (
                 { 1, 2, 2, 2, 2, 1 },
-                { 5, 2, 2 }
+                { 8, 3, 2 }
             );
         }
 

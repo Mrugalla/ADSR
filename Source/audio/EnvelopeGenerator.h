@@ -38,9 +38,9 @@ namespace audio
 			if (noteOns[noteIdx])
 				return;
 			noteOns[noteIdx] = noteOn = true;
+			gain = 1.f + velocitySens * (velo - 1.f);
 			if (!legato)
 				triggerAttack();
-			gain = 1.f + velocitySens * (velo - 1.f);
 		}
 		
 		void setNoteOff(int noteIdx) noexcept

@@ -15,7 +15,8 @@ namespace gui
 			Comp(u, _tooltip, CursorType::Default),
 			Timer(),
 			oscope(_oscope),
-			curve()
+			curve(),
+			bipolar(true)
 		{
 			startTimerHz(FPS);
 		}
@@ -44,7 +45,8 @@ namespace gui
 			const auto w = bounds.getWidth();
 			const auto h = bounds.getHeight();
 			const auto xScale = w / std::min(beatLength, sizeF);
-			const auto yScale = h * .5f;
+			const auto bipolarVal = bipolar ? 1.f : 0.f;
+			const auto yScale = h - bipolarVal * (h * .5f - h);
 			const auto xScaleInv = 1.f / xScale;
 			const auto xOff = bounds.getX();
 			const auto yOff = bounds.getY() + yScale;
@@ -77,6 +79,8 @@ namespace gui
 		const Oscope& oscope;
 		BoundsF bounds;
 		Path curve;
+	public:
+		bool bipolar;
 	};
 }
 
