@@ -36,10 +36,7 @@ namespace gui
 			
 			g.setColour(Colours::c(ColourID::Darken));
 			g.fillRoundedRectangle(bounds, thicc);
-
-			g.setColour(Colours::c(ColourID::Hover));
-			g.drawRoundedRectangle(bounds, thicc, thicc);
-
+			
 			const auto data = oscope.data();
 			const auto size = oscope.windowLength();
 			const auto sizeF = static_cast<float>(size);
@@ -69,6 +66,9 @@ namespace gui
 
 			g.setColour(Colours::c(ColourID::Txt));
 			g.strokePath(curve, stroke);
+
+			g.setColour(Colours::c(ColourID::Hover));
+			g.drawRoundedRectangle(bounds, thicc, thicc);
 		}
 
 		void timerCallback() override

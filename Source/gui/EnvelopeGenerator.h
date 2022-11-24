@@ -78,27 +78,29 @@ namespace gui
 				skewMod = std::tanh(Pi * skewMod) * .5f + .5f;
 				
 				const auto thicc = utils.thicc;
+				const auto thicc2 = thicc * 2.f;
 				const auto bnds = getLocalBounds().toFloat();
 				const auto w = bnds.getWidth();
 				const auto h = bnds.getHeight();
 				const auto wInv = 1.f / w;
+				const auto rangeY = endY - startY;
 				
 				pathNorm.clear();
 				pathNorm.startNewSubPath({ 0.f, startY * h });
-				for (auto i = thicc; i < w; i += thicc)
+				for (auto i = thicc2; i < w; i += thicc2)
 				{
 					const auto x = EnvGen::getSkewed(i * wInv, skewNorm);
-					const auto y = startY + x * (endY - startY);
+					const auto y = startY + x * rangeY;
 					pathNorm.lineTo({ i, y * h });
 				}
 				pathNorm.lineTo({ w, endY * h });
 
 				pathMod.clear();
 				pathMod.startNewSubPath({ 0.f, startY * h });
-				for (auto i = thicc; i < w; i += thicc)
+				for (auto i = thicc2; i < w; i += thicc2)
 				{
 					const auto x = EnvGen::getSkewed(i * wInv, skewMod);
-					const auto y = startY + x * (endY - startY);
+					const auto y = startY + x * rangeY;
 					pathMod.lineTo({ i, y * h });
 				}
 				pathMod.lineTo({ w, endY * h });
