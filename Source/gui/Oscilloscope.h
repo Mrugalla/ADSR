@@ -50,16 +50,13 @@ namespace gui
 			const auto yOff = bounds.getY() + yScale;
 			
 			curve.clear();
-			curve.startNewSubPath(xOff, yOff);
-			for (auto i = 0.f; i < w; ++i)
+			auto y = yOff - data[0] * yScale;
+			curve.startNewSubPath(xOff, y);
+			for (auto i = 1.f; i < w; ++i)
 			{
 				const auto x = xOff + i;
 				const auto idx = static_cast<int>(i * xScaleInv);
-				float y;
-				if(idx < size)
-					y = yOff - data[idx] * yScale;
-				else
-					y = yOff - data[idx - size] * yScale;
+				y = yOff - data[idx] * yScale;
 				curve.lineTo(x, y);
 			}
 			curve.lineTo(xOff + w, yOff);
@@ -82,3 +79,11 @@ namespace gui
 		Path curve;
 	};
 }
+
+/*
+
+todo:
+
+performance: only repaint part of the interface that was changed
+
+*/

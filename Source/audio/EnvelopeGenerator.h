@@ -7,6 +7,8 @@ namespace audio
 {
 	struct EnvGen
 	{
+		static constexpr float MinVelocity = 1.f / 127.f;
+		
 		enum class State
 		{
 			Attack,
@@ -31,12 +33,14 @@ namespace audio
 
 		void setNoteOn(int noteIdx, float velo) noexcept
 		{
+			if (velo < MinVelocity)
+				return setNoteOff(noteIdx);
 			if (noteOns[noteIdx])
 				return;
 			noteOns[noteIdx] = noteOn = true;
-			gain = 1.f + velocitySens * (velo - 1.f);
 			if (!legato)
 				triggerAttack();
+			gain = 1.f + velocitySens * (velo - 1.f);
 		}
 		
 		void setNoteOff(int noteIdx) noexcept
@@ -187,6 +191,20 @@ namespace audio
 
 		// TRIGGER STATES
 
+		void triggerRelease() noexcept
+		{
+			noteOffVal = env;
+			envRaw = 0.f;
+			state = State::Release;
+			noteOn = false;
+		}
+
+		void triggerRelease(int s) noexcept
+		{
+			triggerRelease();
+			synthesizeRelease(s);
+		}
+
 		void triggerAttack() noexcept
 		{
 			noteOnVal = env;
@@ -199,20 +217,6 @@ namespace audio
 		{
 			triggerAttack();
 			synthesizeAttack(s);
-		}
-
-		void triggerRelease() noexcept
-		{
-			noteOffVal = env;
-			envRaw = 0.f;
-			state = State::Release;
-			noteOn = false;
-		}
-		
-		void triggerRelease(int s) noexcept
-		{
-			triggerRelease();
-			synthesizeRelease(s);
 		}
 		
 		// SHAPE
@@ -314,10 +318,12 @@ namespace audio
 						if (msg.isNoteOnOrOff())
 						{
 							auto noteOn = msg.isNoteOn();
+							auto noteNum = msg.getNoteNumber();
+							
 							if (noteOn)
-								envGen.setNoteOn(msg.getNoteNumber(), msg.getFloatVelocity());
+								envGen.setNoteOn(noteNum, msg.getFloatVelocity());
 							else
-								envGen.setNoteOff(msg.getNoteNumber());
+								envGen.setNoteOff(noteNum);
 						}
 
 						++evt;
@@ -361,6 +367,8 @@ namespace audio
 /*
 
 todo:
+
+velocity creates weird gain steps on attack
 
 changing time parameters in temposync steps?
 

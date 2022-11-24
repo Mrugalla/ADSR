@@ -113,10 +113,11 @@ namespace gui
 				layout.place(*comps[LockButton], 0, 2, 1, 1, true);
 
 				const auto thicc = utils.thicc;
+				const auto thicc2 = thicc * 2.f;
 				const auto bnds = getLocalBounds().toFloat();
 				const auto w = bnds.getWidth();
 				
-				auto pathlen = static_cast<int>(w / thicc) + 1;
+				const auto pathlen = static_cast<int>(w / thicc2) + 1;
 				pathMod.preallocateSpace(pathlen);
 				pathNorm.preallocateSpace(pathlen);
 			}
