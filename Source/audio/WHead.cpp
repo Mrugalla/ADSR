@@ -35,4 +35,22 @@ namespace audio
 		return buf.data();
 	}
 
+	int* WHead::data() noexcept
+	{
+		return buf.data();
+	}
+
+	void WHead::shift(int shift, int numSamples) noexcept
+	{
+		for (auto s = 0; s < numSamples; ++s)
+		{
+			buf[s] = buf[s] + shift;
+			if (buf[s] > delaySize)
+				buf[s] -= delaySize;
+			else if (buf[s] < 0)
+				buf[s] += delaySize;
+		}
+		wHead = buf[numSamples - 1];
+	}
+
 }

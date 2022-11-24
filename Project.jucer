@@ -27,6 +27,7 @@
         <FILE id="Uad8Jv" name="State.h" compile="0" resource="0" file="Source/arch/State.h"/>
       </GROUP>
       <GROUP id="{6A8CB2D6-E6E3-8D1E-1148-21BD24558A7A}" name="audio">
+        <FILE id="GGGXFo" name="Oscilloscope.h" compile="0" resource="0" file="Source/audio/Oscilloscope.h"/>
         <FILE id="n7hGsR" name="EnvelopeGenerator.h" compile="0" resource="0"
               file="Source/audio/EnvelopeGenerator.h"/>
         <FILE id="pqdwbw" name="XenManager.cpp" compile="1" resource="0" file="Source/audio/XenManager.cpp"/>
@@ -125,6 +126,7 @@
         <FILE id="abkRAU" name="nel19.ttf" compile="0" resource="1" file="Source/fonts/nel19.ttf"/>
       </GROUP>
       <GROUP id="{DA435779-5001-4379-F809-3E7C21D55DC0}" name="gui">
+        <FILE id="q87WSH" name="Oscilloscope.h" compile="0" resource="0" file="Source/gui/Oscilloscope.h"/>
         <FILE id="S7OSxE" name="EnvelopeGenerator.h" compile="0" resource="0"
               file="Source/gui/EnvelopeGenerator.h"/>
         <FILE id="f9XwbB" name="BGImage.h" compile="0" resource="0" file="Source/gui/BGImage.h"/>

@@ -74,8 +74,8 @@ namespace gui
 					skewNorm *= -1.f;
 					skewMod *= -1.f;
 				}
-				skewNorm = std::tanh(skewNorm) * .5f + .5f;
-				skewMod = std::tanh(skewMod) * .5f + .5f;
+				skewNorm = std::tanh(Pi * skewNorm) * .5f + .5f;
+				skewMod = std::tanh(Pi * skewMod) * .5f + .5f;
 				
 				const auto thicc = utils.thicc;
 				const auto bnds = getLocalBounds().toFloat();
@@ -109,6 +109,14 @@ namespace gui
 				Knob::resized();
 				layout.place(*comps[ModDial], 0, 1, 1, 1, true);
 				layout.place(*comps[LockButton], 0, 2, 1, 1, true);
+
+				const auto thicc = utils.thicc;
+				const auto bnds = getLocalBounds().toFloat();
+				const auto w = bnds.getWidth();
+				
+				auto pathlen = static_cast<int>(w / thicc) + 1;
+				pathMod.preallocateSpace(pathlen);
+				pathNorm.preallocateSpace(pathlen);
 			}
 			
 			Path pathNorm, pathMod;
@@ -156,11 +164,11 @@ namespace gui
 
 			makeParameter(dcy, PID::EnvGenDecay, PID::EnvGenSustain);
 			addAndMakeVisible(dcy);
-			atk.dragMode = Knob::DragMode::Both;
+			dcy.dragMode = Knob::DragMode::Both;
 
 			makeParameter(rls, PID::EnvGenRelease, "", false, nullptr, Knob::LooksType::Knot);
 			addAndMakeVisible(rls);
-			atk.dragMode = Knob::DragMode::Horizontal;
+			rls.dragMode = Knob::DragMode::Horizontal;
 
 			layout.init
 			(
@@ -405,5 +413,9 @@ namespace gui
 todo:
 
 legato modulatable?
+
+make oscilloscope window
+
+make symbol for inverse
 
 */

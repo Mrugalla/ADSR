@@ -24,6 +24,7 @@ namespace audio
 
     ProcessorBackEnd::ProcessorBackEnd() :
         juce::AudioProcessor(makeBusesProperties()),
+        playHeadPos(),
         props(),
         sus(*this),
         state(),
@@ -69,17 +70,31 @@ namespace audio
         return JucePlugin_Name;
     }
 
-    double ProcessorBackEnd::getTailLengthSeconds() const { return 0.; }
+    double ProcessorBackEnd::getTailLengthSeconds() const
+    {
+        return 0.;
+    }
 
-    int ProcessorBackEnd::getNumPrograms() { return 1; }
+    int ProcessorBackEnd::getNumPrograms()
+    {
+        return 1;
+    }
 
-    int ProcessorBackEnd::getCurrentProgram() { return 0; }
+    int ProcessorBackEnd::getCurrentProgram()
+    {
+        return 0;
+    }
 
-    void ProcessorBackEnd::setCurrentProgram(int) {}
+    void ProcessorBackEnd::setCurrentProgram(int)
+    {}
 
-    const String ProcessorBackEnd::getProgramName(int) { return {}; }
+    const String ProcessorBackEnd::getProgramName(int)
+    {
+        return {};
+    }
 
-    void ProcessorBackEnd::changeProgramName(int, const juce::String&) {}
+    void ProcessorBackEnd::changeProgramName(int, const juce::String&)
+    {}
 
     bool ProcessorBackEnd::canAddBus(bool isInput) const
     {
@@ -194,7 +209,8 @@ namespace audio
 
     Processor::Processor() :
         ProcessorBackEnd(),
-		envGenMIDI()
+		envGenMIDI(),
+        oscope()
 	{
     }
 
@@ -223,6 +239,7 @@ namespace audio
 #endif
 
 		envGenMIDI.prepare(sampleRateF, maxBlockSize);
+        oscope.prepare(sampleRateF, maxBlockSize);
 
         dryWetMix.prepare(sampleRateF, maxBlockSize, latency);
 
@@ -261,6 +278,17 @@ namespace audio
         midiVoices.pitchbendRange = std::round(params[PID::PitchbendRange]->getValModDenorm());
 #endif	
         midiManager(midi, numSamples);
+		
+        const auto _playHead = getPlayHead();
+        const auto _playHeadPos = _playHead->getPosition();
+        const bool playHeadValid = _playHeadPos.hasValue();
+        if (playHeadValid)
+        {
+			playHeadPos.bpm = *_playHeadPos->getBpm();
+			playHeadPos.ppqPosition = *_playHeadPos->getPpqPosition();
+			playHeadPos.isPlaying = _playHeadPos->getIsPlaying();
+			playHeadPos.timeInSamples = *_playHeadPos->getTimeInSamples();
+        }
 
         if (params[PID::Power]->getValMod() < .5f)
             return processBlockBypassed(buffer, midi);
@@ -416,7 +444,8 @@ namespace audio
 #endif
     }
 
-    void Processor::processBlockPreUpscaled(float** samples, int numChannels, int numSamples, MIDIBuffer& midi) noexcept
+    void Processor::processBlockPreUpscaled(float** samples, int numChannels, int numSamples,
+        MIDIBuffer& midi) noexcept
     {
         envGenMIDI
         (
@@ -436,6 +465,8 @@ namespace audio
 		
         for (auto ch = 0; ch < numChannels; ++ch)
             SIMD::copy(samples[ch], envGenMIDI.data(), numSamples);
+
+        oscope(samples, 1, numSamples, playHeadPos);
     }
 
     void Processor::processBlockUpsampled(float**, int, int
@@ -479,3 +510,5 @@ juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {
     return new audio::Processor();
 }
+
+// make default playheadpos

@@ -362,6 +362,8 @@ namespace audio
 
 todo:
 
+changing time parameters in temposync steps?
+
 more noteOn than noteOff values. what happens then?
 	panic button for stuck notes?
 

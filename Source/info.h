@@ -24,6 +24,11 @@ HOW TO USE:
 
 TO DO:
 
+add layout function that paints a rectangle or something
+	with a descriptive text to the topLeft
+
+scroll/draggable buttons must also have click function
+
 make toast component
 	use for formulaparser error messages
 
@@ -136,6 +141,11 @@ HighLevel UI Elements
 -------------------------------------------------------------------
 
 FEATURE REQUESTS:
+
+Manta 2
+	autogain
+	automatically finding kick's fundamental frequency
+	keytrack
 
 show total time spent with mrugalla plugins
 

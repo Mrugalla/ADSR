@@ -15,6 +15,7 @@ namespace audio
     using Decibels = juce::Decibels;
     using ScopedNoDenormals = juce::ScopedNoDenormals;
     using MidiMessage = juce::MidiMessage;
+    using PlayHeadPos = juce::AudioPlayHead::CurrentPositionInfo;
 
     using Smooth = smooth::Smooth<float>;
     using PID = param::PID;

@@ -16,6 +16,11 @@ namespace audio
 		int operator[](int) const noexcept;
 
 		const int* data() const noexcept;
+		
+		int* data() noexcept;
+
+		// shift, numSamples
+		void shift(int, int) noexcept;
 	protected:
 		std::vector<int> buf;
 		int wHead, delaySize;

@@ -1,6 +1,6 @@
 #pragma once
-#include "Knob.h"
 #include "EnvelopeGenerator.h"
+#include "Oscilloscope.h"
 
 namespace gui
 {
@@ -19,7 +19,8 @@ namespace gui
             atk(u),
 			dcy(u),
 			sus(u),
-			rls(u)
+			rls(u),
+			oscope(u, "The oscilloscope visualizes the ADSR shape.", u.audioProcessor.oscope)
         {
             addAndMakeVisible(envGen);
 
@@ -35,10 +36,12 @@ namespace gui
 			makeParameter(rls, PID::EnvGenRelease, "Release", true);
 			addAndMakeVisible(rls);
 
+			addAndMakeVisible(oscope);
+
             layout.init
             (
                 { 1, 2, 2, 2, 2, 1 },
-                { 5, 2 }
+                { 5, 2, 2 }
             );
         }
 
@@ -55,11 +58,14 @@ namespace gui
             layout.place(atk, 1, 1, 1, 1);
 			layout.place(dcy, 2, 1, 1, 1);
 			layout.place(sus, 3, 1, 1, 1);
-			layout.place(rls, 4, 1, 1, 1, true);
+			layout.place(rls, 4, 1, 1, 1);
+
+			layout.place(oscope, 1, 2, 4, 1);
         }
 
     protected:
         EnvGenComp envGen;
         Knob atk, dcy, sus, rls;
+        Oscilloscope oscope;
     };
 }

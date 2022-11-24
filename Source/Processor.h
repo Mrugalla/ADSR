@@ -15,6 +15,7 @@
 #include "audio/Meter.h"
 
 #include "audio/EnvelopeGenerator.h"
+#include "audio/Oscilloscope.h"
 
 #include "audio/AudioUtils.h"
 
@@ -53,6 +54,7 @@ namespace audio
 
         juce::AudioProcessor::BusesProperties makeBusesProperties();
 
+        PlayHeadPos playHeadPos;
         AppProps props;
         ProcessSuspender sus;
 
@@ -121,5 +123,6 @@ namespace audio
         juce::AudioProcessorEditor* createEditor() override;
 
         EnvGenMIDI envGenMIDI;
+		Oscilloscope oscope;
     };
 }
