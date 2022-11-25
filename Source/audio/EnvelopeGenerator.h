@@ -22,7 +22,7 @@ namespace audio
 			state(State::Release),
 			noteOn(false), legato(false),
 			envRaw(1.f), env(0.f), noteOffVal(0.f), noteOnVal(0.f),
-			velocitySens(0.f), gain(1.f),
+			velocitySens(0.f), veloGain(1.f),
 			atkP(0.f), dcyP(0.f), susP(0.f), rlsP(0.f),
 			atkShapeP(0.f), dcyShapeP(0.f), rlsShapeP(0.f),
 			noteOns()
@@ -38,7 +38,7 @@ namespace audio
 			if (noteOns[noteIdx])
 				return;
 			noteOns[noteIdx] = noteOn = true;
-			gain = 1.f + velocitySens * (velo - 1.f);
+			veloGain = 1.f + velocitySens * (velo - 1.f);
 			if (!legato)
 				triggerAttack();
 		}
@@ -110,13 +110,13 @@ namespace audio
 				break;
 			}
 			
-			return env * gain;
+			return env;
 		}
 
 		State state;
 		bool noteOn, legato;
 		float envRaw, env, noteOffVal, noteOnVal;
-		float velocitySens, gain;
+		float velocitySens, veloGain;
 		PRM atkP, dcyP, susP, rlsP;
 		PRM atkShapeP, dcyShapeP, rlsShapeP;
 	protected:
@@ -223,19 +223,22 @@ namespace audio
 
 		void shapeAttack(int s) noexcept
 		{
-			env = noteOnVal + getSkewed(envRaw, atkShapeP[s]) * (1.f - noteOnVal);
+			//env = noteOnVal + (1.f - noteOnVal) * getSkewed(envRaw, atkShapeP[s]);
+			env = noteOnVal + (veloGain - noteOnVal) * getSkewed(envRaw, atkShapeP[s]);
 		}
 
 		void shapeDecay(int s) noexcept
 		{
-			const auto sus = susP[s];
+			const auto sus = susP[s] * veloGain;
 			
-			env = 1.f - getSkewed(envRaw, dcyShapeP[s]) * (1.f - sus);
+			//env = 1.f - (1.f - sus) * getSkewed(envRaw, dcyShapeP[s]);
+			env = veloGain - (veloGain - sus) * getSkewed(envRaw, dcyShapeP[s]);
 		}
 
 		void shapeSustain() noexcept
 		{
-			env = envRaw;
+			//env = envRaw;
+			env = envRaw * veloGain;
 		}
 
 		void shapeRelease(int s) noexcept
