@@ -137,9 +137,9 @@ namespace makeRange
 	{
 		const auto minF = static_cast<float>(min);
 		const auto maxF = static_cast<float>(max);
-		const auto range = maxF - minF;
+		const auto range = maxF - minF + 1.f;
 
-		auto numValues = 3 * (max - min);
+		auto numValues = 3 * (max - min) + 1;
 		if (withZero)
 			++numValues;
 		const auto numValuesF = static_cast<float>(numValues);
@@ -147,7 +147,7 @@ namespace makeRange
 		const auto minVal = withZero ? 0.f : std::pow(2.f, minF);
 		const auto maxVal = std::pow(2.f, maxF);
 		
-		enum Mode { Whole, Triplet, Dotted };
+		enum Mode { Whole, Triplet, Dotted, NumModes };
 
 		return
 		{
@@ -177,19 +177,12 @@ namespace makeRange
 					return 0.f;
 				
 				const auto base = std::log2(denormalized); // [minF, maxF]
-				auto modeVal = base - std::floor(base); // [0, 1]
-				if (modeVal < .736966f)
-					modeVal = 1.f;
-				else if (modeVal < .807355f)
-					modeVal = .666666666667f;
-				else
-					modeVal = .75f;
-				const auto val = std::floor(base) * modeVal;
-				const auto norm = (val - minF) * rangeInv; // [0, 1]
-
-				//DBG(val);
-
-				return norm;
+				const auto val = base;
+				auto norm = (val - minF) * rangeInv; // [0, 1]
+				
+				DBG(base);
+				
+				return norm > 1.f ? 1.f : norm;
 			},
 			[](float start, float end, float denormalized)
 			{
