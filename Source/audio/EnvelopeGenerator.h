@@ -223,7 +223,6 @@ namespace audio
 
 		void shapeAttack(int s) noexcept
 		{
-			//env = noteOnVal + (1.f - noteOnVal) * getSkewed(envRaw, atkShapeP[s]);
 			env = noteOnVal + (veloGain - noteOnVal) * getSkewed(envRaw, atkShapeP[s]);
 		}
 
@@ -231,13 +230,11 @@ namespace audio
 		{
 			const auto sus = susP[s] * veloGain;
 			
-			//env = 1.f - (1.f - sus) * getSkewed(envRaw, dcyShapeP[s]);
 			env = veloGain - (veloGain - sus) * getSkewed(envRaw, dcyShapeP[s]);
 		}
 
 		void shapeSustain() noexcept
 		{
-			//env = envRaw;
 			env = envRaw * veloGain;
 		}
 
@@ -276,12 +273,24 @@ namespace audio
 		
 		/* midiBuffer, numSamples, atk [0, N]ms, dcy [0, N]ms, sus [0, 1], rls [0, N]ms,
 		attackShape [-1,1], decayShape [-1,1], releaseShape [-1,1], legato [0, 1], inverse [0, 1],
-		velocitySensitivity [0, 1] */
+		velocitySensitivity [0, 1], tempoSync[0, 1],
+		atkBeats [0, N]beats, dcyBeats[0, N], rlsBeats[0, N] */
 		void operator()(MIDIBuffer& midi, int numSamples,
 			float _atk, float _dcy, float _sus, float _rls,
 			float _atkShape, float _dcyShape, float _rlsShape,
-			bool _legato, bool _inverse, float _velo)
+			bool _legato, bool _inverse, float _velo, bool _tempoSync,
+			float _atkBeats, float _dcyBeats, float _rlsBeats, const PlayHeadPos& playHead) noexcept
 		{
+			if (_tempoSync)
+			{
+				const auto bpm = static_cast<float>(playHead.bpm);
+				const auto bps = bpm * .0166666667f;
+
+				_atk = _atkBeats * bps * 1000.f;
+				_dcy = _dcyBeats * bps * 1000.f;
+				_rls = _rlsBeats * bps * 1000.f;
+			}
+
 			if (_atk == 0.f)
 				envGen.atkP(1.1f, numSamples);
 			else
@@ -371,9 +380,19 @@ namespace audio
 
 todo:
 
-velocity creates weird gain steps on attack
+legato
+	consecutive noteOns don't update velocity
 
-changing time parameters in temposync steps?
+if velocity sensitivity 100%
+	if last note had higher valocity
+		new note might not have transient
+
+temposync
+	check if is ms-calculations correct
+	parameter ranges suck (scale nonlinearly)
+	write valToStr and strToVal functions
+
+make logo for inverse button
 
 more noteOn than noteOff values. what happens then?
 	panic button for stuck notes?
@@ -381,5 +400,9 @@ more noteOn than noteOff values. what happens then?
 test playhead jumps in different daws?
 
 what happens with lookahead?
+
+legato modulatable?
+
+make symbol for inverse
 
 */

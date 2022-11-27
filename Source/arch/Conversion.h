@@ -259,4 +259,19 @@ namespace audio
             buffer[i] *= w;
         }
     }
+
+    inline float getNumBeats(const String& str)
+    {
+		for (auto i = 0; i < str.length(); ++i)
+        {
+            auto chr = str[i];
+            if (chr == '/')
+            {
+				auto num = str.substring(0, i).getFloatValue();
+				auto den = str.substring(i + 1).getFloatValue();
+				return num / den;
+            }
+        }
+        return -1.f;
+    }
 }

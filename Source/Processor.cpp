@@ -447,6 +447,8 @@ namespace audio
     void Processor::processBlockPreUpscaled(float** samples, int numChannels, int numSamples,
         MIDIBuffer& midi) noexcept
     {
+        params[PID::EnvGenDecayBeats]->range.convertTo0to1(params[PID::EnvGenDecayBeats]->getValModDenorm());
+
         envGenMIDI
         (
             midi,
@@ -460,7 +462,12 @@ namespace audio
 			params[PID::EnvGenRlsShape]->getValModDenorm(),
 			params[PID::EnvGenLegato]->getValModDenorm() > .5f,
 			params[PID::EnvGenInverse]->getValModDenorm() > .5f,
-            params[PID::EnvGenVelocity]->getValMod()
+            params[PID::EnvGenVelocity]->getValMod(),
+			params[PID::EnvGenTempoSync]->getValMod() > .5f,
+			params[PID::EnvGenAttackBeats]->getValModDenorm(),
+			params[PID::EnvGenDecayBeats]->getValModDenorm(),
+			params[PID::EnvGenReleaseBeats]->getValModDenorm(),
+            playHeadPos
         );
 		
         for (auto ch = 0; ch < numChannels; ++ch)

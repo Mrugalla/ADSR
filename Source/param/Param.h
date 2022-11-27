@@ -72,6 +72,10 @@ namespace param
 		EnvGenLegato,
 		EnvGenInverse,
 		EnvGenVelocity,
+		EnvGenTempoSync,
+		EnvGenAttackBeats,
+		EnvGenDecayBeats,
+		EnvGenReleaseBeats,
 
 		NumParams
 	};
@@ -290,6 +294,7 @@ namespace param
 		StrToValFunc pitch(const Xen&);
 		StrToValFunc q();
 		StrToValFunc slope();
+		StrToValFunc beats();
 	}
 
 	namespace valToStr
@@ -317,6 +322,7 @@ namespace param
 		ValToStrFunc pitch(const Xen&);
 		ValToStrFunc q();
 		ValToStrFunc slope();
+		ValToStrFunc beats();
 	}
 
 	/* pID, state, valDenormDefault, range, Unit */

@@ -14,7 +14,10 @@ namespace gui
 		enum State
 		{
 			kAtk, kDcy, kSus, kRls,
-			kAtkShape, kDcyShape, kRlsShape, NumParameters,
+			kAtkShape, kDcyShape, kRlsShape,
+			kAtkBeats, kDcyBeats, kRlsBeats,
+			kTempoSync,
+			NumParameters,
 			kAtkShapeMod, kDcyShapeMod, kRlsShapeMod,
 			NumParamsPlus
 		};
@@ -126,10 +129,13 @@ namespace gui
 			State state;
 		};
 		
-		EnvGenComp(Utils& u, PID _atk, PID _dcy, PID _sus, PID _rls, PID _atkShape, PID _dcyShape, PID _rlsShape) :
+		EnvGenComp(Utils& u, PID _atk, PID _dcy, PID _sus, PID _rls,
+			PID _atkShape, PID _dcyShape, PID _rlsShape,
+			PID _atkBeats, PID _dcyBeats, PID _rlsBeats, PID _tempoSync) :
 			Comp(u, "Click here to interact with the envelope generator.", CursorType::Default),
+			Timer(),
 			bounds(),
-			pIDs{ _atk, _dcy, _sus, _rls, _atkShape, _dcyShape, _rlsShape },
+			pIDs{ _atk, _dcy, _sus, _rls, _atkShape, _dcyShape, _rlsShape, _atkBeats, _dcyBeats, _rlsBeats, _tempoSync },
 			pVals(),
 			stateComps
 			{
@@ -138,13 +144,8 @@ namespace gui
 				StateComp(u, "Sustain", kSus, _sus),
 				StateComp(u, "Release", kRls, _rlsShape)
 			},
-			legato(u),
-			inverse(u),
-			velo(u),
-
-			atk(u),
-			dcy(u),
-			rls(u)
+			atk(), dcy(), rls(),
+			tempoSyncEnabled(u.getParam(_tempoSync)->getValMod() > .5f)
 		{
 			for (auto& v : pVals)
 				v = 0.f;
@@ -152,26 +153,7 @@ namespace gui
 			for (auto& s : stateComps)
 				addAndMakeVisible(s);
 			
-			makeParameter(legato, PID::EnvGenLegato, ButtonSymbol::Legato);
-			addAndMakeVisible(legato);
-
-			makeParameter(inverse, PID::EnvGenInverse, "Inverse", true);
-			addAndMakeVisible(inverse);
-
-			makeParameter(velo, PID::EnvGenVelocity, "Velo");
-			addAndMakeVisible(velo);
-
-			makeParameter(atk, PID::EnvGenAttack, "", false, nullptr, Knob::LooksType::Knot);
-			addAndMakeVisible(atk);
-			atk.dragMode = Knob::DragMode::Horizontal;
-
-			makeParameter(dcy, PID::EnvGenDecay, PID::EnvGenSustain);
-			addAndMakeVisible(dcy);
-			dcy.dragMode = Knob::DragMode::Both;
-
-			makeParameter(rls, PID::EnvGenRelease, "", false, nullptr, Knob::LooksType::Knot);
-			addAndMakeVisible(rls);
-			rls.dragMode = Knob::DragMode::Horizontal;
+			switchTimeParameters(tempoSyncEnabled);
 
 			layout.init
 			(
@@ -195,20 +177,24 @@ namespace gui
 
 			bounds = layout(1, 1, 2, 4, false);
 			
-			layout.place(legato, 2, 1, 1, 1, false);
-			layout.place(inverse, 2, 2, 1, 1, false);
-			layout.place(velo, 2, 3, 1, 1, false);
-
 			const auto timeParamsWidth = static_cast<int>(std::min(layout.getW(0), layout.getH(0)) * 2);
-			atk.setBounds(0, 0, timeParamsWidth, timeParamsWidth);
-			dcy.setBounds(0, 0, timeParamsWidth, timeParamsWidth);
-			rls.setBounds(0, 0, timeParamsWidth, timeParamsWidth);
+			atk->setBounds(0, 0, timeParamsWidth, timeParamsWidth);
+			dcy->setBounds(0, 0, timeParamsWidth, timeParamsWidth);
+			rls->setBounds(0, 0, timeParamsWidth, timeParamsWidth);
 
 			update();
 		}
 		
 		void timerCallback() override
 		{
+			const auto ts = utils.getParam(pIDs[kTempoSync])->getValMod() > .5f;
+			if (tempoSyncEnabled != ts)
+			{
+				tempoSyncEnabled = ts;
+				switchTimeParameters(tempoSyncEnabled);
+				resized();
+			}
+
 			if (needsUpdate())
 			{
 				update();
@@ -221,12 +207,13 @@ namespace gui
 			bool e = false;
 			
 			{ // ATTACK
-				auto pID = pIDs[kAtk];
+				auto kIdx = tempoSyncEnabled ? kAtkBeats : kAtk;
+				auto pID = pIDs[kIdx];
 				auto param = utils.getParam(pID);
 				auto val = param->getValue();
-				if (pVals[kAtk] != val)
+				if (pVals[kIdx] != val)
 				{
-					pVals[kAtk] = val;
+					pVals[kIdx] = val;
 					e = true;
 				}
 				const auto iShape = kAtkShape;
@@ -243,12 +230,13 @@ namespace gui
 				}
 			}
 			{ // DECAY
-				auto pID = pIDs[kDcy];
+				auto kIdx = tempoSyncEnabled ? kDcyBeats : kDcy;
+				auto pID = pIDs[kIdx];
 				auto param = utils.getParam(pID);
 				auto val = param->getValue();
-				if (pVals[kDcy] != val)
+				if (pVals[kIdx] != val)
 				{
-					pVals[kDcy] = val;
+					pVals[kIdx] = val;
 					e = true;
 				}
 				const auto iShape = kDcyShape;
@@ -265,12 +253,13 @@ namespace gui
 				}
 			}
 			{ // RELEASE
-				auto pID = pIDs[kRls];
+				auto kIdx = tempoSyncEnabled ? kRlsBeats : kRls;
+				auto pID = pIDs[kIdx];
 				auto param = utils.getParam(pID);
 				auto val = param->getValue();
-				if (pVals[kRls] != val)
+				if (pVals[kIdx] != val)
 				{
-					pVals[kRls] = val;
+					pVals[kIdx] = val;
 					e = true;
 				}
 				const auto iShape = kRlsShape;
@@ -305,21 +294,24 @@ namespace gui
 		{
 			const auto h = bounds.getHeight();
 			
-			const auto& atkParam = *utils.getParam(pIDs[kAtk]);
-			const auto atkDenorm = atkParam.range.convertFrom0to1(pVals[kAtk]);
+			const auto kIdxAtk = tempoSyncEnabled ? kAtkBeats : kAtk;
+			const auto& atkParam = *utils.getParam(pIDs[kIdxAtk]);
+			const auto atkDenorm = atkParam.range.convertFrom0to1(pVals[kIdxAtk]);
 
-			const auto& dcyParam = *utils.getParam(pIDs[kDcy]);
-			const auto dcyDenorm = dcyParam.range.convertFrom0to1(pVals[kDcy]);
+			const auto kIdxDcy = tempoSyncEnabled ? kDcyBeats : kDcy;
+			const auto& dcyParam = *utils.getParam(pIDs[kIdxDcy]);
+			const auto dcyDenorm = dcyParam.range.convertFrom0to1(pVals[kIdxDcy]);
 
-			const auto& rlsParam = *utils.getParam(pIDs[kRls]);
-			const auto rlsDenorm = rlsParam.range.convertFrom0to1(pVals[kRls]);
+			const auto kIdxRls = tempoSyncEnabled ? kRlsBeats : kRls;
+			const auto& rlsParam = *utils.getParam(pIDs[kIdxRls]);
+			const auto rlsDenorm = rlsParam.range.convertFrom0to1(pVals[kIdxRls]);
 
 			const auto sus = 1.f - pVals[kSus];
 			
 			const auto noteOnTime = atkDenorm + dcyDenorm;
 			const auto noteOffTime = rlsDenorm;
 			const auto time = noteOnTime + noteOffTime;
-			if (time < 1.f)
+			if (time == 0.f)
 			{
 				stateComps[kAtk].setVisible(false);
 				stateComps[kDcy].setVisible(false);
@@ -327,17 +319,17 @@ namespace gui
 				stateComps[kRls].setVisible(false);
 				stateComps[kSus].setBounds(bounds.toNearestInt());
 				stateComps[kSus].update(sus, sus, 0.f, 0.f);
-				atk.setVisible(false);
-				dcy.setVisible(false);
-				rls.setVisible(false);
+				atk->setVisible(false);
+				dcy->setVisible(false);
+				rls->setVisible(false);
 				return;
 			}
 			else
 			{
 				stateComps[kSus].setVisible(false);
-				atk.setVisible(true);
-				dcy.setVisible(true);
-				rls.setVisible(true);
+				atk->setVisible(true);
+				dcy->setVisible(true);
+				rls->setVisible(true);
 				
 				const auto timeInv = 1.f / time;
 
@@ -352,7 +344,7 @@ namespace gui
 				const auto atkSize = atkNorm * widthF;
 				const auto dcySize = dcyNorm * widthF;
 				const auto rlsSize = rlsNorm * widthF;
-
+				
 				if (atkSize > 0.f)
 				{
 					const auto& atkShapeParam = *utils.getParam(pIDs[kAtkShape]);
@@ -363,11 +355,13 @@ namespace gui
 					stateComps[kAtk].setBounds(BoundsF(bX, bY, atkSize, h).toNearestInt());
 					stateComps[kAtk].update(1.f, 0.f, atkShapeDenorm, atkShapeModDenorm);
 					
-					atk.setCentrePosition(stateComps[kAtk].getBounds().getTopRight());
+					atk->setCentrePosition(stateComps[kAtk].getBounds().getTopRight());
 				}
 				else
+				{
 					stateComps[kAtk].setVisible(false);
-				
+					atk->setCentrePosition(static_cast<int>(bX), static_cast<int>(bY));
+				}
 				if (dcySize > 0.f)
 				{
 					const auto& dcyShapeParam = *utils.getParam(pIDs[kDcyShape]);
@@ -378,11 +372,13 @@ namespace gui
 					stateComps[kDcy].setBounds(BoundsF(bX + atkSize, bY, dcySize, h).toNearestInt());
 					stateComps[kDcy].update(0.f, sus, dcyShapeDenorm, dcyShapeModDenorm);
 
-					dcy.setCentrePosition({ stateComps[kDcy].getRight(), static_cast<int>(bY + sus * h)});
+					dcy->setCentrePosition({ stateComps[kDcy].getRight(), static_cast<int>(bY + sus * h)});
 				}
 				else
+				{
 					stateComps[kDcy].setVisible(false);
-				
+					dcy->setCentrePosition(static_cast<int>(bX + atkSize), static_cast<int>(bY + sus * h));
+				}
 				if (rlsSize > 0.f)
 				{
 					const auto& rlsShapeParam = *utils.getParam(pIDs[kRlsShape]);
@@ -393,7 +389,7 @@ namespace gui
 					stateComps[kRls].setBounds(BoundsF(bX + atkSize + dcySize, bY, rlsSize, h).toNearestInt());
 					stateComps[kRls].update(sus, 1.f, rlsShapeDenorm, rlsShapeModDenorm);
 
-					rls.setCentrePosition(stateComps[kRls].getBounds().getBottomRight());
+					rls->setCentrePosition(stateComps[kRls].getBounds().getBottomRight());
 				}
 				else
 					stateComps[kRls].setVisible(false);
@@ -404,21 +400,43 @@ namespace gui
 		std::array<PID, NumParameters> pIDs;
 		std::array<float, NumParamsPlus> pVals;
 		std::array<StateComp, 4> stateComps;
-		Button legato, inverse;
-		Knob velo;
+		std::unique_ptr<Knob> atk, dcy, rls;
+		bool tempoSyncEnabled;
+		
+		void switchTimeParameters(bool tempoSync)
+		{
+			removeChildComponent(atk.get());
+			removeChildComponent(dcy.get());
+			removeChildComponent(rls.get());
 
-		Knob atk, dcy, rls;
+			atk = std::make_unique<Knob>(utils);
+			dcy = std::make_unique<Knob>(utils);
+			rls = std::make_unique<Knob>(utils);
+			
+			if (tempoSync)
+			{
+				makeParameter(*atk, pIDs[kAtkBeats], "", false, nullptr, Knob::LooksType::Knot);
+				makeParameter(*dcy, pIDs[kDcyBeats], pIDs[kSus]);
+				makeParameter(*rls, pIDs[kRlsBeats], "", false, nullptr, Knob::LooksType::Knot);
+			}
+			else
+			{
+				makeParameter(*atk, pIDs[kAtk], "", false, nullptr, Knob::LooksType::Knot);
+				makeParameter(*dcy, pIDs[kDcy], pIDs[kSus]);
+				makeParameter(*rls, pIDs[kRls], "", false, nullptr, Knob::LooksType::Knot);
+			}
+
+			atk->dragMode = Knob::DragMode::Horizontal;
+			dcy->dragMode = Knob::DragMode::Both;
+			rls->dragMode = Knob::DragMode::Horizontal;
+			
+			addAndMakeVisible(*atk);
+			addAndMakeVisible(*dcy);
+			addAndMakeVisible(*rls);
+		}
 	};
 }
 
 /*
-
-todo:
-
-legato modulatable?
-
-make oscilloscope window
-
-make symbol for inverse
 
 */

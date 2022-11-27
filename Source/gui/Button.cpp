@@ -933,6 +933,40 @@ namespace gui
 					g.drawLine({ lineStartX, lineStartY, lineEndX, lineEndY }, thicc);
 				}
 			}
+			else if (symbol == ButtonSymbol::TempoSync)
+			{
+				const auto thicc3 = thicc * 3.f;
+				bounds = maxQuadIn(bounds).reduced(thicc3);
+				Stroke stroke(thicc, Stroke::JointStyle::beveled, Stroke::EndCapStyle::butt);
+
+				const auto x = bounds.getX();
+				const auto y = bounds.getY();
+				const auto w = bounds.getWidth();
+				
+				const auto circleW = w * .2f;
+				const auto circleX = x + w * .3f;
+				const auto circleY = y + w - circleW;
+
+				g.fillEllipse(circleX, circleY, circleW, circleW);
+				
+				const auto lineX = circleX + circleW - thicc * .5f;
+				const auto lineY0 = y;
+				const auto lineY1 = circleY + circleW * .5f;
+				
+				g.drawLine(lineX, lineY0, lineX, lineY1, thicc);
+
+				const auto arcX0 = lineX;
+				const auto arcY0 = lineY0;
+				const auto arcX2 = lineX + w * .2f;
+				const auto arcY2 = lineY0 + w * .3f;
+				const auto arcX1 = lineX + w * .3f;
+				const auto arcY1 = lineY0 + w * .1f;
+
+				Path arc;
+				arc.startNewSubPath(arcX0, arcY0);
+				arc.cubicTo(arcX0, arcY0, arcX1, arcY1, arcX2, arcY2);
+				g.strokePath(arc, stroke);
+			}
 		});
 
 		b.toggleNext = withToggle || symbol == ButtonSymbol::StereoConfig ? 1 : 0;

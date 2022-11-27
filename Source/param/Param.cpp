@@ -81,6 +81,10 @@ namespace param
 		case PID::EnvGenLegato: return "EnvGen Legato";
 		case PID::EnvGenInverse: return "EnvGen Inverse";
 		case PID::EnvGenVelocity: return "EnvGen Velocity";
+		case PID::EnvGenTempoSync: return "EnvGen Tempo Sync";
+		case PID::EnvGenAttackBeats: return "EnvGen Attack Beats";
+		case PID::EnvGenDecayBeats: return "EnvGen Decay Beats";
+		case PID::EnvGenReleaseBeats: return "EnvGen Release Beats";
 
 		default: return "Invalid Parameter Name";
 		}
@@ -159,16 +163,20 @@ namespace param
 		case PID::Power: return "Bypass the plugin with this parameter.";
 
 		// LOW LEVEL PARAMS:
-		case PID::EnvGenAttack: return "Define the attack time of the envelope generator.";
-		case PID::EnvGenDecay: return "Define the decay time of the envelope generator.";
+		case PID::EnvGenAttack: return "Define the attack time of the envelope generator in ms.";
+		case PID::EnvGenDecay: return "Define the decay time of the envelope generator in ms.";
 		case PID::EnvGenSustain: return "Define the sustain level of the envelope generator.";
-		case PID::EnvGenRelease: return "Define the release time of the envelope generator.";
+		case PID::EnvGenRelease: return "Define the release time of the envelope generator in ms.";
 		case PID::EnvGenAtkShape: return "Define the attack shape of the envelope generator.";
 		case PID::EnvGenDcyShape: return "Define the decay shape of the envelope generator.";
 		case PID::EnvGenRlsShape: return "Define the release shape of the envelope generator.";
 		case PID::EnvGenLegato: return "Switch on or off legato mode of the envelope generator.";
 		case PID::EnvGenInverse: return "Flips the envelope generator's output upside down.";
 		case PID::EnvGenVelocity: return "Define the velocity sensitivity of the envelope generator.";
+		case PID::EnvGenTempoSync: return "Switch on or off tempo sync of the envelope generator.";
+		case PID::EnvGenAttackBeats: return "Define the attack time of the envelope generator in beats.";
+		case PID::EnvGenDecayBeats: return "Define the decay time of the envelope generator in beats.";
+		case PID::EnvGenReleaseBeats: return "Define the release time of the envelope generator in beats.";
 
 		default: return "Invalid Tooltip.";
 		}
@@ -183,7 +191,7 @@ namespace param
 		case Unit::Mute: return "M";
 		case Unit::Percent: return "%";
 		case Unit::Hz: return "hz";
-		case Unit::Beats: return "x";
+		case Unit::Beats: return "";
 		case Unit::Degree: return CharPtr("\xc2\xb0");
 		case Unit::Octaves: return "oct";
 		case Unit::Semi: return "semi";
@@ -815,6 +823,24 @@ namespace param::strToVal
 			return val / 12.f;
 		};
 	}
+
+	StrToValFunc beats()
+	{
+		return[p = parse()](const String& txt)
+		{
+			enum Mode { Beats, Triplet, Dotted, NumModes };
+			const auto lastChr = txt[txt.length() - 1];
+			const auto mode = lastChr == 't' ? Mode::Triplet : lastChr == '.' ? Mode::Dotted : Mode::Beats;
+			
+			const auto text = mode == Mode::Beats ? txt : txt.substring(0, txt.length() - 1);
+			auto val = p(text, 1.f / 16.f);
+			if (mode == Mode::Triplet)
+				val *= 1.666666666667f;
+			else if (mode == Mode::Dotted)
+				val *= 1.75f;
+			return val;
+		};
+	}
 }
 
 namespace param::valToStr
@@ -1010,6 +1036,14 @@ namespace param::valToStr
 			return String(v) + " " + toString(Unit::Slope);
 		};
 	}
+
+	ValToStrFunc beats()
+	{
+		return [](float v)
+		{
+			return String(v) + " " + toString(Unit::Beats);
+		};
+	}
 }
 
 namespace param
@@ -1094,6 +1128,10 @@ namespace param
 		case Unit::Slope:
 			valToStrFunc = valToStr::slope();
 			strToValFunc = strToVal::slope();
+			break;
+		case Unit::Beats:
+			valToStrFunc = valToStr::beats();
+			strToValFunc = strToVal::beats();
 			break;
 		default:
 			valToStrFunc = valToStr::empty();
@@ -1185,12 +1223,16 @@ namespace param
 		params.push_back(makeParam(PID::EnvGenDecay, state, envGenDefaultTime, makeRange::quad(0.f, 32000.f, 2), Unit::Ms));
 		params.push_back(makeParam(PID::EnvGenSustain, state, .5f, makeRange::lin(0.f, 1.f), Unit::Percent));
 		params.push_back(makeParam(PID::EnvGenRelease, state, envGenDefaultTime, makeRange::quad(0.f, 32000.f, 2), Unit::Ms));
-		params.push_back(makeParam(PID::EnvGenAtkShape, state, 1.f, makeRange::lin(-1.f, 1.f)));
+		params.push_back(makeParam(PID::EnvGenAtkShape, state, .5f, makeRange::lin(-1.f, 1.f)));
 		params.push_back(makeParam(PID::EnvGenDcyShape, state, -.5f, makeRange::lin(-1.f, 1.f)));
 		params.push_back(makeParam(PID::EnvGenRlsShape, state, -.5f, makeRange::lin(-1.f, 1.f)));
 		params.push_back(makeParam(PID::EnvGenLegato, state, 0.f, makeRange::toggle(), Unit::Power));
 		params.push_back(makeParam(PID::EnvGenInverse, state, 0.f, makeRange::toggle(), Unit::Power));
 		params.push_back(makeParam(PID::EnvGenVelocity, state, 0.f));
+		params.push_back(makeParam(PID::EnvGenTempoSync, state, 0.f, makeRange::toggle(), Unit::Power));
+		params.push_back(makeParam(PID::EnvGenAttackBeats, state, 1.f / 16.f, makeRange::beats(-4, 1, true), Unit::Beats));
+		params.push_back(makeParam(PID::EnvGenDecayBeats, state, 1.f / 16.f, makeRange::beats(-4, 1, true), Unit::Beats));
+		params.push_back(makeParam(PID::EnvGenReleaseBeats, state, 1.f / 16.f, makeRange::beats(-4, 1, true), Unit::Beats));
 		// LOW LEVEL PARAMS END
 
 		for (auto param : params)

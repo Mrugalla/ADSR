@@ -101,6 +101,7 @@ namespace gui
 		Lookahead,
 		Img,
 		Legato,
+		TempoSync,
 		NumSymbols
 	};
 

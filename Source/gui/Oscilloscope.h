@@ -65,9 +65,6 @@ namespace gui
 
 			g.setColour(Colours::c(ColourID::Txt));
 			g.strokePath(curve, stroke);
-
-			g.setColour(Colours::c(ColourID::Hover));
-			g.drawRoundedRectangle(bounds, thicc, thicc);
 		}
 
 		void timerCallback() override

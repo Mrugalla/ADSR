@@ -1,5 +1,5 @@
 #include "Range.h"
-//#include "Conversion.h"
+#include "Conversion.h"
 
 namespace makeRange
 {
@@ -55,20 +55,20 @@ namespace makeRange
 
 		return
 		{
-				start,
-				end,
-				[range](float min, float, float normalized)
-				{
-					return min + normalized * range;
-				},
-				[inv = 1.f / range](float min, float, float denormalized)
-				{
-					return (denormalized - min) * inv;
-				},
-				[](float min, float max, float x)
-				{
-					return juce::jlimit(min, max, x);
-				}
+			start,
+			end,
+			[range](float min, float, float normalized)
+			{
+				return min + normalized * range;
+			},
+			[inv = 1.f / range](float min, float, float denormalized)
+			{
+				return (denormalized - min) * inv;
+			},
+			[](float min, float max, float x)
+			{
+				return juce::jlimit(min, max, x);
+			}
 		};
 	}
 
@@ -113,13 +113,13 @@ namespace makeRange
 		return
 		{
 			min, max,
-			[numSteps, range = max - min](float start, float end, float x)
+			[numSteps, range = max - min](float start, float, float x)
 			{
 				for (auto i = 0; i < numSteps; ++i)
 					x *= x;
 				return start + x * range;
 			},
-			[numSteps, rangeInv = 1.f / (max - min)](float start, float end, float x)
+			[numSteps, rangeInv = 1.f / (max - min)](float start, float, float x)
 			{
 				x = (x - start) * rangeInv;
 				for (auto i = 0; i < numSteps; ++i)
@@ -129,6 +129,71 @@ namespace makeRange
 			[](float start, float end, float x)
 			{
 				return juce::jlimit(start, end, x);
+			}
+		};
+	}
+
+	Range beats(int min, int max, bool withZero) noexcept
+	{
+		const auto minF = static_cast<float>(min);
+		const auto maxF = static_cast<float>(max);
+		const auto range = maxF - minF;
+
+		auto numValues = 3 * (max - min);
+		if (withZero)
+			++numValues;
+		const auto numValuesF = static_cast<float>(numValues);
+
+		const auto minVal = withZero ? 0.f : std::pow(2.f, minF);
+		const auto maxVal = std::pow(2.f, maxF);
+		
+		enum Mode { Whole, Triplet, Dotted };
+
+		return
+		{
+			minVal, maxVal,
+			[minF, maxF, numValuesF, withZero](float, float, float normalized)
+			{
+				if(withZero && normalized == 0.f)
+					return 0.f;
+
+				const auto idxF = normalized * numValuesF; // [0, numValuesF]
+				const auto idxI = static_cast<int>(idxF); // [0, numValues]
+				
+				const auto mode = idxI % 3; // [ 0 = Whole, 1 = Triplet, 2 = Dotted ]
+				const auto mult =
+					mode == Mode::Triplet ? 1.666666666667f :
+					mode == Mode::Dotted ? 1.75f :
+					1.f;
+
+				const auto baseVal = std::floor(idxF * .333333333f) + minF; // [min, max]
+				const auto val = std::pow(2.f, baseVal) * mult; // [minVal, maxVal]
+				
+				return val;
+			},
+			[minF, rangeInv = 1.f / range, withZero](float start, float end, float denormalized)
+			{
+				if (withZero && denormalized == 0.f)
+					return 0.f;
+				
+				const auto base = std::log2(denormalized); // [minF, maxF]
+				auto modeVal = base - std::floor(base); // [0, 1]
+				if (modeVal < .736966f)
+					modeVal = 1.f;
+				else if (modeVal < .807355f)
+					modeVal = .666666666667f;
+				else
+					modeVal = .75f;
+				const auto val = std::floor(base) * modeVal;
+				const auto norm = (val - minF) * rangeInv; // [0, 1]
+
+				//DBG(val);
+
+				return norm;
+			},
+			[](float start, float end, float denormalized)
+			{
+				return juce::jlimit(start, end, denormalized);
 			}
 		};
 	}
