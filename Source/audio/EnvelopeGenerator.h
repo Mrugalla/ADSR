@@ -381,7 +381,8 @@ namespace audio
 todo:
 
 legato
-	consecutive noteOns don't update velocity
+	consecutive noteOns don't update velocity normally
+		but maybe they do in new mode
 
 if velocity sensitivity 100%
 	if last note had higher valocity
@@ -389,10 +390,11 @@ if velocity sensitivity 100%
 
 temposync
 	check if is ms-calculations correct
-	parameter ranges suck (scale nonlinearly)
-	write valToStr and strToVal functions
-
-make logo for inverse button
+	parameter range
+		denormalisation wrong!
+	valToStr and strToVal functions
+		write
+		test
 
 more noteOn than noteOff values. what happens then?
 	panic button for stuck notes?
