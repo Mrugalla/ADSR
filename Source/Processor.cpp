@@ -444,6 +444,21 @@ namespace audio
 #endif
     }
 
+    void Processor::processBlockBypassed(AudioBuffer& buffer, juce::MidiBuffer& midi)
+    {
+		const auto numChannels = buffer.getNumChannels();
+		const auto numSamples = buffer.getNumSamples();
+		auto samples = buffer.getArrayOfWritePointers();
+
+        envGenMIDI.processBypassed(numSamples);
+        for (auto ch = 0; ch < numChannels; ++ch)
+            SIMD::copy(samples[ch], envGenMIDI.data(), numSamples);
+
+        oscope(samples, 1, numSamples, playHeadPos);
+
+        ProcessorBackEnd::processBlockBypassed(buffer, midi);
+    }
+
     void Processor::processBlockPreUpscaled(float** samples, int numChannels, int numSamples,
         MIDIBuffer& midi) noexcept
     {

@@ -40,7 +40,10 @@ namespace audio
 			noteOns[noteIdx] = noteOn = true;
 			veloGain = 1.f + velocitySens * (velo - 1.f);
 			if (!legato)
-				triggerAttack();
+				if(env < velo)
+					triggerAttack();
+				else
+					triggerDecay();
 		}
 		
 		void setNoteOff(int noteIdx) noexcept
@@ -111,6 +114,16 @@ namespace audio
 			}
 			
 			return env;
+		}
+
+		void processBypassed(float* samples, int numSamples) noexcept
+		{
+			for (auto& n : noteOns)
+				n = false;
+			setNoteOff(24);
+
+			for (auto s = 0; s < numSamples; ++s)
+				samples[s] = process(s);
 		}
 
 		State state;
@@ -217,6 +230,14 @@ namespace audio
 		{
 			triggerAttack();
 			synthesizeAttack(s);
+		}
+
+		void triggerDecay()
+		{
+			noteOnVal = env;
+			state = State::Decay;
+			envRaw = 0.f;
+			noteOn = true;
 		}
 		
 		// SHAPE
@@ -354,6 +375,11 @@ namespace audio
 					buffer[s] = 1.f - buffer[s];
 		}
 
+		void processBypassed(int numSamples) noexcept
+		{
+			envGen.processBypassed(buffer.data(), numSamples);
+		}
+
 		float operator[](int s) const noexcept
 		{
 			return buffer[s];
@@ -382,24 +408,15 @@ todo:
 
 legato
 	consecutive noteOns don't update velocity normally
-		but maybe they do in new mode
-
-if velocity sensitivity 100%
-	if last note had higher valocity
-		new note might not have transient
+		but maybe they do in new mode?
 
 temposync
-	check if is ms-calculations correct
+	check if ms-calculations correct
 	parameter range
 		denormalisation wrong!
 	valToStr and strToVal functions
 		write
 		test
-
-more noteOn than noteOff values. what happens then?
-	panic button for stuck notes?
-
-test playhead jumps in different daws?
 
 what happens with lookahead?
 

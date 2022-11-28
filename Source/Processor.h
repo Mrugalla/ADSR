@@ -33,13 +33,13 @@ namespace audio
 
         ProcessorBackEnd();
 
-        const juce::String getName() const override;
+        const String getName() const override;
         double getTailLengthSeconds() const override;
         int getNumPrograms() override;
         int getCurrentProgram() override;
         void setCurrentProgram(int) override;
-        const juce::String getProgramName(int) override;
-        void changeProgramName(int, const juce::String&) override;
+        const String getProgramName(int) override;
+        void changeProgramName(int, const String&) override;
         bool isBusesLayoutSupported(const BusesLayout&) const override;
         AppProps* getProps() noexcept;
         bool canAddBus(bool) const override;
@@ -97,6 +97,8 @@ namespace audio
         void prepareToPlay(double, int) override;
 
         void processBlock(AudioBuffer&, juce::MidiBuffer&) override;
+
+        void processBlockBypassed(AudioBuffer&, juce::MidiBuffer&) override;
         
         /* samples, numChannels, numSamples, midi, samplesSC, numChannelsSC */
         void processBlockPreUpscaled(float**, int numChannels, int numSamples, juce::MidiBuffer& midi) noexcept;

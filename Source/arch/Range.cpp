@@ -137,7 +137,7 @@ namespace makeRange
 	{
 		const auto minF = static_cast<float>(min);
 		const auto maxF = static_cast<float>(max);
-		const auto range = maxF - minF + 1.f;
+		auto range = maxF - minF + 1.f;
 
 		auto numValues = 3 * (max - min) + 1;
 		if (withZero)
@@ -176,13 +176,18 @@ namespace makeRange
 				if (withZero && denormalized == 0.f)
 					return 0.f;
 				
-				const auto base = std::log2(denormalized); // [minF, maxF]
-				const auto val = base;
+				const auto denormFloor = audio::nextLowestPowTwoX(denormalized);
+				const auto denormFrac = denormalized - denormFloor;
+				const auto modeVal = denormFrac / denormFloor;
+				const auto mode = modeVal < .66f ? Mode::Whole :
+					modeVal < .75f ? Mode::Triplet :
+					Mode::Dotted;
+				
+				const auto base = std::log2(denormFloor); // [minF, maxF]
+				const auto val = base + modeVal;
 				auto norm = (val - minF) * rangeInv; // [0, 1]
-				
-				DBG(base);
-				
-				return norm > 1.f ? 1.f : norm;
+
+				return norm;
 			},
 			[](float start, float end, float denormalized)
 			{
