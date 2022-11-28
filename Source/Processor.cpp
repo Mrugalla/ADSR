@@ -62,6 +62,13 @@ namespace audio
             props.setStorageParameters(options);
         }
 
+        {
+            playHeadPos.bpm = 120.;
+            playHeadPos.ppqPosition = 0.;
+            playHeadPos.isPlaying = false;
+            playHeadPos.timeInSamples = 0;
+        }
+
         startTimerHz(6);
     }
 

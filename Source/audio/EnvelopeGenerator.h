@@ -302,29 +302,54 @@ namespace audio
 			bool _legato, bool _inverse, float _velo, bool _tempoSync,
 			float _atkBeats, float _dcyBeats, float _rlsBeats, const PlayHeadPos& playHead) noexcept
 		{
-			if (_tempoSync)
+			if (_tempoSync && playHead.bpm != 0.)
 			{
-				const auto bpm = static_cast<float>(playHead.bpm);
-				const auto bps = bpm * .0166666667f;
+				const auto beatsPerMinute = static_cast<float>(playHead.bpm);
+				const auto beatsPerSec = beatsPerMinute * .0166666667f;
+				const auto samplesPerBeat = Fs / beatsPerSec;
+				
+				if (_atkBeats == 0.f)
+					envGen.atkP(1.1f, numSamples);
+				else
+				{
+					_atk = _atkBeats * samplesPerBeat;
+					envGen.atkP(1.f / _atk, numSamples);
+				}
 
-				_atk = _atkBeats * bps * 1000.f;
-				_dcy = _dcyBeats * bps * 1000.f;
-				_rls = _rlsBeats * bps * 1000.f;
+				if (_dcyBeats == 0.f)
+					envGen.dcyP(1.1f, numSamples);
+				else
+				{
+					_dcy = _dcyBeats * samplesPerBeat;
+					envGen.dcyP(1.f / _dcy, numSamples);
+				}
+
+				if (_rlsBeats == 0.f)
+					envGen.rlsP(1.1f, numSamples);
+				else
+				{
+					_rls = _rlsBeats * samplesPerBeat;
+					envGen.rlsP(1.f / _rls, numSamples);
+				}
+			}
+			else
+			{
+				if (_atk == 0.f)
+					envGen.atkP(1.1f, numSamples);
+				else
+					envGen.atkP(msInInc(_atk, Fs), numSamples);
+				if (_dcy == 0.f)
+					envGen.dcyP(1.1f, numSamples);
+				else
+					envGen.dcyP(msInInc(_dcy, Fs), numSamples);
+				if (_rls == 0.f)
+					envGen.rlsP(1.1f, numSamples);
+				else
+					envGen.rlsP(msInInc(_rls, Fs), numSamples);
 			}
 
-			if (_atk == 0.f)
-				envGen.atkP(1.1f, numSamples);
-			else
-				envGen.atkP(msInInc(_atk, Fs), numSamples);
-			if (_dcy == 0.f)
-				envGen.dcyP(1.1f, numSamples);
-			else
-				envGen.dcyP(msInInc(_dcy, Fs), numSamples);
 			envGen.susP(_sus, numSamples);
-			if (_rls == 0.f)
-				envGen.rlsP(1.1f, numSamples);
-			else
-				envGen.rlsP(msInInc(_rls, Fs), numSamples);
+
 			envGen.atkShapeP(std::tanh(Pi * _atkShape) * .5f + .5f, numSamples);
 			envGen.dcyShapeP(-std::tanh(Pi * _dcyShape) * .5f + .5f, numSamples);
 			envGen.rlsShapeP(-std::tanh(Pi * _rlsShape) * .5f + .5f, numSamples);
@@ -411,7 +436,6 @@ legato
 		but maybe they do in new mode?
 
 temposync
-	check if ms-calculations correct
 	parameter range
 		denormalisation wrong!
 	valToStr and strToVal functions
