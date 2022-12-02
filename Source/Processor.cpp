@@ -469,8 +469,6 @@ namespace audio
     void Processor::processBlockPreUpscaled(float** samples, int numChannels, int numSamples,
         MIDIBuffer& midi) noexcept
     {
-        params[PID::EnvGenDecayBeats]->range.convertTo0to1(params[PID::EnvGenDecayBeats]->getValModDenorm());
-
         envGenMIDI
         (
             midi,

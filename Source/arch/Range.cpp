@@ -133,61 +133,62 @@ namespace makeRange
 		};
 	}
 
-	Range beats(int min, int max, bool withZero) noexcept
+	Range beats(float minDenominator, float maxDenominator, bool withZero)
 	{
-		const auto minF = static_cast<float>(min);
-		const auto maxF = static_cast<float>(max);
-		auto range = maxF - minF + 1.f;
-
-		auto numValues = 3 * (max - min) + 1;
-		if (withZero)
-			++numValues;
-		const auto numValuesF = static_cast<float>(numValues);
-
-		const auto minVal = withZero ? 0.f : std::pow(2.f, minF);
-		const auto maxVal = std::pow(2.f, maxF);
+		std::vector<float> table;
 		
-		enum Mode { Whole, Triplet, Dotted, NumModes };
+		const auto minV = std::log2(minDenominator);
+		const auto maxV = std::log2(maxDenominator);
+		
+		const auto numWholeBeatsF = static_cast<float>(minV - maxV);
+		const auto numWholeBeatsInv = 1.f / numWholeBeatsF;
+		
+		const auto numWholeBeats = static_cast<int>(numWholeBeatsF);
+		const auto numValues = numWholeBeats * 3 + 1 + (withZero ? 1 : 0);
+		table.reserve(numValues);
+		if(withZero)
+			table.emplace_back(0.f);
+		
+		for (auto i = 0; i < numWholeBeats; ++i)
+		{
+			const auto iF = static_cast<float>(i);
+			const auto x = iF * numWholeBeatsInv;
+
+			const auto curV = minV - x * numWholeBeatsF;
+			const auto baseVal = std::pow(2.f, curV);
+			
+			const auto valWhole = 1.f / baseVal;
+			const auto valTriplet = valWhole * 1.666666666667f;
+			const auto valDotted = valWhole * 1.75f;
+			
+			table.emplace_back(valWhole);
+			table.emplace_back(valTriplet);
+			table.emplace_back(valDotted);
+		}
+		table.emplace_back(1.f / maxDenominator);
+
+		static constexpr float Eps = 1.f - std::numeric_limits<float>::epsilon();
+		static constexpr float EpsInv = 1.f / Eps;
+		
+		const auto numValuesF = static_cast<float>(numValues);
+		const auto numValuesInv = 1.f / numValuesF;
+		const auto numValsX = numValuesInv * EpsInv;
+		const auto normValsY = numValuesF * Eps;
 
 		return
 		{
-			minVal, maxVal,
-			[minF, maxF, numValuesF, withZero](float, float, float normalized)
+			table.front(), table.back(),
+			[table, normValsY](float, float, float normalized)
 			{
-				if(withZero && normalized == 0.f)
-					return 0.f;
-
-				const auto idxF = normalized * numValuesF; // [0, numValuesF]
-				const auto idxI = static_cast<int>(idxF); // [0, numValues]
-				
-				const auto mode = idxI % 3; // [ 0 = Whole, 1 = Triplet, 2 = Dotted ]
-				const auto mult =
-					mode == Mode::Triplet ? 1.666666666667f :
-					mode == Mode::Dotted ? 1.75f :
-					1.f;
-
-				const auto baseVal = std::floor(idxF * .333333333f) + minF; // [min, max]
-				const auto val = std::pow(2.f, baseVal) * mult; // [minVal, maxVal]
-				
-				return val;
+				const auto valueIdx = normalized * normValsY;
+				return table[static_cast<int>(valueIdx)];
 			},
-			[minF, rangeInv = 1.f / range, withZero](float start, float end, float denormalized)
+			[table, numValsX](float, float, float denormalized)
 			{
-				if (withZero && denormalized == 0.f)
-					return 0.f;
-				
-				const auto denormFloor = audio::nextLowestPowTwoX(denormalized);
-				const auto denormFrac = denormalized - denormFloor;
-				const auto modeVal = denormFrac / denormFloor;
-				const auto mode = modeVal < .66f ? Mode::Whole :
-					modeVal < .75f ? Mode::Triplet :
-					Mode::Dotted;
-				
-				const auto base = std::log2(denormFloor); // [minF, maxF]
-				const auto val = base + modeVal;
-				auto norm = (val - minF) * rangeInv; // [0, 1]
-
-				return norm;
+				for (auto i = 0; i < table.size(); ++i)
+					if (denormalized <= table[i])
+						return static_cast<float>(i) * numValsX;
+				return 0.f;
 			},
 			[](float start, float end, float denormalized)
 			{

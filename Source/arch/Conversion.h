@@ -275,7 +275,7 @@ namespace audio
         return -1.f;
     }
 
-    inline float nextLowestPowTwoX(float x)
+    inline float nextLowestPowTwoX(float x) noexcept
     {
         return std::pow(2.f, std::floor(std::log2(x)));
     }

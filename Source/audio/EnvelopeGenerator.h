@@ -436,11 +436,7 @@ legato
 		but maybe they do in new mode?
 
 temposync
-	parameter range
-		denormalisation wrong!
-	valToStr and strToVal functions
-		write
-		test
+	improve valToStr and strToVal functions
 
 what happens with lookahead?
 

@@ -26,14 +26,9 @@ namespace makeRange
 	/* min, max, numSteps ]1, N] */
 	Range quad(float, float, int) noexcept;
 	
-	/* start, end, withZero
-	-4 = 1/16 beats
-	-3 = 1/8 beats
-	-2 = 1/4 beats
-	-1 = 1/2 beats
-	0 = 1 beats
-	1 = 2 beats
+	/* minDenominator, maxDenominator, withZero
+	for example { 16, .5, true }
+	starts at 0, then 1/16 and ends at 2/1
 	*/
-	Range beats(int, int, bool = false) noexcept;
-
+	Range beats(float, float, bool = false);
 }

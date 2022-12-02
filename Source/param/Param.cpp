@@ -1039,9 +1039,32 @@ namespace param::valToStr
 
 	ValToStrFunc beats()
 	{
+		enum Mode { Whole, Triplet, Dotted, NumModes };
+
 		return [](float v)
 		{
-			return String(v) + " " + toString(Unit::Beats);
+			if (v == 0.f)
+				return String("0");
+			
+			const auto denormFloor = audio::nextLowestPowTwoX(v);
+			const auto denormFrac = v - denormFloor;
+			const auto modeVal = denormFrac / denormFloor;
+			const auto mode = modeVal < .66f ? Mode::Whole :
+				modeVal < .75f ? Mode::Triplet :
+				Mode::Dotted;
+			String modeStr = mode == Mode::Whole ? String("") :
+				mode == Mode::Triplet ? String("t") :
+				String(".");
+
+			auto denominator = 1.f / denormFloor;
+			auto numerator = 1.f;
+			if (denominator < 1.f)
+			{
+				numerator = denormFloor;
+				denominator = 1.f;
+			}
+			
+			return String(numerator) + " / " + String(denominator) + modeStr;
 		};
 	}
 }
@@ -1230,9 +1253,9 @@ namespace param
 		params.push_back(makeParam(PID::EnvGenInverse, state, 0.f, makeRange::toggle(), Unit::Power));
 		params.push_back(makeParam(PID::EnvGenVelocity, state, 0.f));
 		params.push_back(makeParam(PID::EnvGenTempoSync, state, 0.f, makeRange::toggle(), Unit::Power));
-		params.push_back(makeParam(PID::EnvGenAttackBeats, state, 1.f / 16.f, makeRange::beats(-4, 1, true), Unit::Beats));
-		params.push_back(makeParam(PID::EnvGenDecayBeats, state, 1.f / 16.f, makeRange::beats(-4, 1, true), Unit::Beats));
-		params.push_back(makeParam(PID::EnvGenReleaseBeats, state, 1.f / 16.f, makeRange::beats(-4, 1, true), Unit::Beats));
+		params.push_back(makeParam(PID::EnvGenAttackBeats, state, 1.f / 16.f, makeRange::beats(64.f, .5f, true), Unit::Beats));
+		params.push_back(makeParam(PID::EnvGenDecayBeats, state, 1.f / 16.f, makeRange::beats(64.f, .5f, true), Unit::Beats));
+		params.push_back(makeParam(PID::EnvGenReleaseBeats, state, 1.f / 16.f, makeRange::beats(64.f, .5f, true), Unit::Beats));
 		// LOW LEVEL PARAMS END
 
 		for (auto param : params)
