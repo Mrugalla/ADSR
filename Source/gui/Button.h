@@ -102,6 +102,7 @@ namespace gui
 		Img,
 		Legato,
 		TempoSync,
+		InvertADSR,
 		NumSymbols
 	};
 

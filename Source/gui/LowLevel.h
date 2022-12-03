@@ -63,7 +63,7 @@ namespace gui
             makeParameter(legato, PID::EnvGenLegato, ButtonSymbol::Legato);
             addAndMakeVisible(legato);
 
-            makeParameter(inverse, PID::EnvGenInverse, "Inverse", true);
+            makeParameter(inverse, PID::EnvGenInverse, ButtonSymbol::InvertADSR);
             addAndMakeVisible(inverse);
 
 			makeParameter(tempoSync, PID::EnvGenTempoSync, ButtonSymbol::TempoSync);

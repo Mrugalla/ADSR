@@ -967,6 +967,45 @@ namespace gui
 				arc.cubicTo(arcX0, arcY0, arcX1, arcY1, arcX2, arcY2);
 				g.strokePath(arc, stroke);
 			}
+			else if (symbol == ButtonSymbol::InvertADSR)
+			{
+				const auto thicc3 = thicc * 3.f;
+				bounds = maxQuadIn(bounds).reduced(thicc3);
+				Stroke stroke(thicc, Stroke::JointStyle::beveled, Stroke::EndCapStyle::butt);
+
+				const auto x = bounds.getX();
+				const auto y = bounds.getY();
+				const auto w = bounds.getWidth();
+				
+				const auto btm = y + w * .5f;
+				const auto right = x + w;
+				Path adsrCurve;
+				
+				auto inverted = static_cast<float>(button.toggleState);
+				
+				const auto x1 = x + w * .2f;
+				const auto x2 = x + w * .7f;
+				
+				const auto ySus = y + w * .25f;
+
+				const auto y1 = btm + inverted * (y - btm);
+				const auto y2 = y + inverted * (btm - y);
+				
+				const auto xControl1 = x + w * .1f;
+				const auto yControl1 = ySus + w * (inverted * .3f - .15f);
+
+				const auto xControl2 = x + w * .5f;
+				const auto yControl2 = ySus;
+
+				const auto xControl3 = x + w * .9f;
+				const auto yControl3 = ySus;
+
+				adsrCurve.startNewSubPath(x, y1);
+				adsrCurve.quadraticTo({ xControl1, yControl1 }, { x1, y2 });
+				adsrCurve.quadraticTo({ xControl2, yControl2 }, { x2, ySus });
+				adsrCurve.quadraticTo({ xControl3, yControl3 }, { right, y1 });
+				g.strokePath(adsrCurve, stroke);
+			}
 		});
 
 		b.toggleNext = withToggle || symbol == ButtonSymbol::StereoConfig ? 1 : 0;

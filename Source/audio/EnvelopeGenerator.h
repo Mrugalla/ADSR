@@ -435,13 +435,11 @@ legato
 	consecutive noteOns don't update velocity normally
 		but maybe they do in new mode?
 
-temposync
-	improve valToStr and strToVal functions
-
-what happens with lookahead?
-
 legato modulatable?
 
-make symbol for inverse
+modes
+	direct out
+	amplitude mod
+	filter mod
 
 */
