@@ -36,7 +36,7 @@ CLAP_HELPERS_BINARY_DIR:STATIC=F:/PluginDevelopment/ADSR/build-clap/clap_juce_cl
 CLAP_HELPERS_IS_TOP_LEVEL:STATIC=OFF
 
 //Value Computed by CMake
-CLAP_HELPERS_SOURCE_DIR:STATIC=F:/PluginDevelopment/ADSR/clap-juce-extensions-main/clap-libs/clap-helpers
+CLAP_HELPERS_SOURCE_DIR:STATIC=F:/PluginDevelopment/clap-juce-extensions-main/clap-libs/clap-helpers
 
 //Value Computed by CMake
 CLAP_IS_TOP_LEVEL:STATIC=OFF
@@ -45,7 +45,7 @@ CLAP_IS_TOP_LEVEL:STATIC=OFF
 CLAP_JUCE_EXTENSIONS_BUILD_EXAMPLES:BOOL=OFF
 
 //Value Computed by CMake
-CLAP_SOURCE_DIR:STATIC=F:/PluginDevelopment/ADSR/clap-juce-extensions-main/clap-libs/clap
+CLAP_SOURCE_DIR:STATIC=F:/PluginDevelopment/clap-juce-extensions-main/clap-libs/clap
 
 //Path to a program.
 CMAKE_AR:FILEPATH=D:/Pogramme/Visual Studio/VC/Tools/MSVC/14.33.31629/bin/Hostx64/x64/lib.exe
@@ -333,7 +333,7 @@ clap-juce-extensions_BINARY_DIR:STATIC=F:/PluginDevelopment/ADSR/build-clap/clap
 clap-juce-extensions_IS_TOP_LEVEL:STATIC=OFF
 
 //Value Computed by CMake
-clap-juce-extensions_SOURCE_DIR:STATIC=F:/PluginDevelopment/ADSR/clap-juce-extensions-main
+clap-juce-extensions_SOURCE_DIR:STATIC=F:/PluginDevelopment/clap-juce-extensions-main
 
 
 ########################

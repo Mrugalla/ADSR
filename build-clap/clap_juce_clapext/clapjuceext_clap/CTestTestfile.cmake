@@ -1,5 +1,5 @@
 # CMake generated Testfile for 
-# Source directory: F:/PluginDevelopment/ADSR/clap-juce-extensions-main/clap-libs/clap
+# Source directory: F:/PluginDevelopment/clap-juce-extensions-main/clap-libs/clap
 # Build directory: F:/PluginDevelopment/ADSR/build-clap/clap_juce_clapext/clapjuceext_clap
 # 
 # This file includes the relevant testing commands required for 

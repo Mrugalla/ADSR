@@ -1,4 +1,4 @@
-# Install script for directory: F:/PluginDevelopment/ADSR/clap-juce-extensions-main/clap-libs/clap
+# Install script for directory: F:/PluginDevelopment/clap-juce-extensions-main/clap-libs/clap
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -33,7 +33,7 @@ if(NOT DEFINED CMAKE_CROSSCOMPILING)
 endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/include" TYPE DIRECTORY FILES "F:/PluginDevelopment/ADSR/clap-juce-extensions-main/clap-libs/clap/include/clap")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/include" TYPE DIRECTORY FILES "F:/PluginDevelopment/clap-juce-extensions-main/clap-libs/clap/include/clap")
 endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)

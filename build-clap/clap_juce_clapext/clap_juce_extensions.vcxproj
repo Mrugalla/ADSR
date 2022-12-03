@@ -78,7 +78,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>F:\PluginDevelopment\ADSR\clap-juce-extensions-main\include;F:\PluginDevelopment\ADSR\clap-juce-extensions-main\clap-libs\clap\include;F:\PluginDevelopment\ADSR\clap-juce-extensions-main\clap-libs\clap-helpers\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>F:\PluginDevelopment\clap-juce-extensions-main\include;F:\PluginDevelopment\clap-juce-extensions-main\clap-libs\clap\include;F:\PluginDevelopment\clap-juce-extensions-main\clap-libs\clap-helpers\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
@@ -95,10 +95,10 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_DEBUG;_WINDOWS;HAS_CLAP_JUCE_EXTENSIONS=1;CMAKE_INTDIR=\"Debug\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>F:\PluginDevelopment\ADSR\clap-juce-extensions-main\include;F:\PluginDevelopment\ADSR\clap-juce-extensions-main\clap-libs\clap\include;F:\PluginDevelopment\ADSR\clap-juce-extensions-main\clap-libs\clap-helpers\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>F:\PluginDevelopment\clap-juce-extensions-main\include;F:\PluginDevelopment\clap-juce-extensions-main\clap-libs\clap\include;F:\PluginDevelopment\clap-juce-extensions-main\clap-libs\clap-helpers\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>F:\PluginDevelopment\ADSR\clap-juce-extensions-main\include;F:\PluginDevelopment\ADSR\clap-juce-extensions-main\clap-libs\clap\include;F:\PluginDevelopment\ADSR\clap-juce-extensions-main\clap-libs\clap-helpers\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>F:\PluginDevelopment\clap-juce-extensions-main\include;F:\PluginDevelopment\clap-juce-extensions-main\clap-libs\clap\include;F:\PluginDevelopment\clap-juce-extensions-main\clap-libs\clap-helpers\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -111,7 +111,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>F:\PluginDevelopment\ADSR\clap-juce-extensions-main\include;F:\PluginDevelopment\ADSR\clap-juce-extensions-main\clap-libs\clap\include;F:\PluginDevelopment\ADSR\clap-juce-extensions-main\clap-libs\clap-helpers\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>F:\PluginDevelopment\clap-juce-extensions-main\include;F:\PluginDevelopment\clap-juce-extensions-main\clap-libs\clap\include;F:\PluginDevelopment\clap-juce-extensions-main\clap-libs\clap-helpers\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <ExceptionHandling>Sync</ExceptionHandling>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
@@ -128,10 +128,10 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;HAS_CLAP_JUCE_EXTENSIONS=1;CMAKE_INTDIR=\"Release\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>F:\PluginDevelopment\ADSR\clap-juce-extensions-main\include;F:\PluginDevelopment\ADSR\clap-juce-extensions-main\clap-libs\clap\include;F:\PluginDevelopment\ADSR\clap-juce-extensions-main\clap-libs\clap-helpers\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>F:\PluginDevelopment\clap-juce-extensions-main\include;F:\PluginDevelopment\clap-juce-extensions-main\clap-libs\clap\include;F:\PluginDevelopment\clap-juce-extensions-main\clap-libs\clap-helpers\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>F:\PluginDevelopment\ADSR\clap-juce-extensions-main\include;F:\PluginDevelopment\ADSR\clap-juce-extensions-main\clap-libs\clap\include;F:\PluginDevelopment\ADSR\clap-juce-extensions-main\clap-libs\clap-helpers\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>F:\PluginDevelopment\clap-juce-extensions-main\include;F:\PluginDevelopment\clap-juce-extensions-main\clap-libs\clap\include;F:\PluginDevelopment\clap-juce-extensions-main\clap-libs\clap-helpers\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -144,7 +144,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>F:\PluginDevelopment\ADSR\clap-juce-extensions-main\include;F:\PluginDevelopment\ADSR\clap-juce-extensions-main\clap-libs\clap\include;F:\PluginDevelopment\ADSR\clap-juce-extensions-main\clap-libs\clap-helpers\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>F:\PluginDevelopment\clap-juce-extensions-main\include;F:\PluginDevelopment\clap-juce-extensions-main\clap-libs\clap\include;F:\PluginDevelopment\clap-juce-extensions-main\clap-libs\clap-helpers\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <ExceptionHandling>Sync</ExceptionHandling>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
@@ -161,10 +161,10 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;HAS_CLAP_JUCE_EXTENSIONS=1;CMAKE_INTDIR=\"MinSizeRel\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>F:\PluginDevelopment\ADSR\clap-juce-extensions-main\include;F:\PluginDevelopment\ADSR\clap-juce-extensions-main\clap-libs\clap\include;F:\PluginDevelopment\ADSR\clap-juce-extensions-main\clap-libs\clap-helpers\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>F:\PluginDevelopment\clap-juce-extensions-main\include;F:\PluginDevelopment\clap-juce-extensions-main\clap-libs\clap\include;F:\PluginDevelopment\clap-juce-extensions-main\clap-libs\clap-helpers\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>F:\PluginDevelopment\ADSR\clap-juce-extensions-main\include;F:\PluginDevelopment\ADSR\clap-juce-extensions-main\clap-libs\clap\include;F:\PluginDevelopment\ADSR\clap-juce-extensions-main\clap-libs\clap-helpers\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>F:\PluginDevelopment\clap-juce-extensions-main\include;F:\PluginDevelopment\clap-juce-extensions-main\clap-libs\clap\include;F:\PluginDevelopment\clap-juce-extensions-main\clap-libs\clap-helpers\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -177,7 +177,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>F:\PluginDevelopment\ADSR\clap-juce-extensions-main\include;F:\PluginDevelopment\ADSR\clap-juce-extensions-main\clap-libs\clap\include;F:\PluginDevelopment\ADSR\clap-juce-extensions-main\clap-libs\clap-helpers\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>F:\PluginDevelopment\clap-juce-extensions-main\include;F:\PluginDevelopment\clap-juce-extensions-main\clap-libs\clap\include;F:\PluginDevelopment\clap-juce-extensions-main\clap-libs\clap-helpers\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <ExceptionHandling>Sync</ExceptionHandling>
@@ -193,10 +193,10 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;HAS_CLAP_JUCE_EXTENSIONS=1;CMAKE_INTDIR=\"RelWithDebInfo\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>F:\PluginDevelopment\ADSR\clap-juce-extensions-main\include;F:\PluginDevelopment\ADSR\clap-juce-extensions-main\clap-libs\clap\include;F:\PluginDevelopment\ADSR\clap-juce-extensions-main\clap-libs\clap-helpers\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>F:\PluginDevelopment\clap-juce-extensions-main\include;F:\PluginDevelopment\clap-juce-extensions-main\clap-libs\clap\include;F:\PluginDevelopment\clap-juce-extensions-main\clap-libs\clap-helpers\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>F:\PluginDevelopment\ADSR\clap-juce-extensions-main\include;F:\PluginDevelopment\ADSR\clap-juce-extensions-main\clap-libs\clap\include;F:\PluginDevelopment\ADSR\clap-juce-extensions-main\clap-libs\clap-helpers\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>F:\PluginDevelopment\clap-juce-extensions-main\include;F:\PluginDevelopment\clap-juce-extensions-main\clap-libs\clap\include;F:\PluginDevelopment\clap-juce-extensions-main\clap-libs\clap-helpers\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -208,9 +208,9 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <CustomBuild Include="F:\PluginDevelopment\ADSR\clap-juce-extensions-main\CMakeLists.txt">
+    <CustomBuild Include="F:\PluginDevelopment\clap-juce-extensions-main\CMakeLists.txt">
       <UseUtf8Encoding>Always</UseUtf8Encoding>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule F:/PluginDevelopment/ADSR/clap-juce-extensions-main/CMakeLists.txt</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule F:/PluginDevelopment/clap-juce-extensions-main/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
 D:\Pogramme\cmake\bin\cmake.exe -SF:/PluginDevelopment/ADSR -BF:/PluginDevelopment/ADSR/build-clap --check-stamp-file F:/PluginDevelopment/ADSR/build-clap/clap_juce_clapext/CMakeFiles/generate.stamp
 if %errorlevel% neq 0 goto :cmEnd
@@ -220,10 +220,10 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">F:\PluginDevelopment\ADSR\build-clap\CMakeFiles\cmake.verify_globs;F:\PluginDevelopment\ADSR\clap-juce-extensions-main\cmake\ClapTargetHelpers.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">F:\PluginDevelopment\ADSR\build-clap\CMakeFiles\cmake.verify_globs;F:\PluginDevelopment\clap-juce-extensions-main\cmake\ClapTargetHelpers.cmake;%(AdditionalInputs)</AdditionalInputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">F:\PluginDevelopment\ADSR\build-clap\clap_juce_clapext\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule F:/PluginDevelopment/ADSR/clap-juce-extensions-main/CMakeLists.txt</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule F:/PluginDevelopment/clap-juce-extensions-main/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
 D:\Pogramme\cmake\bin\cmake.exe -SF:/PluginDevelopment/ADSR -BF:/PluginDevelopment/ADSR/build-clap --check-stamp-file F:/PluginDevelopment/ADSR/build-clap/clap_juce_clapext/CMakeFiles/generate.stamp
 if %errorlevel% neq 0 goto :cmEnd
@@ -233,10 +233,10 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">F:\PluginDevelopment\ADSR\build-clap\CMakeFiles\cmake.verify_globs;F:\PluginDevelopment\ADSR\clap-juce-extensions-main\cmake\ClapTargetHelpers.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">F:\PluginDevelopment\ADSR\build-clap\CMakeFiles\cmake.verify_globs;F:\PluginDevelopment\clap-juce-extensions-main\cmake\ClapTargetHelpers.cmake;%(AdditionalInputs)</AdditionalInputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">F:\PluginDevelopment\ADSR\build-clap\clap_juce_clapext\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
-      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Building Custom Rule F:/PluginDevelopment/ADSR/clap-juce-extensions-main/CMakeLists.txt</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Building Custom Rule F:/PluginDevelopment/clap-juce-extensions-main/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
 D:\Pogramme\cmake\bin\cmake.exe -SF:/PluginDevelopment/ADSR -BF:/PluginDevelopment/ADSR/build-clap --check-stamp-file F:/PluginDevelopment/ADSR/build-clap/clap_juce_clapext/CMakeFiles/generate.stamp
 if %errorlevel% neq 0 goto :cmEnd
@@ -246,10 +246,10 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">F:\PluginDevelopment\ADSR\build-clap\CMakeFiles\cmake.verify_globs;F:\PluginDevelopment\ADSR\clap-juce-extensions-main\cmake\ClapTargetHelpers.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">F:\PluginDevelopment\ADSR\build-clap\CMakeFiles\cmake.verify_globs;F:\PluginDevelopment\clap-juce-extensions-main\cmake\ClapTargetHelpers.cmake;%(AdditionalInputs)</AdditionalInputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">F:\PluginDevelopment\ADSR\build-clap\clap_juce_clapext\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
-      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Building Custom Rule F:/PluginDevelopment/ADSR/clap-juce-extensions-main/CMakeLists.txt</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Building Custom Rule F:/PluginDevelopment/clap-juce-extensions-main/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
 D:\Pogramme\cmake\bin\cmake.exe -SF:/PluginDevelopment/ADSR -BF:/PluginDevelopment/ADSR/build-clap --check-stamp-file F:/PluginDevelopment/ADSR/build-clap/clap_juce_clapext/CMakeFiles/generate.stamp
 if %errorlevel% neq 0 goto :cmEnd
@@ -259,13 +259,13 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">F:\PluginDevelopment\ADSR\build-clap\CMakeFiles\cmake.verify_globs;F:\PluginDevelopment\ADSR\clap-juce-extensions-main\cmake\ClapTargetHelpers.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">F:\PluginDevelopment\ADSR\build-clap\CMakeFiles\cmake.verify_globs;F:\PluginDevelopment\clap-juce-extensions-main\cmake\ClapTargetHelpers.cmake;%(AdditionalInputs)</AdditionalInputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">F:\PluginDevelopment\ADSR\build-clap\clap_juce_clapext\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="F:\PluginDevelopment\ADSR\clap-juce-extensions-main\src\extensions\clap-juce-extensions.cpp" />
+    <ClCompile Include="F:\PluginDevelopment\clap-juce-extensions-main\src\extensions\clap-juce-extensions.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="F:\PluginDevelopment\ADSR\build-clap\ZERO_CHECK.vcxproj">

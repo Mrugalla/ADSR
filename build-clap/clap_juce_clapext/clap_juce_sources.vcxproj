@@ -69,9 +69,9 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'" />
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'" />
   <ItemGroup>
-    <CustomBuild Include="F:\PluginDevelopment\ADSR\clap-juce-extensions-main\CMakeLists.txt">
+    <CustomBuild Include="F:\PluginDevelopment\clap-juce-extensions-main\CMakeLists.txt">
       <UseUtf8Encoding>Always</UseUtf8Encoding>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule F:/PluginDevelopment/ADSR/clap-juce-extensions-main/CMakeLists.txt</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule F:/PluginDevelopment/clap-juce-extensions-main/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
 D:\Pogramme\cmake\bin\cmake.exe -SF:/PluginDevelopment/ADSR -BF:/PluginDevelopment/ADSR/build-clap --check-stamp-file F:/PluginDevelopment/ADSR/build-clap/clap_juce_clapext/CMakeFiles/generate.stamp
 if %errorlevel% neq 0 goto :cmEnd
@@ -81,10 +81,10 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">F:\PluginDevelopment\ADSR\build-clap\CMakeFiles\cmake.verify_globs;F:\PluginDevelopment\ADSR\clap-juce-extensions-main\cmake\ClapTargetHelpers.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">F:\PluginDevelopment\ADSR\build-clap\CMakeFiles\cmake.verify_globs;F:\PluginDevelopment\clap-juce-extensions-main\cmake\ClapTargetHelpers.cmake;%(AdditionalInputs)</AdditionalInputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">F:\PluginDevelopment\ADSR\build-clap\clap_juce_clapext\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule F:/PluginDevelopment/ADSR/clap-juce-extensions-main/CMakeLists.txt</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule F:/PluginDevelopment/clap-juce-extensions-main/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
 D:\Pogramme\cmake\bin\cmake.exe -SF:/PluginDevelopment/ADSR -BF:/PluginDevelopment/ADSR/build-clap --check-stamp-file F:/PluginDevelopment/ADSR/build-clap/clap_juce_clapext/CMakeFiles/generate.stamp
 if %errorlevel% neq 0 goto :cmEnd
@@ -94,10 +94,10 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">F:\PluginDevelopment\ADSR\build-clap\CMakeFiles\cmake.verify_globs;F:\PluginDevelopment\ADSR\clap-juce-extensions-main\cmake\ClapTargetHelpers.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">F:\PluginDevelopment\ADSR\build-clap\CMakeFiles\cmake.verify_globs;F:\PluginDevelopment\clap-juce-extensions-main\cmake\ClapTargetHelpers.cmake;%(AdditionalInputs)</AdditionalInputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">F:\PluginDevelopment\ADSR\build-clap\clap_juce_clapext\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
-      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Building Custom Rule F:/PluginDevelopment/ADSR/clap-juce-extensions-main/CMakeLists.txt</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Building Custom Rule F:/PluginDevelopment/clap-juce-extensions-main/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
 D:\Pogramme\cmake\bin\cmake.exe -SF:/PluginDevelopment/ADSR -BF:/PluginDevelopment/ADSR/build-clap --check-stamp-file F:/PluginDevelopment/ADSR/build-clap/clap_juce_clapext/CMakeFiles/generate.stamp
 if %errorlevel% neq 0 goto :cmEnd
@@ -107,10 +107,10 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">F:\PluginDevelopment\ADSR\build-clap\CMakeFiles\cmake.verify_globs;F:\PluginDevelopment\ADSR\clap-juce-extensions-main\cmake\ClapTargetHelpers.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">F:\PluginDevelopment\ADSR\build-clap\CMakeFiles\cmake.verify_globs;F:\PluginDevelopment\clap-juce-extensions-main\cmake\ClapTargetHelpers.cmake;%(AdditionalInputs)</AdditionalInputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">F:\PluginDevelopment\ADSR\build-clap\clap_juce_clapext\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
-      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Building Custom Rule F:/PluginDevelopment/ADSR/clap-juce-extensions-main/CMakeLists.txt</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Building Custom Rule F:/PluginDevelopment/clap-juce-extensions-main/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
 D:\Pogramme\cmake\bin\cmake.exe -SF:/PluginDevelopment/ADSR -BF:/PluginDevelopment/ADSR/build-clap --check-stamp-file F:/PluginDevelopment/ADSR/build-clap/clap_juce_clapext/CMakeFiles/generate.stamp
 if %errorlevel% neq 0 goto :cmEnd
@@ -120,13 +120,13 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">F:\PluginDevelopment\ADSR\build-clap\CMakeFiles\cmake.verify_globs;F:\PluginDevelopment\ADSR\clap-juce-extensions-main\cmake\ClapTargetHelpers.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">F:\PluginDevelopment\ADSR\build-clap\CMakeFiles\cmake.verify_globs;F:\PluginDevelopment\clap-juce-extensions-main\cmake\ClapTargetHelpers.cmake;%(AdditionalInputs)</AdditionalInputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">F:\PluginDevelopment\ADSR\build-clap\clap_juce_clapext\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <None Include="F:\PluginDevelopment\ADSR\clap-juce-extensions-main\src\wrapper\clap-juce-wrapper.cpp">
+    <None Include="F:\PluginDevelopment\clap-juce-extensions-main\src\wrapper\clap-juce-wrapper.cpp">
     </None>
   </ItemGroup>
   <ItemGroup>

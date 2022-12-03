@@ -1,4 +1,4 @@
-# Install script for directory: F:/PluginDevelopment/ADSR/clap-juce-extensions-main
+# Install script for directory: F:/PluginDevelopment/clap-juce-extensions-main
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

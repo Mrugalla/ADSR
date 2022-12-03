@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="F:\PluginDevelopment\ADSR\clap-juce-extensions-main\src\wrapper\clap-juce-wrapper.cpp">
+    <ClCompile Include="F:\PluginDevelopment\clap-juce-extensions-main\src\wrapper\clap-juce-wrapper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
