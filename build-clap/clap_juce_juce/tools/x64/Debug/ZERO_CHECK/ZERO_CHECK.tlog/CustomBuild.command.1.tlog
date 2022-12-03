@@ -1,0 +1,10 @@
+^F:\PLUGINDEVELOPMENT\ADSR\BUILD-CLAP\CLAP_JUCE_JUCE\TOOLS\CMAKEFILES\8E7E19E33CA1438B200A4110B2F0CE32\GENERATE.STAMP.RULE
+setlocal
+D:\Pogramme\cmake\bin\cmake.exe -SF:/PluginDevelopment/JUCE -BF:/PluginDevelopment/ADSR/build-clap/clap_juce_juce/tools --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file F:/PluginDevelopment/ADSR/build-clap/clap_juce_juce/tools/JUCE.sln
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

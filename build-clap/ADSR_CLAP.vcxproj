@@ -1,0 +1,339 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <PreferredToolArchitecture>x64</PreferredToolArchitecture>
+  </PropertyGroup>
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="MinSizeRel|x64">
+      <Configuration>MinSizeRel</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="RelWithDebInfo|x64">
+      <Configuration>RelWithDebInfo</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{5297CDA7-A2A2-3B2E-B17C-0983CB433D0B}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <WindowsTargetPlatformVersion>10.0.19041.0</WindowsTargetPlatformVersion>
+    <Platform>x64</Platform>
+    <ProjectName>ADSR_CLAP</ProjectName>
+    <VCProjectUpgraderObjectName>NoUpgrade</VCProjectUpgraderObjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">F:\PluginDevelopment\ADSR\build-clap\ADSR_artefacts\Debug\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">ADSR_CLAP.dir\Debug\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">ADSR</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.clap</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</GenerateManifest>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">F:\PluginDevelopment\ADSR\build-clap\ADSR_artefacts\Release\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">ADSR_CLAP.dir\Release\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">ADSR</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.clap</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</GenerateManifest>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">F:\PluginDevelopment\ADSR\build-clap\ADSR_artefacts\MinSizeRel\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">ADSR_CLAP.dir\MinSizeRel\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">ADSR</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">.clap</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">true</GenerateManifest>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">F:\PluginDevelopment\ADSR\build-clap\ADSR_artefacts\RelWithDebInfo\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">ADSR_CLAP.dir\RelWithDebInfo\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">ADSR</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">.clap</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">true</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">true</GenerateManifest>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>F:\PluginDevelopment\JUCE\modules;F:\PluginDevelopment\ADSR\JuceLibraryCode;F:\PluginDevelopment\ADSR\clap-juce-extensions-main\include;F:\PluginDevelopment\ADSR\clap-juce-extensions-main\clap-libs\clap\include;F:\PluginDevelopment\ADSR\clap-juce-extensions-main\clap-libs\clap-helpers\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
+      <LanguageStandard>stdcpp14</LanguageStandard>
+      <Optimization>Disabled</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <UseFullPaths>false</UseFullPaths>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;CLAP_ID="mrugalla.adsr";CLAP_FEATURES="audio-effect";CLAP_MANUAL_URL="https://www.mycompany.com";CLAP_SUPPORT_URL="https://www.mycompany.com";CLAP_MISBEHAVIOUR_HANDLER_LEVEL=Ignore;CLAP_CHECKING_LEVEL=Minimal;CLAP_PROCESS_EVENTS_RESOLUTION_SAMPLES=0;CLAP_ALWAYS_SPLIT_BLOCK=0;CLAP_USE_JUCE_PARAMETER_RANGES=CLAP_USE_JUCE_PARAMETER_RANGES_OFF;JUCE_GLOBAL_MODULE_SETTINGS_INCLUDED=1;JucePlugin_Name="ADSR";JucePlugin_Manufacturer="Mrugalla";JucePlugin_ManufacturerWebsite="";JucePlugin_VersionString="1.0.0";JucePlugin_Desc="";NDEBUG=1;_NDEBUG=1;JucePlugin_IsSynth=0;JucePlugin_ProducesMidiOutput=0;JucePlugin_WantsMidiInput=0;JucePlugin_ManufacturerCode=Mrug;JucePlugin_PluginCode=ID12;JucePlugin_EditorRequiresKeyboardFocus=0;HAS_CLAP_JUCE_EXTENSIONS=1;CMAKE_INTDIR="Debug";ADSR_CLAP_EXPORTS</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_DEBUG;_WINDOWS;CLAP_ID=\"mrugalla.adsr\";CLAP_FEATURES=\"audio-effect\";CLAP_MANUAL_URL=\"https://www.mycompany.com\";CLAP_SUPPORT_URL=\"https://www.mycompany.com\";CLAP_MISBEHAVIOUR_HANDLER_LEVEL=Ignore;CLAP_CHECKING_LEVEL=Minimal;CLAP_PROCESS_EVENTS_RESOLUTION_SAMPLES=0;CLAP_ALWAYS_SPLIT_BLOCK=0;CLAP_USE_JUCE_PARAMETER_RANGES=CLAP_USE_JUCE_PARAMETER_RANGES_OFF;JUCE_GLOBAL_MODULE_SETTINGS_INCLUDED=1;JucePlugin_Name=\"ADSR\";JucePlugin_Manufacturer=\"Mrugalla\";JucePlugin_ManufacturerWebsite=\"\";JucePlugin_VersionString=\"1.0.0\";JucePlugin_Desc=\"\";NDEBUG=1;_NDEBUG=1;JucePlugin_IsSynth=0;JucePlugin_ProducesMidiOutput=0;JucePlugin_WantsMidiInput=0;JucePlugin_ManufacturerCode=Mrug;JucePlugin_PluginCode=ID12;JucePlugin_EditorRequiresKeyboardFocus=0;HAS_CLAP_JUCE_EXTENSIONS=1;CMAKE_INTDIR=\"Debug\";ADSR_CLAP_EXPORTS</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>F:\PluginDevelopment\JUCE\modules;F:\PluginDevelopment\ADSR\JuceLibraryCode;F:\PluginDevelopment\ADSR\clap-juce-extensions-main\include;F:\PluginDevelopment\ADSR\clap-juce-extensions-main\clap-libs\clap\include;F:\PluginDevelopment\ADSR\clap-juce-extensions-main\clap-libs\clap-helpers\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>F:\PluginDevelopment\JUCE\modules;F:\PluginDevelopment\ADSR\JuceLibraryCode;F:\PluginDevelopment\ADSR\clap-juce-extensions-main\include;F:\PluginDevelopment\ADSR\clap-juce-extensions-main\clap-libs\clap\include;F:\PluginDevelopment\ADSR\clap-juce-extensions-main\clap-libs\clap-helpers\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalDependencies>clap_juce_clapext\Debug\clap_juce_extensions.lib;PLUGIN_LIBRARY_PATH-NOTFOUND.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>F:/PluginDevelopment/ADSR/build-clap/ADSR_artefacts/Debug/ADSR.lib</ImportLibrary>
+      <ProgramDataBaseFile>F:/PluginDevelopment/ADSR/build-clap/ADSR_artefacts/Debug/ADSR.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>F:\PluginDevelopment\JUCE\modules;F:\PluginDevelopment\ADSR\JuceLibraryCode;F:\PluginDevelopment\ADSR\clap-juce-extensions-main\include;F:\PluginDevelopment\ADSR\clap-juce-extensions-main\clap-libs\clap\include;F:\PluginDevelopment\ADSR\clap-juce-extensions-main\clap-libs\clap-helpers\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <LanguageStandard>stdcpp14</LanguageStandard>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <UseFullPaths>false</UseFullPaths>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CLAP_ID="mrugalla.adsr";CLAP_FEATURES="audio-effect";CLAP_MANUAL_URL="https://www.mycompany.com";CLAP_SUPPORT_URL="https://www.mycompany.com";CLAP_MISBEHAVIOUR_HANDLER_LEVEL=Ignore;CLAP_CHECKING_LEVEL=Minimal;CLAP_PROCESS_EVENTS_RESOLUTION_SAMPLES=0;CLAP_ALWAYS_SPLIT_BLOCK=0;CLAP_USE_JUCE_PARAMETER_RANGES=CLAP_USE_JUCE_PARAMETER_RANGES_OFF;JUCE_GLOBAL_MODULE_SETTINGS_INCLUDED=1;JucePlugin_Name="ADSR";JucePlugin_Manufacturer="Mrugalla";JucePlugin_ManufacturerWebsite="";JucePlugin_VersionString="1.0.0";JucePlugin_Desc="";NDEBUG=1;_NDEBUG=1;JucePlugin_IsSynth=0;JucePlugin_ProducesMidiOutput=0;JucePlugin_WantsMidiInput=0;JucePlugin_ManufacturerCode=Mrug;JucePlugin_PluginCode=ID12;JucePlugin_EditorRequiresKeyboardFocus=0;HAS_CLAP_JUCE_EXTENSIONS=1;CMAKE_INTDIR="Release";ADSR_CLAP_EXPORTS</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CLAP_ID=\"mrugalla.adsr\";CLAP_FEATURES=\"audio-effect\";CLAP_MANUAL_URL=\"https://www.mycompany.com\";CLAP_SUPPORT_URL=\"https://www.mycompany.com\";CLAP_MISBEHAVIOUR_HANDLER_LEVEL=Ignore;CLAP_CHECKING_LEVEL=Minimal;CLAP_PROCESS_EVENTS_RESOLUTION_SAMPLES=0;CLAP_ALWAYS_SPLIT_BLOCK=0;CLAP_USE_JUCE_PARAMETER_RANGES=CLAP_USE_JUCE_PARAMETER_RANGES_OFF;JUCE_GLOBAL_MODULE_SETTINGS_INCLUDED=1;JucePlugin_Name=\"ADSR\";JucePlugin_Manufacturer=\"Mrugalla\";JucePlugin_ManufacturerWebsite=\"\";JucePlugin_VersionString=\"1.0.0\";JucePlugin_Desc=\"\";NDEBUG=1;_NDEBUG=1;JucePlugin_IsSynth=0;JucePlugin_ProducesMidiOutput=0;JucePlugin_WantsMidiInput=0;JucePlugin_ManufacturerCode=Mrug;JucePlugin_PluginCode=ID12;JucePlugin_EditorRequiresKeyboardFocus=0;HAS_CLAP_JUCE_EXTENSIONS=1;CMAKE_INTDIR=\"Release\";ADSR_CLAP_EXPORTS</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>F:\PluginDevelopment\JUCE\modules;F:\PluginDevelopment\ADSR\JuceLibraryCode;F:\PluginDevelopment\ADSR\clap-juce-extensions-main\include;F:\PluginDevelopment\ADSR\clap-juce-extensions-main\clap-libs\clap\include;F:\PluginDevelopment\ADSR\clap-juce-extensions-main\clap-libs\clap-helpers\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>F:\PluginDevelopment\JUCE\modules;F:\PluginDevelopment\ADSR\JuceLibraryCode;F:\PluginDevelopment\ADSR\clap-juce-extensions-main\include;F:\PluginDevelopment\ADSR\clap-juce-extensions-main\clap-libs\clap\include;F:\PluginDevelopment\ADSR\clap-juce-extensions-main\clap-libs\clap-helpers\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalDependencies>clap_juce_clapext\Release\clap_juce_extensions.lib;PLUGIN_LIBRARY_PATH-NOTFOUND.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>F:/PluginDevelopment/ADSR/build-clap/ADSR_artefacts/Release/ADSR.lib</ImportLibrary>
+      <ProgramDataBaseFile>F:/PluginDevelopment/ADSR/build-clap/ADSR_artefacts/Release/ADSR.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>F:\PluginDevelopment\JUCE\modules;F:\PluginDevelopment\ADSR\JuceLibraryCode;F:\PluginDevelopment\ADSR\clap-juce-extensions-main\include;F:\PluginDevelopment\ADSR\clap-juce-extensions-main\clap-libs\clap\include;F:\PluginDevelopment\ADSR\clap-juce-extensions-main\clap-libs\clap-helpers\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <LanguageStandard>stdcpp14</LanguageStandard>
+      <Optimization>MinSpace</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <UseFullPaths>false</UseFullPaths>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CLAP_ID="mrugalla.adsr";CLAP_FEATURES="audio-effect";CLAP_MANUAL_URL="https://www.mycompany.com";CLAP_SUPPORT_URL="https://www.mycompany.com";CLAP_MISBEHAVIOUR_HANDLER_LEVEL=Ignore;CLAP_CHECKING_LEVEL=Minimal;CLAP_PROCESS_EVENTS_RESOLUTION_SAMPLES=0;CLAP_ALWAYS_SPLIT_BLOCK=0;CLAP_USE_JUCE_PARAMETER_RANGES=CLAP_USE_JUCE_PARAMETER_RANGES_OFF;JUCE_GLOBAL_MODULE_SETTINGS_INCLUDED=1;JucePlugin_Name="ADSR";JucePlugin_Manufacturer="Mrugalla";JucePlugin_ManufacturerWebsite="";JucePlugin_VersionString="1.0.0";JucePlugin_Desc="";NDEBUG=1;_NDEBUG=1;JucePlugin_IsSynth=0;JucePlugin_ProducesMidiOutput=0;JucePlugin_WantsMidiInput=0;JucePlugin_ManufacturerCode=Mrug;JucePlugin_PluginCode=ID12;JucePlugin_EditorRequiresKeyboardFocus=0;HAS_CLAP_JUCE_EXTENSIONS=1;CMAKE_INTDIR="MinSizeRel";ADSR_CLAP_EXPORTS</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CLAP_ID=\"mrugalla.adsr\";CLAP_FEATURES=\"audio-effect\";CLAP_MANUAL_URL=\"https://www.mycompany.com\";CLAP_SUPPORT_URL=\"https://www.mycompany.com\";CLAP_MISBEHAVIOUR_HANDLER_LEVEL=Ignore;CLAP_CHECKING_LEVEL=Minimal;CLAP_PROCESS_EVENTS_RESOLUTION_SAMPLES=0;CLAP_ALWAYS_SPLIT_BLOCK=0;CLAP_USE_JUCE_PARAMETER_RANGES=CLAP_USE_JUCE_PARAMETER_RANGES_OFF;JUCE_GLOBAL_MODULE_SETTINGS_INCLUDED=1;JucePlugin_Name=\"ADSR\";JucePlugin_Manufacturer=\"Mrugalla\";JucePlugin_ManufacturerWebsite=\"\";JucePlugin_VersionString=\"1.0.0\";JucePlugin_Desc=\"\";NDEBUG=1;_NDEBUG=1;JucePlugin_IsSynth=0;JucePlugin_ProducesMidiOutput=0;JucePlugin_WantsMidiInput=0;JucePlugin_ManufacturerCode=Mrug;JucePlugin_PluginCode=ID12;JucePlugin_EditorRequiresKeyboardFocus=0;HAS_CLAP_JUCE_EXTENSIONS=1;CMAKE_INTDIR=\"MinSizeRel\";ADSR_CLAP_EXPORTS</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>F:\PluginDevelopment\JUCE\modules;F:\PluginDevelopment\ADSR\JuceLibraryCode;F:\PluginDevelopment\ADSR\clap-juce-extensions-main\include;F:\PluginDevelopment\ADSR\clap-juce-extensions-main\clap-libs\clap\include;F:\PluginDevelopment\ADSR\clap-juce-extensions-main\clap-libs\clap-helpers\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>F:\PluginDevelopment\JUCE\modules;F:\PluginDevelopment\ADSR\JuceLibraryCode;F:\PluginDevelopment\ADSR\clap-juce-extensions-main\include;F:\PluginDevelopment\ADSR\clap-juce-extensions-main\clap-libs\clap\include;F:\PluginDevelopment\ADSR\clap-juce-extensions-main\clap-libs\clap-helpers\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalDependencies>clap_juce_clapext\MinSizeRel\clap_juce_extensions.lib;PLUGIN_LIBRARY_PATH-NOTFOUND.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>F:/PluginDevelopment/ADSR/build-clap/ADSR_artefacts/MinSizeRel/ADSR.lib</ImportLibrary>
+      <ProgramDataBaseFile>F:/PluginDevelopment/ADSR/build-clap/ADSR_artefacts/MinSizeRel/ADSR.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>F:\PluginDevelopment\JUCE\modules;F:\PluginDevelopment\ADSR\JuceLibraryCode;F:\PluginDevelopment\ADSR\clap-juce-extensions-main\include;F:\PluginDevelopment\ADSR\clap-juce-extensions-main\clap-libs\clap\include;F:\PluginDevelopment\ADSR\clap-juce-extensions-main\clap-libs\clap-helpers\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <LanguageStandard>stdcpp14</LanguageStandard>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <UseFullPaths>false</UseFullPaths>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CLAP_ID="mrugalla.adsr";CLAP_FEATURES="audio-effect";CLAP_MANUAL_URL="https://www.mycompany.com";CLAP_SUPPORT_URL="https://www.mycompany.com";CLAP_MISBEHAVIOUR_HANDLER_LEVEL=Ignore;CLAP_CHECKING_LEVEL=Minimal;CLAP_PROCESS_EVENTS_RESOLUTION_SAMPLES=0;CLAP_ALWAYS_SPLIT_BLOCK=0;CLAP_USE_JUCE_PARAMETER_RANGES=CLAP_USE_JUCE_PARAMETER_RANGES_OFF;JUCE_GLOBAL_MODULE_SETTINGS_INCLUDED=1;JucePlugin_Name="ADSR";JucePlugin_Manufacturer="Mrugalla";JucePlugin_ManufacturerWebsite="";JucePlugin_VersionString="1.0.0";JucePlugin_Desc="";NDEBUG=1;_NDEBUG=1;JucePlugin_IsSynth=0;JucePlugin_ProducesMidiOutput=0;JucePlugin_WantsMidiInput=0;JucePlugin_ManufacturerCode=Mrug;JucePlugin_PluginCode=ID12;JucePlugin_EditorRequiresKeyboardFocus=0;HAS_CLAP_JUCE_EXTENSIONS=1;CMAKE_INTDIR="RelWithDebInfo";ADSR_CLAP_EXPORTS</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;CLAP_ID=\"mrugalla.adsr\";CLAP_FEATURES=\"audio-effect\";CLAP_MANUAL_URL=\"https://www.mycompany.com\";CLAP_SUPPORT_URL=\"https://www.mycompany.com\";CLAP_MISBEHAVIOUR_HANDLER_LEVEL=Ignore;CLAP_CHECKING_LEVEL=Minimal;CLAP_PROCESS_EVENTS_RESOLUTION_SAMPLES=0;CLAP_ALWAYS_SPLIT_BLOCK=0;CLAP_USE_JUCE_PARAMETER_RANGES=CLAP_USE_JUCE_PARAMETER_RANGES_OFF;JUCE_GLOBAL_MODULE_SETTINGS_INCLUDED=1;JucePlugin_Name=\"ADSR\";JucePlugin_Manufacturer=\"Mrugalla\";JucePlugin_ManufacturerWebsite=\"\";JucePlugin_VersionString=\"1.0.0\";JucePlugin_Desc=\"\";NDEBUG=1;_NDEBUG=1;JucePlugin_IsSynth=0;JucePlugin_ProducesMidiOutput=0;JucePlugin_WantsMidiInput=0;JucePlugin_ManufacturerCode=Mrug;JucePlugin_PluginCode=ID12;JucePlugin_EditorRequiresKeyboardFocus=0;HAS_CLAP_JUCE_EXTENSIONS=1;CMAKE_INTDIR=\"RelWithDebInfo\";ADSR_CLAP_EXPORTS</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>F:\PluginDevelopment\JUCE\modules;F:\PluginDevelopment\ADSR\JuceLibraryCode;F:\PluginDevelopment\ADSR\clap-juce-extensions-main\include;F:\PluginDevelopment\ADSR\clap-juce-extensions-main\clap-libs\clap\include;F:\PluginDevelopment\ADSR\clap-juce-extensions-main\clap-libs\clap-helpers\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>F:\PluginDevelopment\JUCE\modules;F:\PluginDevelopment\ADSR\JuceLibraryCode;F:\PluginDevelopment\ADSR\clap-juce-extensions-main\include;F:\PluginDevelopment\ADSR\clap-juce-extensions-main\clap-libs\clap\include;F:\PluginDevelopment\ADSR\clap-juce-extensions-main\clap-libs\clap-helpers\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalDependencies>clap_juce_clapext\RelWithDebInfo\clap_juce_extensions.lib;PLUGIN_LIBRARY_PATH-NOTFOUND.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>F:/PluginDevelopment/ADSR/build-clap/ADSR_artefacts/RelWithDebInfo/ADSR.lib</ImportLibrary>
+      <ProgramDataBaseFile>F:/PluginDevelopment/ADSR/build-clap/ADSR_artefacts/RelWithDebInfo/ADSR.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <CustomBuild Include="F:\PluginDevelopment\ADSR\cmakelists.txt">
+      <UseUtf8Encoding>Always</UseUtf8Encoding>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule F:/PluginDevelopment/ADSR/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
+D:\Pogramme\cmake\bin\cmake.exe -SF:/PluginDevelopment/ADSR -BF:/PluginDevelopment/ADSR/build-clap --check-stamp-file F:/PluginDevelopment/ADSR/build-clap/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:\Pogramme\cmake\share\cmake-3.25\Modules\CMakeCInformation.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\CMakeCXXInformation.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\CMakeCommonLanguageInclude.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\CMakeGenericSystem.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\CMakeInitializeConfigs.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\CMakeLanguageInformation.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\CMakeRCInformation.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\CMakeSystemSpecificInformation.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\CMakeSystemSpecificInitialize.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\Compiler\CMakeCommonCompilerMacros.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\Compiler\MSVC-C.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\Compiler\MSVC-CXX.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\Compiler\MSVC.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\Platform\Windows-MSVC-C.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\Platform\Windows-MSVC-CXX.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\Platform\Windows-MSVC.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\Platform\Windows.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\Platform\WindowsPaths.cmake;F:\PluginDevelopment\ADSR\build-clap\CMakeFiles\3.25.1\CMakeCCompiler.cmake;F:\PluginDevelopment\ADSR\build-clap\CMakeFiles\3.25.1\CMakeCXXCompiler.cmake;F:\PluginDevelopment\ADSR\build-clap\CMakeFiles\3.25.1\CMakeRCCompiler.cmake;F:\PluginDevelopment\ADSR\build-clap\CMakeFiles\3.25.1\CMakeSystem.cmake;F:\PluginDevelopment\ADSR\build-clap\CMakeFiles\cmake.verify_globs;F:\PluginDevelopment\ADSR\clap-juce-extensions-main\cmake\JucerClap.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">F:\PluginDevelopment\ADSR\build-clap\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule F:/PluginDevelopment/ADSR/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
+D:\Pogramme\cmake\bin\cmake.exe -SF:/PluginDevelopment/ADSR -BF:/PluginDevelopment/ADSR/build-clap --check-stamp-file F:/PluginDevelopment/ADSR/build-clap/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:\Pogramme\cmake\share\cmake-3.25\Modules\CMakeCInformation.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\CMakeCXXInformation.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\CMakeCommonLanguageInclude.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\CMakeGenericSystem.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\CMakeInitializeConfigs.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\CMakeLanguageInformation.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\CMakeRCInformation.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\CMakeSystemSpecificInformation.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\CMakeSystemSpecificInitialize.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\Compiler\CMakeCommonCompilerMacros.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\Compiler\MSVC-C.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\Compiler\MSVC-CXX.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\Compiler\MSVC.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\Platform\Windows-MSVC-C.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\Platform\Windows-MSVC-CXX.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\Platform\Windows-MSVC.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\Platform\Windows.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\Platform\WindowsPaths.cmake;F:\PluginDevelopment\ADSR\build-clap\CMakeFiles\3.25.1\CMakeCCompiler.cmake;F:\PluginDevelopment\ADSR\build-clap\CMakeFiles\3.25.1\CMakeCXXCompiler.cmake;F:\PluginDevelopment\ADSR\build-clap\CMakeFiles\3.25.1\CMakeRCCompiler.cmake;F:\PluginDevelopment\ADSR\build-clap\CMakeFiles\3.25.1\CMakeSystem.cmake;F:\PluginDevelopment\ADSR\build-clap\CMakeFiles\cmake.verify_globs;F:\PluginDevelopment\ADSR\clap-juce-extensions-main\cmake\JucerClap.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">F:\PluginDevelopment\ADSR\build-clap\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Building Custom Rule F:/PluginDevelopment/ADSR/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
+D:\Pogramme\cmake\bin\cmake.exe -SF:/PluginDevelopment/ADSR -BF:/PluginDevelopment/ADSR/build-clap --check-stamp-file F:/PluginDevelopment/ADSR/build-clap/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:\Pogramme\cmake\share\cmake-3.25\Modules\CMakeCInformation.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\CMakeCXXInformation.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\CMakeCommonLanguageInclude.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\CMakeGenericSystem.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\CMakeInitializeConfigs.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\CMakeLanguageInformation.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\CMakeRCInformation.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\CMakeSystemSpecificInformation.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\CMakeSystemSpecificInitialize.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\Compiler\CMakeCommonCompilerMacros.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\Compiler\MSVC-C.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\Compiler\MSVC-CXX.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\Compiler\MSVC.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\Platform\Windows-MSVC-C.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\Platform\Windows-MSVC-CXX.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\Platform\Windows-MSVC.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\Platform\Windows.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\Platform\WindowsPaths.cmake;F:\PluginDevelopment\ADSR\build-clap\CMakeFiles\3.25.1\CMakeCCompiler.cmake;F:\PluginDevelopment\ADSR\build-clap\CMakeFiles\3.25.1\CMakeCXXCompiler.cmake;F:\PluginDevelopment\ADSR\build-clap\CMakeFiles\3.25.1\CMakeRCCompiler.cmake;F:\PluginDevelopment\ADSR\build-clap\CMakeFiles\3.25.1\CMakeSystem.cmake;F:\PluginDevelopment\ADSR\build-clap\CMakeFiles\cmake.verify_globs;F:\PluginDevelopment\ADSR\clap-juce-extensions-main\cmake\JucerClap.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">F:\PluginDevelopment\ADSR\build-clap\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Building Custom Rule F:/PluginDevelopment/ADSR/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
+D:\Pogramme\cmake\bin\cmake.exe -SF:/PluginDevelopment/ADSR -BF:/PluginDevelopment/ADSR/build-clap --check-stamp-file F:/PluginDevelopment/ADSR/build-clap/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:\Pogramme\cmake\share\cmake-3.25\Modules\CMakeCInformation.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\CMakeCXXInformation.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\CMakeCommonLanguageInclude.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\CMakeGenericSystem.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\CMakeInitializeConfigs.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\CMakeLanguageInformation.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\CMakeRCInformation.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\CMakeSystemSpecificInformation.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\CMakeSystemSpecificInitialize.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\Compiler\CMakeCommonCompilerMacros.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\Compiler\MSVC-C.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\Compiler\MSVC-CXX.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\Compiler\MSVC.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\Platform\Windows-MSVC-C.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\Platform\Windows-MSVC-CXX.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\Platform\Windows-MSVC.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\Platform\Windows.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\Platform\WindowsPaths.cmake;F:\PluginDevelopment\ADSR\build-clap\CMakeFiles\3.25.1\CMakeCCompiler.cmake;F:\PluginDevelopment\ADSR\build-clap\CMakeFiles\3.25.1\CMakeCXXCompiler.cmake;F:\PluginDevelopment\ADSR\build-clap\CMakeFiles\3.25.1\CMakeRCCompiler.cmake;F:\PluginDevelopment\ADSR\build-clap\CMakeFiles\3.25.1\CMakeSystem.cmake;F:\PluginDevelopment\ADSR\build-clap\CMakeFiles\cmake.verify_globs;F:\PluginDevelopment\ADSR\clap-juce-extensions-main\cmake\JucerClap.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">F:\PluginDevelopment\ADSR\build-clap\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="F:\PluginDevelopment\ADSR\clap-juce-extensions-main\src\wrapper\clap-juce-wrapper.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="F:\PluginDevelopment\ADSR\build-clap\ZERO_CHECK.vcxproj">
+      <Project>{ED0A8B0C-89B0-3BBC-8B0F-067E88EEC18F}</Project>
+      <Name>ZERO_CHECK</Name>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </ProjectReference>
+    <ProjectReference Include="F:\PluginDevelopment\ADSR\build-clap\clap_juce_clapext\clap_juce_extensions.vcxproj">
+      <Project>{AF433988-1B3C-3605-BA6D-8A485DE3227F}</Project>
+      <Name>clap_juce_extensions</Name>
+    </ProjectReference>
+    <ProjectReference Include="F:\PluginDevelopment\ADSR\build-clap\clap_juce_clapext\clap_juce_sources.vcxproj">
+      <Project>{DEC17314-AD90-32A6-A15F-B903BC7A4544}</Project>
+      <Name>clap_juce_sources</Name>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

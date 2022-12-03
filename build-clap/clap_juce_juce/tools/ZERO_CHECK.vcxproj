@@ -1,0 +1,227 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <PreferredToolArchitecture>x64</PreferredToolArchitecture>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ResolveNugetPackages>false</ResolveNugetPackages>
+  </PropertyGroup>
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="MinSizeRel|x64">
+      <Configuration>MinSizeRel</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="RelWithDebInfo|x64">
+      <Configuration>RelWithDebInfo</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{F246454D-6F7E-3A1B-897F-EEB0AC95A039}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <DisableFastUpToDateCheck>true</DisableFastUpToDateCheck>
+    <WindowsTargetPlatformVersion>10.0.19041.0</WindowsTargetPlatformVersion>
+    <Platform>x64</Platform>
+    <ProjectName>ZERO_CHECK</ProjectName>
+    <VCProjectUpgraderObjectName>NoUpgrade</VCProjectUpgraderObjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Utility</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Utility</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'" Label="Configuration">
+    <ConfigurationType>Utility</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'" Label="Configuration">
+    <ConfigurationType>Utility</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Midl>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <PreBuildEvent>
+      <UseUtf8Encoding>Always</UseUtf8Encoding>
+      <Message>Checking File Globs</Message>
+      <Command>setlocal
+D:\Pogramme\cmake\bin\cmake.exe -P F:/PluginDevelopment/ADSR/build-clap/clap_juce_juce/tools/CMakeFiles/VerifyGlobs.cmake
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+    </PreBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Midl>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <PreBuildEvent>
+      <UseUtf8Encoding>Always</UseUtf8Encoding>
+      <Message>Checking File Globs</Message>
+      <Command>setlocal
+D:\Pogramme\cmake\bin\cmake.exe -P F:/PluginDevelopment/ADSR/build-clap/clap_juce_juce/tools/CMakeFiles/VerifyGlobs.cmake
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+    </PreBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">
+    <Midl>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <PreBuildEvent>
+      <UseUtf8Encoding>Always</UseUtf8Encoding>
+      <Message>Checking File Globs</Message>
+      <Command>setlocal
+D:\Pogramme\cmake\bin\cmake.exe -P F:/PluginDevelopment/ADSR/build-clap/clap_juce_juce/tools/CMakeFiles/VerifyGlobs.cmake
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+    </PreBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">
+    <Midl>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <PreBuildEvent>
+      <UseUtf8Encoding>Always</UseUtf8Encoding>
+      <Message>Checking File Globs</Message>
+      <Command>setlocal
+D:\Pogramme\cmake\bin\cmake.exe -P F:/PluginDevelopment/ADSR/build-clap/clap_juce_juce/tools/CMakeFiles/VerifyGlobs.cmake
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+    </PreBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <CustomBuild Include="F:\PluginDevelopment\ADSR\build-clap\clap_juce_juce\tools\CMakeFiles\8e7e19e33ca1438b200a4110b2f0ce32\generate.stamp.rule">
+      <UseUtf8Encoding>Always</UseUtf8Encoding>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Checking Build System</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
+D:\Pogramme\cmake\bin\cmake.exe -SF:/PluginDevelopment/JUCE -BF:/PluginDevelopment/ADSR/build-clap/clap_juce_juce/tools --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file F:/PluginDevelopment/ADSR/build-clap/clap_juce_juce/tools/JUCE.sln
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">D:\Pogramme\cmake\share\cmake-3.25\Modules\BasicConfigVersion-ExactVersion.cmake.in;D:\Pogramme\cmake\share\cmake-3.25\Modules\CMakeCInformation.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\CMakeCXXInformation.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\CMakeCommonLanguageInclude.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\CMakeDependentOption.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\CMakeGenericSystem.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\CMakeInitializeConfigs.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\CMakeLanguageInformation.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\CMakePackageConfigHelpers.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\CMakeRCInformation.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\CMakeSystemSpecificInformation.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\CMakeSystemSpecificInitialize.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\Compiler\CMakeCommonCompilerMacros.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\Compiler\MSVC-C.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\Compiler\MSVC-CXX.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\Compiler\MSVC.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\Platform\Windows-MSVC-C.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\Platform\Windows-MSVC-CXX.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\Platform\Windows-MSVC.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\Platform\Windows.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\Platform\WindowsPaths.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\WriteBasicConfigVersionFile.cmake;F:\PluginDevelopment\ADSR\build-clap\clap_juce_juce\tools\CMakeFiles\3.25.1\CMakeCCompiler.cmake;F:\PluginDevelopment\ADSR\build-clap\clap_juce_juce\tools\CMakeFiles\3.25.1\CMakeCXXCompiler.cmake;F:\PluginDevelopment\ADSR\build-clap\clap_juce_juce\tools\CMakeFiles\3.25.1\CMakeRCCompiler.cmake;F:\PluginDevelopment\ADSR\build-clap\clap_juce_juce\tools\CMakeFiles\3.25.1\CMakeSystem.cmake;F:\PluginDevelopment\ADSR\build-clap\clap_juce_juce\tools\CMakeFiles\cmake.verify_globs;F:\PluginDevelopment\JUCE\CMakeLists.txt;F:\PluginDevelopment\JUCE\extras\Build\CMake\JUCECheckAtomic.cmake;F:\PluginDevelopment\JUCE\extras\Build\CMake\JUCEConfig.cmake.in;F:\PluginDevelopment\JUCE\extras\Build\CMake\JUCEHelperTargets.cmake;F:\PluginDevelopment\JUCE\extras\Build\CMake\JUCEModuleSupport.cmake;F:\PluginDevelopment\JUCE\extras\Build\CMake\JUCEUtils.cmake;F:\PluginDevelopment\JUCE\extras\Build\CMakeLists.txt;F:\PluginDevelopment\JUCE\extras\Build\juceaide\CMakeLists.txt;F:\PluginDevelopment\JUCE\modules\CMakeLists.txt;F:\PluginDevelopment\JUCE\modules\juce_audio_plugin_client\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">F:\PluginDevelopment\ADSR\build-clap\clap_juce_juce\tools\CMakeFiles\generate.stamp;F:\PluginDevelopment\ADSR\build-clap\clap_juce_juce\tools\modules\CMakeFiles\generate.stamp;F:\PluginDevelopment\ADSR\build-clap\clap_juce_juce\tools\modules\juce_audio_plugin_client\CMakeFiles\generate.stamp;F:\PluginDevelopment\ADSR\build-clap\clap_juce_juce\tools\extras\Build\CMakeFiles\generate.stamp;F:\PluginDevelopment\ADSR\build-clap\clap_juce_juce\tools\extras\Build\juceaide\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Checking Build System</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
+D:\Pogramme\cmake\bin\cmake.exe -SF:/PluginDevelopment/JUCE -BF:/PluginDevelopment/ADSR/build-clap/clap_juce_juce/tools --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file F:/PluginDevelopment/ADSR/build-clap/clap_juce_juce/tools/JUCE.sln
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">D:\Pogramme\cmake\share\cmake-3.25\Modules\BasicConfigVersion-ExactVersion.cmake.in;D:\Pogramme\cmake\share\cmake-3.25\Modules\CMakeCInformation.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\CMakeCXXInformation.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\CMakeCommonLanguageInclude.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\CMakeDependentOption.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\CMakeGenericSystem.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\CMakeInitializeConfigs.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\CMakeLanguageInformation.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\CMakePackageConfigHelpers.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\CMakeRCInformation.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\CMakeSystemSpecificInformation.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\CMakeSystemSpecificInitialize.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\Compiler\CMakeCommonCompilerMacros.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\Compiler\MSVC-C.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\Compiler\MSVC-CXX.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\Compiler\MSVC.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\Platform\Windows-MSVC-C.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\Platform\Windows-MSVC-CXX.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\Platform\Windows-MSVC.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\Platform\Windows.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\Platform\WindowsPaths.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\WriteBasicConfigVersionFile.cmake;F:\PluginDevelopment\ADSR\build-clap\clap_juce_juce\tools\CMakeFiles\3.25.1\CMakeCCompiler.cmake;F:\PluginDevelopment\ADSR\build-clap\clap_juce_juce\tools\CMakeFiles\3.25.1\CMakeCXXCompiler.cmake;F:\PluginDevelopment\ADSR\build-clap\clap_juce_juce\tools\CMakeFiles\3.25.1\CMakeRCCompiler.cmake;F:\PluginDevelopment\ADSR\build-clap\clap_juce_juce\tools\CMakeFiles\3.25.1\CMakeSystem.cmake;F:\PluginDevelopment\ADSR\build-clap\clap_juce_juce\tools\CMakeFiles\cmake.verify_globs;F:\PluginDevelopment\JUCE\CMakeLists.txt;F:\PluginDevelopment\JUCE\extras\Build\CMake\JUCECheckAtomic.cmake;F:\PluginDevelopment\JUCE\extras\Build\CMake\JUCEConfig.cmake.in;F:\PluginDevelopment\JUCE\extras\Build\CMake\JUCEHelperTargets.cmake;F:\PluginDevelopment\JUCE\extras\Build\CMake\JUCEModuleSupport.cmake;F:\PluginDevelopment\JUCE\extras\Build\CMake\JUCEUtils.cmake;F:\PluginDevelopment\JUCE\extras\Build\CMakeLists.txt;F:\PluginDevelopment\JUCE\extras\Build\juceaide\CMakeLists.txt;F:\PluginDevelopment\JUCE\modules\CMakeLists.txt;F:\PluginDevelopment\JUCE\modules\juce_audio_plugin_client\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">F:\PluginDevelopment\ADSR\build-clap\clap_juce_juce\tools\CMakeFiles\generate.stamp;F:\PluginDevelopment\ADSR\build-clap\clap_juce_juce\tools\modules\CMakeFiles\generate.stamp;F:\PluginDevelopment\ADSR\build-clap\clap_juce_juce\tools\modules\juce_audio_plugin_client\CMakeFiles\generate.stamp;F:\PluginDevelopment\ADSR\build-clap\clap_juce_juce\tools\extras\Build\CMakeFiles\generate.stamp;F:\PluginDevelopment\ADSR\build-clap\clap_juce_juce\tools\extras\Build\juceaide\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Checking Build System</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
+D:\Pogramme\cmake\bin\cmake.exe -SF:/PluginDevelopment/JUCE -BF:/PluginDevelopment/ADSR/build-clap/clap_juce_juce/tools --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file F:/PluginDevelopment/ADSR/build-clap/clap_juce_juce/tools/JUCE.sln
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">D:\Pogramme\cmake\share\cmake-3.25\Modules\BasicConfigVersion-ExactVersion.cmake.in;D:\Pogramme\cmake\share\cmake-3.25\Modules\CMakeCInformation.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\CMakeCXXInformation.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\CMakeCommonLanguageInclude.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\CMakeDependentOption.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\CMakeGenericSystem.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\CMakeInitializeConfigs.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\CMakeLanguageInformation.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\CMakePackageConfigHelpers.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\CMakeRCInformation.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\CMakeSystemSpecificInformation.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\CMakeSystemSpecificInitialize.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\Compiler\CMakeCommonCompilerMacros.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\Compiler\MSVC-C.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\Compiler\MSVC-CXX.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\Compiler\MSVC.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\Platform\Windows-MSVC-C.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\Platform\Windows-MSVC-CXX.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\Platform\Windows-MSVC.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\Platform\Windows.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\Platform\WindowsPaths.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\WriteBasicConfigVersionFile.cmake;F:\PluginDevelopment\ADSR\build-clap\clap_juce_juce\tools\CMakeFiles\3.25.1\CMakeCCompiler.cmake;F:\PluginDevelopment\ADSR\build-clap\clap_juce_juce\tools\CMakeFiles\3.25.1\CMakeCXXCompiler.cmake;F:\PluginDevelopment\ADSR\build-clap\clap_juce_juce\tools\CMakeFiles\3.25.1\CMakeRCCompiler.cmake;F:\PluginDevelopment\ADSR\build-clap\clap_juce_juce\tools\CMakeFiles\3.25.1\CMakeSystem.cmake;F:\PluginDevelopment\ADSR\build-clap\clap_juce_juce\tools\CMakeFiles\cmake.verify_globs;F:\PluginDevelopment\JUCE\CMakeLists.txt;F:\PluginDevelopment\JUCE\extras\Build\CMake\JUCECheckAtomic.cmake;F:\PluginDevelopment\JUCE\extras\Build\CMake\JUCEConfig.cmake.in;F:\PluginDevelopment\JUCE\extras\Build\CMake\JUCEHelperTargets.cmake;F:\PluginDevelopment\JUCE\extras\Build\CMake\JUCEModuleSupport.cmake;F:\PluginDevelopment\JUCE\extras\Build\CMake\JUCEUtils.cmake;F:\PluginDevelopment\JUCE\extras\Build\CMakeLists.txt;F:\PluginDevelopment\JUCE\extras\Build\juceaide\CMakeLists.txt;F:\PluginDevelopment\JUCE\modules\CMakeLists.txt;F:\PluginDevelopment\JUCE\modules\juce_audio_plugin_client\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">F:\PluginDevelopment\ADSR\build-clap\clap_juce_juce\tools\CMakeFiles\generate.stamp;F:\PluginDevelopment\ADSR\build-clap\clap_juce_juce\tools\modules\CMakeFiles\generate.stamp;F:\PluginDevelopment\ADSR\build-clap\clap_juce_juce\tools\modules\juce_audio_plugin_client\CMakeFiles\generate.stamp;F:\PluginDevelopment\ADSR\build-clap\clap_juce_juce\tools\extras\Build\CMakeFiles\generate.stamp;F:\PluginDevelopment\ADSR\build-clap\clap_juce_juce\tools\extras\Build\juceaide\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Checking Build System</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
+D:\Pogramme\cmake\bin\cmake.exe -SF:/PluginDevelopment/JUCE -BF:/PluginDevelopment/ADSR/build-clap/clap_juce_juce/tools --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file F:/PluginDevelopment/ADSR/build-clap/clap_juce_juce/tools/JUCE.sln
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">D:\Pogramme\cmake\share\cmake-3.25\Modules\BasicConfigVersion-ExactVersion.cmake.in;D:\Pogramme\cmake\share\cmake-3.25\Modules\CMakeCInformation.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\CMakeCXXInformation.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\CMakeCommonLanguageInclude.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\CMakeDependentOption.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\CMakeGenericSystem.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\CMakeInitializeConfigs.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\CMakeLanguageInformation.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\CMakePackageConfigHelpers.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\CMakeRCInformation.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\CMakeSystemSpecificInformation.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\CMakeSystemSpecificInitialize.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\Compiler\CMakeCommonCompilerMacros.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\Compiler\MSVC-C.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\Compiler\MSVC-CXX.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\Compiler\MSVC.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\Platform\Windows-MSVC-C.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\Platform\Windows-MSVC-CXX.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\Platform\Windows-MSVC.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\Platform\Windows.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\Platform\WindowsPaths.cmake;D:\Pogramme\cmake\share\cmake-3.25\Modules\WriteBasicConfigVersionFile.cmake;F:\PluginDevelopment\ADSR\build-clap\clap_juce_juce\tools\CMakeFiles\3.25.1\CMakeCCompiler.cmake;F:\PluginDevelopment\ADSR\build-clap\clap_juce_juce\tools\CMakeFiles\3.25.1\CMakeCXXCompiler.cmake;F:\PluginDevelopment\ADSR\build-clap\clap_juce_juce\tools\CMakeFiles\3.25.1\CMakeRCCompiler.cmake;F:\PluginDevelopment\ADSR\build-clap\clap_juce_juce\tools\CMakeFiles\3.25.1\CMakeSystem.cmake;F:\PluginDevelopment\ADSR\build-clap\clap_juce_juce\tools\CMakeFiles\cmake.verify_globs;F:\PluginDevelopment\JUCE\CMakeLists.txt;F:\PluginDevelopment\JUCE\extras\Build\CMake\JUCECheckAtomic.cmake;F:\PluginDevelopment\JUCE\extras\Build\CMake\JUCEConfig.cmake.in;F:\PluginDevelopment\JUCE\extras\Build\CMake\JUCEHelperTargets.cmake;F:\PluginDevelopment\JUCE\extras\Build\CMake\JUCEModuleSupport.cmake;F:\PluginDevelopment\JUCE\extras\Build\CMake\JUCEUtils.cmake;F:\PluginDevelopment\JUCE\extras\Build\CMakeLists.txt;F:\PluginDevelopment\JUCE\extras\Build\juceaide\CMakeLists.txt;F:\PluginDevelopment\JUCE\modules\CMakeLists.txt;F:\PluginDevelopment\JUCE\modules\juce_audio_plugin_client\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">F:\PluginDevelopment\ADSR\build-clap\clap_juce_juce\tools\CMakeFiles\generate.stamp;F:\PluginDevelopment\ADSR\build-clap\clap_juce_juce\tools\modules\CMakeFiles\generate.stamp;F:\PluginDevelopment\ADSR\build-clap\clap_juce_juce\tools\modules\juce_audio_plugin_client\CMakeFiles\generate.stamp;F:\PluginDevelopment\ADSR\build-clap\clap_juce_juce\tools\extras\Build\CMakeFiles\generate.stamp;F:\PluginDevelopment\ADSR\build-clap\clap_juce_juce\tools\extras\Build\juceaide\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

@@ -1,0 +1,9 @@
+F:/PluginDevelopment/ADSR/build-clap/clap_juce_juce/tools/CMakeFiles/INSTALL.dir
+F:/PluginDevelopment/ADSR/build-clap/clap_juce_juce/tools/CMakeFiles/ALL_BUILD.dir
+F:/PluginDevelopment/ADSR/build-clap/clap_juce_juce/tools/CMakeFiles/ZERO_CHECK.dir
+F:/PluginDevelopment/ADSR/build-clap/clap_juce_juce/tools/modules/CMakeFiles/INSTALL.dir
+F:/PluginDevelopment/ADSR/build-clap/clap_juce_juce/tools/modules/juce_audio_plugin_client/CMakeFiles/juce_lv2_helper.dir
+F:/PluginDevelopment/ADSR/build-clap/clap_juce_juce/tools/modules/juce_audio_plugin_client/CMakeFiles/INSTALL.dir
+F:/PluginDevelopment/ADSR/build-clap/clap_juce_juce/tools/extras/Build/CMakeFiles/INSTALL.dir
+F:/PluginDevelopment/ADSR/build-clap/clap_juce_juce/tools/extras/Build/juceaide/CMakeFiles/juceaide.dir
+F:/PluginDevelopment/ADSR/build-clap/clap_juce_juce/tools/extras/Build/juceaide/CMakeFiles/INSTALL.dir

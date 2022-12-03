@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="F:\PluginDevelopment\JUCE\modules\juce_audio_plugin_client\LV2\juce_LV2TurtleDumpProgram.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="F:\PluginDevelopment\JUCE\modules\juce_audio_plugin_client\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{F56607FF-C2F4-36FF-A0AB-419A65C46694}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
