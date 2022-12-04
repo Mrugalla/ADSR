@@ -16,7 +16,7 @@ namespace gui
 			kAtk, kDcy, kSus, kRls,
 			kAtkShape, kDcyShape, kRlsShape,
 			kAtkBeats, kDcyBeats, kRlsBeats,
-			kTempoSync,
+			kTempoSync, kDcyRlsLocked,
 			NumParameters,
 			kAtkShapeMod, kDcyShapeMod, kRlsShapeMod,
 			NumParamsPlus
@@ -131,11 +131,11 @@ namespace gui
 		
 		EnvGenComp(Utils& u, PID _atk, PID _dcy, PID _sus, PID _rls,
 			PID _atkShape, PID _dcyShape, PID _rlsShape,
-			PID _atkBeats, PID _dcyBeats, PID _rlsBeats, PID _tempoSync) :
+			PID _atkBeats, PID _dcyBeats, PID _rlsBeats, PID _tempoSync, PID _dcyRlsLocked) :
 			Comp(u, "Click here to interact with the envelope generator.", CursorType::Default),
 			Timer(),
 			bounds(),
-			pIDs{ _atk, _dcy, _sus, _rls, _atkShape, _dcyShape, _rlsShape, _atkBeats, _dcyBeats, _rlsBeats, _tempoSync },
+			pIDs{ _atk, _dcy, _sus, _rls, _atkShape, _dcyShape, _rlsShape, _atkBeats, _dcyBeats, _rlsBeats, _tempoSync, _dcyRlsLocked },
 			pVals(),
 			stateComps
 			{
@@ -145,7 +145,8 @@ namespace gui
 				StateComp(u, "Release", kRls, _rlsShape)
 			},
 			atk(), dcy(), rls(),
-			tempoSyncEnabled(u.getParam(_tempoSync)->getValMod() > .5f)
+			tempoSyncEnabled(u.getParam(_tempoSync)->getValMod() > .5f),
+			lockDcyRlsEnabled(u.getParam(_dcyRlsLocked)->getValMod() > .5f)
 		{
 			for (auto& v : pVals)
 				v = 0.f;
@@ -153,7 +154,7 @@ namespace gui
 			for (auto& s : stateComps)
 				addAndMakeVisible(s);
 			
-			switchTimeParameters(tempoSyncEnabled);
+			switchTimeParameters(tempoSyncEnabled, lockDcyRlsEnabled);
 
 			layout.init
 			(
@@ -188,10 +189,12 @@ namespace gui
 		void timerCallback() override
 		{
 			const auto ts = utils.getParam(pIDs[kTempoSync])->getValMod() > .5f;
-			if (tempoSyncEnabled != ts)
+			const auto ldr = utils.getParam(pIDs[kDcyRlsLocked])->getValMod() > .5f;
+			if (tempoSyncEnabled != ts || lockDcyRlsEnabled != ldr)
 			{
 				tempoSyncEnabled = ts;
-				switchTimeParameters(tempoSyncEnabled);
+				lockDcyRlsEnabled = ldr;
+				switchTimeParameters(tempoSyncEnabled, lockDcyRlsEnabled);
 				resized();
 			}
 
@@ -401,9 +404,9 @@ namespace gui
 		std::array<float, NumParamsPlus> pVals;
 		std::array<StateComp, 4> stateComps;
 		std::unique_ptr<Knob> atk, dcy, rls;
-		bool tempoSyncEnabled;
+		bool tempoSyncEnabled, lockDcyRlsEnabled;
 		
-		void switchTimeParameters(bool tempoSync)
+		void switchTimeParameters(bool tempoSync, bool dcyRlsLocked)
 		{
 			removeChildComponent(atk.get());
 			removeChildComponent(dcy.get());
@@ -416,14 +419,32 @@ namespace gui
 			if (tempoSync)
 			{
 				makeParameter(*atk, pIDs[kAtkBeats], "", false, nullptr, Knob::LooksType::Knot);
-				makeParameter(*dcy, pIDs[kDcyBeats], pIDs[kSus]);
-				makeParameter(*rls, pIDs[kRlsBeats], "", false, nullptr, Knob::LooksType::Knot);
+				if (dcyRlsLocked)
+				{
+					
+					makeParameter(*dcy, { pIDs[kDcyBeats], pIDs[kRlsBeats] }, pIDs[kSus]);
+					makeParameter(*rls, { pIDs[kRlsBeats], pIDs[kDcyBeats] }, "", false, nullptr, Knob::LooksType::Knot);
+				}
+				else
+				{
+					makeParameter(*dcy, pIDs[kDcyBeats], pIDs[kSus]);
+					makeParameter(*rls, pIDs[kRlsBeats], "", false, nullptr, Knob::LooksType::Knot);
+				}
+				
 			}
 			else
 			{
 				makeParameter(*atk, pIDs[kAtk], "", false, nullptr, Knob::LooksType::Knot);
-				makeParameter(*dcy, pIDs[kDcy], pIDs[kSus]);
-				makeParameter(*rls, pIDs[kRls], "", false, nullptr, Knob::LooksType::Knot);
+				if (dcyRlsLocked)
+				{
+					makeParameter(*dcy, { pIDs[kDcy], pIDs[kRls] }, pIDs[kSus]);
+					makeParameter(*rls, { pIDs[kRls], pIDs[kDcy] }, "", false, nullptr, Knob::LooksType::Knot);
+				}
+				else
+				{
+					makeParameter(*dcy, pIDs[kDcy], pIDs[kSus]);
+					makeParameter(*rls, pIDs[kRls], "", false, nullptr, Knob::LooksType::Knot);
+				}
 			}
 
 			atk->dragMode = Knob::DragMode::Horizontal;

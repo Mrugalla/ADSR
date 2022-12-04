@@ -1,8 +1,0 @@
-build*/
-Builds/
-JuceLibraryCode/
-
-.vscode/
-.idea/
-
-.DS_Store

@@ -85,6 +85,7 @@ namespace param
 		case PID::EnvGenAttackBeats: return "EnvGen Attack Beats";
 		case PID::EnvGenDecayBeats: return "EnvGen Decay Beats";
 		case PID::EnvGenReleaseBeats: return "EnvGen Release Beats";
+		case PID::EnvGenLockDcyRls: return "EnvGen Lock Decay-Release";
 
 		default: return "Invalid Parameter Name";
 		}
@@ -177,6 +178,7 @@ namespace param
 		case PID::EnvGenAttackBeats: return "Define the attack time of the envelope generator in beats.";
 		case PID::EnvGenDecayBeats: return "Define the decay time of the envelope generator in beats.";
 		case PID::EnvGenReleaseBeats: return "Define the release time of the envelope generator in beats.";
+		case PID::EnvGenLockDcyRls: return "Lock the decay and release time of the envelope generator.";
 
 		default: return "Invalid Tooltip.";
 		}
@@ -1256,6 +1258,7 @@ namespace param
 		params.push_back(makeParam(PID::EnvGenAttackBeats, state, 1.f / 16.f, makeRange::beats(64.f, .5f, true), Unit::Beats));
 		params.push_back(makeParam(PID::EnvGenDecayBeats, state, 1.f / 16.f, makeRange::beats(64.f, .5f, true), Unit::Beats));
 		params.push_back(makeParam(PID::EnvGenReleaseBeats, state, 1.f / 16.f, makeRange::beats(64.f, .5f, true), Unit::Beats));
+		params.push_back(makeParam(PID::EnvGenLockDcyRls, state, 1.f, makeRange::toggle(), Unit::Power));
 		// LOW LEVEL PARAMS END
 
 		for (auto param : params)

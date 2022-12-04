@@ -76,6 +76,7 @@ namespace param
 		EnvGenAttackBeats,
 		EnvGenDecayBeats,
 		EnvGenReleaseBeats,
+		EnvGenLockDcyRls,
 
 		NumParams
 	};

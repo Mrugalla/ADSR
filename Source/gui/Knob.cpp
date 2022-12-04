@@ -998,6 +998,11 @@ namespace gui
 		makeParameter(knob, std::vector<PID>{ pIDHorizontal }, std::vector<PID>{ pIDVertical });
     }
 
+    void makeParameter(Knob& knob, const std::vector<PID>& pIDHorizontal, PID pIDVertical)
+    {
+        makeParameter(knob, pIDHorizontal, std::vector<PID>{ pIDVertical });
+    }
+
     void makeParameter(Knob& knob, const std::vector<PID>& pIDsHorizontal, const std::vector<PID>& pIDsVertical)
     {
         looks::knot::create(knob);

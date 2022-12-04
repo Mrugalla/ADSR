@@ -87,6 +87,9 @@ namespace gui
     /* knob, pIDHorizontal, pIDVertical */
     void makeParameter(Knob&, PID, PID);
 
+    /* knob, pIDHorizontal, pIDVertical */
+    void makeParameter(Knob&, const std::vector<PID>&, PID);
+
 	/* knob, pIDsHorizontal, pIDsVertical */
     void makeParameter(Knob&, const std::vector<PID>&, const std::vector<PID>&);
 
