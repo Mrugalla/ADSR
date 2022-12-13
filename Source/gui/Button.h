@@ -111,6 +111,7 @@ namespace gui
 	/* button, symbol, targetToggleState */
 	void makeSymbolButton(Button&, ButtonSymbol, int = 1);
 
+	/* button, text */
 	void makeToggleButton(Button&, const String&);
 
 	/* button, pIDs, symbol, withToggle */

@@ -458,11 +458,11 @@ namespace audio
 		auto samples = buffer.getArrayOfWritePointers();
 
         envGenMIDI.processBypassed(numSamples);
+        oscope(envGenMIDI.data(), numSamples, playHeadPos);
+		
         for (auto ch = 0; ch < numChannels; ++ch)
             SIMD::copy(samples[ch], envGenMIDI.data(), numSamples);
-
-        oscope(samples, 1, numSamples, playHeadPos);
-
+		
         ProcessorBackEnd::processBlockBypassed(buffer, midi);
     }
 
@@ -480,7 +480,7 @@ namespace audio
 			params[PID::EnvGenAtkShape]->getValModDenorm(),
 			params[PID::EnvGenDcyShape]->getValModDenorm(),
 			params[PID::EnvGenRlsShape]->getValModDenorm(),
-			params[PID::EnvGenLegato]->getValModDenorm() > .5f,
+			static_cast<int>(params[PID::EnvGenLegato]->getValModDenorm()),
 			params[PID::EnvGenInverse]->getValModDenorm() > .5f,
             params[PID::EnvGenVelocity]->getValMod(),
 			params[PID::EnvGenTempoSync]->getValMod() > .5f,
@@ -489,11 +489,35 @@ namespace audio
 			params[PID::EnvGenReleaseBeats]->getValModDenorm(),
             playHeadPos
         );
-		
-        for (auto ch = 0; ch < numChannels; ++ch)
-            SIMD::copy(samples[ch], envGenMIDI.data(), numSamples);
 
-        oscope(samples, 1, numSamples, playHeadPos);
+        oscope(envGenMIDI.data(), numSamples, playHeadPos);
+		
+        auto mode = static_cast<int>(std::rint(params[PID::EnvGenMode]->getValModDenorm()));
+        auto envGenData = envGenMIDI.data();
+        float lowerLimit, upperLimit, limitRange;
+
+		enum { DirectOut, Gain, Filter, NumModes };
+        switch (mode)
+        {
+        case DirectOut:
+            for (auto ch = 0; ch < numChannels; ++ch)
+                SIMD::copy(samples[ch], envGenData, numSamples);
+            break;
+		case Gain:
+			lowerLimit = decibelToGain(params[PID::ModeGainLowerLimit]->getValModDenorm(), -60.f);
+			upperLimit = decibelToGain(params[PID::ModeGainUpperLimit]->getValModDenorm(), -60.f);
+			limitRange = upperLimit - lowerLimit;
+			for(auto s = 0; s < numSamples; ++s)
+				envGenData[s] = lowerLimit + envGenData[s] * limitRange;
+
+			for (auto ch = 0; ch < numChannels; ++ch)
+				SIMD::multiply(samples[ch], envGenData, numSamples);
+			break;
+        default:
+            for (auto ch = 0; ch < numChannels; ++ch)
+                SIMD::copy(samples[ch], envGenData, numSamples);
+            break;
+        }
     }
 
     void Processor::processBlockUpsampled(float**, int, int

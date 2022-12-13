@@ -8,6 +8,27 @@ namespace audio
 	struct EnvGen
 	{
 		static constexpr float MinVelocity = 1.f / 127.f;
+
+		struct Note
+		{
+			Note(float _gain = 0.f, bool _noteOn = false) :
+				gain(_gain),
+				noteOn(_noteOn)
+			{
+			}
+
+			float gain;
+			bool noteOn;
+		};
+		
+		enum class LegatoMode
+		{
+			Disabled,
+			Enabled,
+			EnabledWithSustain,
+			NumLegatoModes
+		};
+		static constexpr int NumLegatoModes = static_cast<int>(LegatoMode::NumLegatoModes);
 		
 		enum class State
 		{
@@ -20,47 +41,69 @@ namespace audio
 
 		EnvGen() :
 			state(State::Release),
-			noteOn(false), legato(false),
+			legato(LegatoMode::Disabled),
 			envRaw(1.f), env(0.f), noteOffVal(0.f), noteOnVal(0.f),
-			velocitySens(0.f), veloGain(1.f),
+			velocitySens(0.f),
 			atkP(0.f), dcyP(0.f), susP(0.f), rlsP(0.f),
 			atkShapeP(0.f), dcyShapeP(0.f), rlsShapeP(0.f),
-			noteOns()
+			note(),
+			noteIdx(0), noteOnCount(0), legatoSusIdx(0)
 		{
-			for (auto& n : noteOns)
-				n = false;
 		}
 
-		void setNoteOn(int noteIdx, float velo) noexcept
+		void setNoteOn(int _noteIdx, float velo) noexcept
 		{
+			noteIdx = _noteIdx;
 			if (velo < MinVelocity)
 				return setNoteOff(noteIdx);
-			if (noteOns[noteIdx])
+			if (note[noteIdx].noteOn)
 				return;
-			noteOns[noteIdx] = noteOn = true;
-			veloGain = 1.f + velocitySens * (velo - 1.f);
-			if (!legato)
-				if(env < velo)
+			if (noteOnCount == 0)
+				legatoSusIdx = noteIdx;
+
+			++noteOnCount;
+			note[noteIdx].noteOn = true;
+			if(noteOnCount == 1 || legato != LegatoMode::Enabled)
+				note[noteIdx].gain = 1.f + velocitySens * (velo - 1.f);
+			else
+			{
+				if (noteIdx != legatoSusIdx)
+					note[noteIdx].gain = note[legatoSusIdx].gain;
+			}
+			
+			switch (legato)
+			{
+			case LegatoMode::Disabled:
+				if (env < velo)
 					triggerAttack();
 				else
 					triggerDecay();
-		}
-		
-		void setNoteOff(int noteIdx) noexcept
-		{
-  			noteOns[noteIdx] = false;
-			const auto notesLeft = noteOnLeft();
-			if (legato)
-			{
-				if (!notesLeft)
-					noteOn = false;
-			}
-			else
-				if (notesLeft)
+				break;
+			case LegatoMode::EnabledWithSustain:
+				if (noteOnCount == 1)
 					triggerAttack();
-				else
+				break;
+			}
+		}
+
+		void setNoteOff(int _noteIdx) noexcept
+		{
+			note[_noteIdx].noteOn = false;
+			noteOnCount = noteOnCount == 0 ? 0 : noteOnCount - 1;
+			switch (legato)
+			{
+			case LegatoMode::Disabled:
+				if (noteOnCount == 0)
 					triggerRelease();
-			
+				else
+					triggerAttack();
+				break;
+			case LegatoMode::Enabled:
+			case LegatoMode::EnabledWithSustain:
+				if (noteOnCount == 0)
+					triggerRelease();
+				break;
+			}
 		}
 
 		void prepare(float Fs, int blockSize)
@@ -72,6 +115,7 @@ namespace audio
 			atkShapeP.prepare(Fs, blockSize, 15.f);
 			dcyShapeP.prepare(Fs, blockSize, 15.f);
 			rlsShapeP.prepare(Fs, blockSize, 15.f);
+			noteOnCount = 0;
 		}
 
 		float operator()(int s) noexcept
@@ -118,8 +162,8 @@ namespace audio
 
 		void processBypassed(float* samples, int numSamples) noexcept
 		{
-			for (auto& n : noteOns)
-				n = false;
+			for (auto& n : note)
+				n.noteOn = false;
 			setNoteOff(24);
 
 			for (auto s = 0; s < numSamples; ++s)
@@ -127,27 +171,21 @@ namespace audio
 		}
 
 		State state;
-		bool noteOn, legato;
+		//bool noteOn;
+		LegatoMode legato;
 		float envRaw, env, noteOffVal, noteOnVal;
-		float velocitySens, veloGain;
+		float velocitySens;// , veloGain;
 		PRM atkP, dcyP, susP, rlsP;
 		PRM atkShapeP, dcyShapeP, rlsShapeP;
 	protected:
-		std::array<bool, 128> noteOns;
-
-		bool noteOnLeft() const noexcept
-		{
-			for (const auto n : noteOns)
-				if (n)
-					return true;
-			return false;
-		}
+		std::array<Note, 128> note;
+		int noteIdx, noteOnCount, legatoSusIdx;
 
 		// SYNTHESIZE
 		
 		void synthesizeAttack(int s) noexcept
 		{
-			if (noteOn)
+			if (note[noteIdx].noteOn)
 			{
 				const auto atk = atkP[s];
 				
@@ -165,7 +203,7 @@ namespace audio
 
 		void synthesizeDecay(int s) noexcept
 		{
-			if (noteOn)
+			if (note[noteIdx].noteOn)
 			{
 				const auto dcy = dcyP[s];
 
@@ -182,7 +220,7 @@ namespace audio
 
 		void synthesizeSustain(int s) noexcept
 		{
-			if (!noteOn)
+			if (!note[noteIdx].noteOn)
 				return triggerRelease(s);
 
 			envRaw = susP[s];
@@ -190,7 +228,7 @@ namespace audio
 
 		void synthesizeRelease(int s) noexcept
 		{
-			if (!noteOn)
+			if (!note[noteIdx].noteOn)
 			{
 				const auto rls = rlsP[s];
 
@@ -209,7 +247,7 @@ namespace audio
 			noteOffVal = env;
 			envRaw = 0.f;
 			state = State::Release;
-			noteOn = false;
+			note[noteIdx].noteOn = false;
 		}
 
 		void triggerRelease(int s) noexcept
@@ -223,7 +261,7 @@ namespace audio
 			noteOnVal = env;
 			envRaw = 0.f;
 			state = State::Attack;
-			noteOn = true;
+			note[noteIdx].noteOn = true;
 		}
 
 		void triggerAttack(int s) noexcept
@@ -237,18 +275,19 @@ namespace audio
 			noteOnVal = env;
 			state = State::Decay;
 			envRaw = 0.f;
-			noteOn = true;
+			note[noteIdx].noteOn = true;
 		}
 		
 		// SHAPE
 
 		void shapeAttack(int s) noexcept
 		{
-			env = noteOnVal + (veloGain - noteOnVal) * getSkewed(envRaw, atkShapeP[s]);
+			env = noteOnVal + (note[noteIdx].gain - noteOnVal) * getSkewed(envRaw, atkShapeP[s]);
 		}
 
 		void shapeDecay(int s) noexcept
 		{
+			const auto veloGain = note[noteIdx].gain;
 			const auto sus = susP[s] * veloGain;
 			
 			env = veloGain - (veloGain - sus) * getSkewed(envRaw, dcyShapeP[s]);
@@ -256,7 +295,7 @@ namespace audio
 
 		void shapeSustain() noexcept
 		{
-			env = envRaw * veloGain;
+			env = envRaw * note[noteIdx].gain;
 		}
 
 		void shapeRelease(int s) noexcept
@@ -293,13 +332,13 @@ namespace audio
 		}
 		
 		/* midiBuffer, numSamples, atk [0, N]ms, dcy [0, N]ms, sus [0, 1], rls [0, N]ms,
-		attackShape [-1,1], decayShape [-1,1], releaseShape [-1,1], legato [0, 1], inverse [0, 1],
+		attackShape [-1,1], decayShape [-1,1], releaseShape [-1,1], legato [0, 2], inverse [0, 1],
 		velocitySensitivity [0, 1], tempoSync[0, 1],
 		atkBeats [0, N]beats, dcyBeats[0, N], rlsBeats[0, N] */
 		void operator()(MIDIBuffer& midi, int numSamples,
 			float _atk, float _dcy, float _sus, float _rls,
 			float _atkShape, float _dcyShape, float _rlsShape,
-			bool _legato, bool _inverse, float _velo, bool _tempoSync,
+			int _legato, bool _inverse, float _velo, bool _tempoSync,
 			float _atkBeats, float _dcyBeats, float _rlsBeats, const PlayHeadPos& playHead) noexcept
 		{
 			if (_tempoSync && playHead.bpm != 0.)
@@ -361,7 +400,7 @@ namespace audio
 			}
 			else
 			{
-				envGen.legato = _legato;
+				envGen.legato = static_cast<EnvGen::LegatoMode>(_legato);
 				envGen.velocitySens = _velo;
 
 				auto evt = midi.begin();
@@ -415,6 +454,11 @@ namespace audio
 			return buffer.data();
 		}
 
+		float* data() noexcept
+		{
+			return buffer.data();
+		}
+
 		static float getSkewed(float x, float bias) noexcept
 		{
 			return EnvGen::getSkewed(x, bias);
@@ -430,12 +474,6 @@ namespace audio
 /*
 
 todo:
-
-legato
-	consecutive noteOns don't update velocity normally
-		but maybe they do in new mode?
-
-legato modulatable?
 
 modes
 	direct out

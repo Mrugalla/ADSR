@@ -263,7 +263,7 @@ namespace gui
                             -AngleWidth, AngleWidth,
                             true
                         );
-                        auto stroke2 = strokeType;
+                        Stroke stroke2 = strokeType;
                         stroke2.setStrokeThickness(radDif);
                         g.strokePath(arcInline, stroke2);
                     };
@@ -297,7 +297,7 @@ namespace gui
                                 0.f, biasAngle,
                                 true
                             );
-                            auto bStroke = strokeType;
+                            Stroke bStroke = strokeType;
                             bStroke.setStrokeThickness(radDif);
 
                             g.strokePath(biasPath, bStroke);
@@ -356,100 +356,172 @@ namespace gui
             }
         }
 
-        namespace vertSlidr
+        namespace slidr
         {
-            static void create(Knob& k, bool modulatable, bool hasMeter)
+            static void create(Knob& k, bool modulatable, bool hasMeter, bool vertical)
             {
-                k.onPaint = [modulatable, hasMeter](Knob& k, Graphics& g)
+                k.onPaint = [modulatable, hasMeter, vertical](Knob& k, Graphics& g)
                 {
+                    enum { X, Y };
 					// remember to implement hasMeter
                     const auto& bounds = k.knobBounds;
 					const auto thicc = k.utils.thicc;
 					const auto thicc2 = thicc * 2.f;
 					const auto thicc4 = thicc * 4.f;
-                    const auto x = bounds.getX();
-					const auto y = bounds.getY();
-					const auto w = bounds.getWidth();
-					const auto h = bounds.getHeight();
-                    const auto btm = bounds.getBottom();
-                    const PointF centre
-                    (
-                        x + w * .5f,
-                        y + h * .5f
-                    );
+                    const float xy[2] = { bounds.getX(), bounds.getY() };
+					const float wh[2] = { bounds.getWidth(), bounds.getHeight() };
+					
+					const float btm[2] = { xy[X] + wh[X], xy[Y] + wh[Y]};
+                    const float centre[2] =
+                    {
+                        xy[X] + wh[X] * .5f,
+                        xy[Y] + wh[Y] * .5f
+                    };
 
-                    const auto values = k.values;
+                    const auto values = k.values.data();
                     const auto val = values[Value];
-                    const auto valHeight = val * h;
-					const auto valY = btm - valHeight;
-
                     auto col = Colours::c(ColourID::Interact);
                     g.setColour(col);
-					
-                    const auto line0X = centre.x - thicc;
-                    const auto line1X = centre.x + thicc2;
-                    { // paint lines
-                        const auto lineY0 = y;
-                        const auto lineY1 = btm;
-                        g.drawLine({ line0X, lineY0, line0X, lineY1 }, thicc);
-                        g.drawLine({ line1X, lineY0,  line1X, lineY1 }, thicc2);
-                    }
-					
-					if(modulatable)
-                    { // paint modulation
-                        const auto maxModDepth = values[MaxModDepth];
-						const auto mmdHeight = maxModDepth * h;
-						const auto mmdY = juce::jlimit(y, btm, valY - mmdHeight);
-						
-                        col = Colours::c(ColourID::Mod);
-                        g.setColour(col);
-						g.drawLine({ line0X, valY, line0X, mmdY }, thicc);
+                    
+                    if (vertical)
+                    {
+                        const auto valLength = val * wh[Y];
+                        const auto valXY = btm[Y] - valLength;
 
-						const auto valMod = values[ValMod];
-						const auto valModHeight = valMod * h;
-						const auto valModY = juce::jlimit(y, btm, btm - valModHeight);
-                        g.drawLine({ line0X, valModY, line1X, valModY }, thicc2);
-						
-						const auto bias = values[ModBias];
-						const auto biasHeight = bias * h;
-                        const auto biasX = line1X;
-                        const auto biasY0 = centre.y;
-						const auto biasY1 = btm - biasHeight;
-                        col = Colours::c(ColourID::Bias);
-                        g.setColour(col);
-						g.drawLine({ biasX, biasY0, biasX, biasY1 }, thicc2);
+                        const auto line0X = centre[X] - thicc;
+                        const auto line1X = centre[X] + thicc2;
+                        const auto line0Y = xy[Y];
+                        const auto line1Y = btm[Y];
+                        { // paint lines
+
+                            g.drawLine({ line0X, line0Y, line0X, line1Y }, thicc);
+                            g.drawLine({ line1X, line0Y,  line1X, line1Y }, thicc2);
+                        }
+
+                        if (modulatable)
+                        { // paint modulation
+                            const auto maxModDepth = values[MaxModDepth];
+                            const auto mmdLength = maxModDepth * wh[Y];
+                            const auto mmdY = juce::jlimit(xy[Y], btm[Y], valXY - mmdLength);
+
+                            col = Colours::c(ColourID::Mod);
+                            g.setColour(col);
+                            g.drawLine({ line0X, valXY, line0X, mmdY }, thicc);
+
+                            const auto valMod = values[ValMod];
+                            const auto valModHeight = valMod * wh[Y];
+                            const auto valModY = juce::jlimit(xy[Y], btm[Y], btm[Y] - valModHeight);
+                            g.drawLine({ line0X, valModY, line1X, valModY }, thicc2);
+
+                            const auto bias = values[ModBias];
+                            const auto biasHeight = bias * wh[Y];
+                            const auto biasX = line1X;
+                            const auto biasY0 = centre[Y];
+                            const auto biasY1 = btm[Y] - biasHeight;
+                            col = Colours::c(ColourID::Bias);
+                            g.setColour(col);
+                            g.drawLine({ biasX, biasY0, biasX, biasY1 }, thicc2);
+                        }
+
+                        { // paint tick
+                            col = Colours::c(ColourID::Bg);
+                            g.setColour(col);
+                            g.drawLine({ line0X, valXY, line1X, valXY }, thicc4);
+                            col = Colours::c(ColourID::Interact);
+                            g.setColour(col);
+                            g.drawLine({ line0X, valXY, line1X, valXY }, thicc2);
+                        }
                     }
-					
-                    { // paint tick
-                        col = Colours::c(ColourID::Bg);
-						g.setColour(col);
-                        g.drawLine({ line0X, valY, line1X, valY }, thicc4);
-                        col = Colours::c(ColourID::Interact);
-						g.setColour(col);
-						g.drawLine({ line0X, valY, line1X, valY }, thicc2);
-					}
+                    else
+                    {
+						const auto valLength = val * wh[X];
+						const auto valXY = xy[X] + valLength;
+
+						const auto line0X = xy[X];
+						const auto line1X = btm[X];
+						const auto line0Y = centre[Y] - thicc;
+						const auto line1Y = centre[Y] + thicc2;
+						{ // paint lines
+
+							g.drawLine({ line0X, line0Y, line1X, line0Y }, thicc);
+							g.drawLine({ line0X, line1Y, line1X, line1Y }, thicc2);
+						}
+
+						if (modulatable)
+						{ // paint modulation
+							const auto maxModDepth = values[MaxModDepth];
+							const auto mmdLength = maxModDepth * wh[X];
+							const auto mmdX = juce::jlimit(xy[X], btm[X], valXY + mmdLength);
+
+							col = Colours::c(ColourID::Mod);
+							g.setColour(col);
+							g.drawLine({ valXY, line0Y, mmdX, line0Y }, thicc);
+
+							const auto valMod = values[ValMod];
+                            const auto valModLength = valMod * wh[X];
+							const auto valModX = juce::jlimit(xy[X], btm[X], xy[X] + valMod * wh[X]);
+							g.drawLine({ valModX, line0Y, valModX, line1Y }, thicc2);
+
+							const auto bias = values[ModBias];
+							const auto biasLength = bias * wh[X];
+							const auto biasX0 = centre[X];
+							const auto biasX1 = xy[X] + biasLength;
+							const auto biasY = line1Y;
+							col = Colours::c(ColourID::Bias);
+							g.setColour(col);
+							g.drawLine({ biasX0, biasY, biasX1, biasY }, thicc2);
+						}
+
+                        { // paint tick
+                            col = Colours::c(ColourID::Bg);
+                            g.setColour(col);
+                            g.drawLine({ valXY, line0Y, valXY, line1Y }, thicc4);
+                            col = Colours::c(ColourID::Interact);
+                            g.setColour(col);
+                            g.drawLine({ valXY, line0Y, valXY, line1Y }, thicc);
+                        }
+                    }
                 };
 
-                k.onResize = [modulatable](Knob& k)
+                k.onResize = [modulatable, vertical](Knob& k)
                 {
                     const auto thicc = k.utils.thicc;
                     auto& layout = k.layout;
 
-                    k.knobBounds = layout(0, 1, 1, 1, false).reduced(thicc);
-                    layout.place(k.label, 0, 3, 1, 1, false);
-                    if (modulatable)
+                    if (vertical)
                     {
-                        layout.place(*k.comps[LockButton], 0, 0, 1, 1, true);
-                        layout.place(*k.comps[ModDial], 0, 2, 1, 1, true);
+                        k.knobBounds = layout(0, 1, 1, 1, false).reduced(thicc);
+                        layout.place(k.label, 0, 3, 1, 1, false);
+                        if (modulatable)
+                        {
+                            layout.place(*k.comps[LockButton], 0, 0, 1, 1, true);
+                            layout.place(*k.comps[ModDial], 0, 2, 1, 1, true);
+                        }
                     }
-                        
+                    else
+                    {
+						k.knobBounds = layout(2, 0, 1, 1, false).reduced(thicc);
+						layout.place(k.label, 0, 0, 1, 1, false);
+						if (modulatable)
+						{
+							layout.place(*k.comps[LockButton], 3, 0, 1, 1, true);
+							layout.place(*k.comps[ModDial], 1, 0, 1, 1, true);
+						}
+                    }  
                 };
 
-                k.init
-                (
-                    { 1 },
-                    { 3, 13, 3, 3 }
-                );
+                if(vertical)
+                    k.init
+                    (
+                        { 1 },
+                        { 3, 13, 3, 3 }
+                    );
+                else
+                    k.init
+                    (
+                        { 3, 3, 13, 3 },
+                        { 1 }
+                    );
             }
         }
 
@@ -517,7 +589,8 @@ namespace gui
     bool isKnobLooksTypeModulatable(Knob::LooksType lt) noexcept
     {
 		return lt == Knob::LooksType::Default
-			|| lt == Knob::LooksType::VerticalSlider;
+			|| lt == Knob::LooksType::VerticalSlider
+			|| lt == Knob::LooksType::HorizontalSlider;
     }
 
     // PARAMETER CREATION FREE FUNCS
@@ -531,7 +604,11 @@ namespace gui
         switch (looksType)
         {
         case Knob::LooksType::VerticalSlider:
-            looks::vertSlidr::create(knob, false, false);
+            looks::slidr::create(knob, false, false, true);
+            break;
+		case Knob::LooksType::HorizontalSlider:
+			looks::slidr::create(knob, false, false, false);
+			knob.dragMode = Knob::DragMode::Horizontal;
             break;
         default:
             looks::def::create(knob, false, false);
@@ -634,7 +711,11 @@ namespace gui
         switch (looksType)
         {
         case Knob::LooksType::VerticalSlider:
-            looks::vertSlidr::create(knob, modulatable, hasMeter);
+            looks::slidr::create(knob, modulatable, hasMeter, true);
+            break;
+        case Knob::LooksType::HorizontalSlider:
+            looks::slidr::create(knob, modulatable, hasMeter, false);
+            knob.dragMode = Knob::DragMode::Horizontal;
             break;
         case Knob::LooksType::Knot:
             looks::knot::create(knob);

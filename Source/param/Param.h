@@ -77,6 +77,14 @@ namespace param
 		EnvGenDecayBeats,
 		EnvGenReleaseBeats,
 		EnvGenLockDcyRls,
+		
+		EnvGenMode,
+		ModeGainLowerLimit,
+		ModeGainUpperLimit,
+		//ModeFilterType,
+		//ModeFilterCutoff,
+		//ModeFilterQ,
+		//ModeFilterSlope,
 
 		NumParams
 	};
@@ -124,6 +132,8 @@ namespace param
 		Pitch,
 		Q,
 		Slope,
+		Legato,
+		Custom,
 		NumUnits
 	};
 
@@ -296,6 +306,7 @@ namespace param
 		StrToValFunc q();
 		StrToValFunc slope();
 		StrToValFunc beats();
+		StrToValFunc legato();
 	}
 
 	namespace valToStr
@@ -324,18 +335,8 @@ namespace param
 		ValToStrFunc q();
 		ValToStrFunc slope();
 		ValToStrFunc beats();
+		ValToStrFunc legato();
 	}
-
-	/* pID, state, valDenormDefault, range, Unit */
-	Param* makeParam(PID, State&,
-		float = 1.f, const Range& = Range(0.f, 1.f),
-		Unit = Unit::Percent);
-
-	/* pID, state, params */
-	Param* makeParamPan(PID, State&, const Params&);
-
-	/* pID, state, valDenormDefault, range, Xen */
-	Param* makeParamPitch(PID, State&, float, const Range&, const Xen&);
 
 	struct MacroProcessor
 	{

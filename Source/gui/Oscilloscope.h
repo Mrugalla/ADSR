@@ -54,14 +54,13 @@ namespace gui
 			curve.clear();
 			auto y = yOff - data[0] * yScale;
 			curve.startNewSubPath(xOff, y);
-			for (auto i = 1.f; i < w; ++i)
+			for (auto i = 1.f; i <= w; ++i)
 			{
 				const auto x = xOff + i;
 				const auto idx = static_cast<int>(i * xScaleInv);
 				y = yOff - data[idx] * yScale;
 				curve.lineTo(x, y);
 			}
-			curve.lineTo(xOff + w, yOff);
 
 			g.setColour(Colours::c(ColourID::Txt));
 			g.strokePath(curve, stroke);
@@ -85,6 +84,6 @@ namespace gui
 
 todo:
 
-performance: only repaint part of the interface that was changed
+performance: only repaint part if the interface that was changed
 
 */

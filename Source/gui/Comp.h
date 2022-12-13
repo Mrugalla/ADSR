@@ -38,9 +38,9 @@ namespace gui
 
 		Utils& utils;
 		Layout layout;
+		String tooltip;
 	protected:
 		std::vector<Evt> evts;
-		String tooltip;
 		CursorType cursorType;
 
 		void paint(Graphics&) override;

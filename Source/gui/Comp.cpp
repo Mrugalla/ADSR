@@ -5,8 +5,8 @@ namespace gui
 	Comp::Comp(Utils& _utils, const String& _tooltip, CursorType _cursorType) :
 		utils(_utils),
 		layout(*this),
-		evts(),
 		tooltip(_tooltip),
+		evts(),
 		cursorType(_cursorType)
 	{
 		evts.reserve(1);
@@ -19,8 +19,8 @@ namespace gui
 	Comp::Comp(Utils& _utils, const String& _tooltip, Notify&& _notify, CursorType _cursorType) :
 		utils(_utils),
 		layout(*this),
-		evts(),
 		tooltip(_tooltip),
+		evts(),
 		cursorType(_cursorType)
 	{
 		evts.reserve(2);
@@ -161,7 +161,6 @@ namespace gui
 
 		updateBounds();
 	}
-
 
 
 	CompScrollable::ScrollBar::ScrollBar(Utils& u, CompScrollable& _scrollable, bool _vertical) :

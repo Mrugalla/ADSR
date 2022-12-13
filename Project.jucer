@@ -126,6 +126,7 @@
         <FILE id="abkRAU" name="nel19.ttf" compile="0" resource="1" file="Source/fonts/nel19.ttf"/>
       </GROUP>
       <GROUP id="{DA435779-5001-4379-F809-3E7C21D55DC0}" name="gui">
+        <FILE id="xQxWVP" name="RadioButton.h" compile="0" resource="0" file="Source/gui/RadioButton.h"/>
         <FILE id="q87WSH" name="Oscilloscope.h" compile="0" resource="0" file="Source/gui/Oscilloscope.h"/>
         <FILE id="S7OSxE" name="EnvelopeGenerator.h" compile="0" resource="0"
               file="Source/gui/EnvelopeGenerator.h"/>

@@ -86,6 +86,10 @@ namespace param
 		case PID::EnvGenDecayBeats: return "EnvGen Decay Beats";
 		case PID::EnvGenReleaseBeats: return "EnvGen Release Beats";
 		case PID::EnvGenLockDcyRls: return "EnvGen Lock Decay-Release";
+		
+		case PID::EnvGenMode: return "EnvGen Mode";
+		case PID::ModeGainLowerLimit: return "Gain Lower Limit";
+		case PID::ModeGainUpperLimit: return "Gain Upper Limit";
 
 		default: return "Invalid Parameter Name";
 		}
@@ -171,7 +175,7 @@ namespace param
 		case PID::EnvGenAtkShape: return "Define the attack shape of the envelope generator.";
 		case PID::EnvGenDcyShape: return "Define the decay shape of the envelope generator.";
 		case PID::EnvGenRlsShape: return "Define the release shape of the envelope generator.";
-		case PID::EnvGenLegato: return "Switch on or off legato mode of the envelope generator.";
+		case PID::EnvGenLegato: return "Define the legato mode of the envelope generator.";
 		case PID::EnvGenInverse: return "Flips the envelope generator's output upside down.";
 		case PID::EnvGenVelocity: return "Define the velocity sensitivity of the envelope generator.";
 		case PID::EnvGenTempoSync: return "Switch on or off tempo sync of the envelope generator.";
@@ -179,6 +183,9 @@ namespace param
 		case PID::EnvGenDecayBeats: return "Define the decay time of the envelope generator in beats.";
 		case PID::EnvGenReleaseBeats: return "Define the release time of the envelope generator in beats.";
 		case PID::EnvGenLockDcyRls: return "Lock the decay and release time of the envelope generator.";
+		case PID::EnvGenMode: return "Define the mode of the envelope generator.";
+		case PID::ModeGainLowerLimit: return "Define the lower limit of the gain mode.";
+		case PID::ModeGainUpperLimit: return "Define the upper limit of the gain mode.";
 
 		default: return "Invalid Tooltip.";
 		}
@@ -210,6 +217,8 @@ namespace param
 		case Unit::Pitch: return "";
 		case Unit::Q: return "q";
 		case Unit::Slope: return "db/oct";
+		case Unit::Legato: return "";
+		case Unit::Custom: return "";
 		default: return "";
 		}
 	}
@@ -525,6 +534,8 @@ namespace param::strToVal
 		return[p = parse()](const String& txt)
 		{
 			const auto text = txt.trimCharactersAtEnd(toString(Unit::Power));
+			if (audio::stringNegates(text))
+				return 0.f;
 			const auto val = p(text, 0.f);
 			return val > .5f ? 1.f : 0.f;
 		};
@@ -843,6 +854,16 @@ namespace param::strToVal
 			return val;
 		};
 	}
+
+	StrToValFunc legato()
+	{
+		return[p = parse()](const String& txt)
+		{
+			if (audio::stringNegates(txt))
+				return 0.f;
+			return p(txt, 0.f);
+		};
+	}
 }
 
 namespace param::valToStr
@@ -1069,13 +1090,22 @@ namespace param::valToStr
 			return String(numerator) + " / " + String(denominator) + modeStr;
 		};
 	}
+
+	ValToStrFunc legato()
+	{
+		return [](float v)
+		{
+			return v < .5f ? String("Off") : v < 1.5f ? String("On") : String("On+Sus");
+		};
+	}
 }
 
 namespace param
 {
-	Param* makeParam(PID id, State& state,
-		float valDenormDefault, const Range& range,
-		Unit unit)
+	/* pID, state, valDenormDefault, range, Unit */
+	static Param* makeParam(PID id, State& state,
+		float valDenormDefault = 1.f, const Range& range = { 0.f, 1.f },
+		Unit unit = Unit::Percent)
 	{
 		ValToStrFunc valToStrFunc;
 		StrToValFunc strToValFunc;
@@ -1158,6 +1188,10 @@ namespace param
 			valToStrFunc = valToStr::beats();
 			strToValFunc = strToVal::beats();
 			break;
+		case Unit::Legato:
+			valToStrFunc = valToStr::legato();
+			strToValFunc = strToVal::legato();
+			break;
 		default:
 			valToStrFunc = valToStr::empty();
 			strToValFunc = strToVal::percent();
@@ -1167,7 +1201,8 @@ namespace param
 		return new Param(id, range, valDenormDefault, valToStrFunc, strToValFunc, state, unit);
 	}
 
-	Param* makeParamPan(PID id, State& state, const Params& params)
+	/* pID, state, params */
+	static Param* makeParamPan(PID id, State& state, const Params& params)
 	{
 		ValToStrFunc valToStrFunc = valToStr::pan(params);
 		StrToValFunc strToValFunc = strToVal::pan(params);
@@ -1175,12 +1210,20 @@ namespace param
 		return new Param(id, { -1.f, 1.f }, 0.f, valToStrFunc, strToValFunc, state, Unit::Pan);
 	}
 
-	Param* makeParamPitch(PID id, State& state, float valDenormDefault, const Range& range, const Xen& xen)
+	/* pID, state, valDenormDefault, range, Xen */
+	static Param* makeParamPitch(PID id, State& state, float valDenormDefault, const Range& range, const Xen& xen)
 	{
 		ValToStrFunc valToStrFunc = valToStr::pitch(xen);
 		StrToValFunc strToValFunc = strToVal::pitch(xen);
 
 		return new Param(id, range, valDenormDefault, valToStrFunc, strToValFunc, state, Unit::Pitch);
+	}
+
+	static Param* makeParam(PID id, State& state,
+		float valDenormDefault, const Range& range,
+		ValToStrFunc&& valToStrFunc, StrToValFunc&& strToValFunc)
+	{
+		return new Param(id, range, valDenormDefault, valToStrFunc, strToValFunc, state, Unit::Custom);
 	}
 
 	// PARAMS
@@ -1251,7 +1294,7 @@ namespace param
 		params.push_back(makeParam(PID::EnvGenAtkShape, state, .5f, makeRange::lin(-1.f, 1.f)));
 		params.push_back(makeParam(PID::EnvGenDcyShape, state, -.5f, makeRange::lin(-1.f, 1.f)));
 		params.push_back(makeParam(PID::EnvGenRlsShape, state, -.5f, makeRange::lin(-1.f, 1.f)));
-		params.push_back(makeParam(PID::EnvGenLegato, state, 0.f, makeRange::toggle(), Unit::Power));
+		params.push_back(makeParam(PID::EnvGenLegato, state, 0.f, makeRange::stepped(0.f, 2.f), Unit::Legato));
 		params.push_back(makeParam(PID::EnvGenInverse, state, 0.f, makeRange::toggle(), Unit::Power));
 		params.push_back(makeParam(PID::EnvGenVelocity, state, 0.f));
 		params.push_back(makeParam(PID::EnvGenTempoSync, state, 0.f, makeRange::toggle(), Unit::Power));
@@ -1259,6 +1302,27 @@ namespace param
 		params.push_back(makeParam(PID::EnvGenDecayBeats, state, 1.f / 16.f, makeRange::beats(64.f, .5f, true), Unit::Beats));
 		params.push_back(makeParam(PID::EnvGenReleaseBeats, state, 1.f / 16.f, makeRange::beats(64.f, .5f, true), Unit::Beats));
 		params.push_back(makeParam(PID::EnvGenLockDcyRls, state, 1.f, makeRange::toggle(), Unit::Power));
+		
+		auto valToStrMode = [](float v)
+		{
+			return String(v < .5f ? "Direct Out" : v < 1.5f ? "Gain" : "Filter");
+		};
+		auto strToValMode = [p = strToVal::parse()](const String& s)
+		{
+			if (s == "Direct Out")
+				return 0.f;
+			if (s == "Gain")
+				return 1.f;
+			if (s == "Filter")
+				return 2.f;
+			auto val = p(s, 0.f);
+			return val;
+		};
+		
+		params.push_back(makeParam(PID::EnvGenMode, state, 1.f, makeRange::stepped(0.f, 2.f), valToStrMode, strToValMode));
+		
+		params.push_back(makeParam(PID::ModeGainLowerLimit, state, -60.f, makeRange::lin(-60.f, 0.f), Unit::Decibel));
+		params.push_back(makeParam(PID::ModeGainUpperLimit, state, 0.f, makeRange::lin(-60.f, 0.f), Unit::Decibel));
 		// LOW LEVEL PARAMS END
 
 		for (auto param : params)

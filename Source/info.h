@@ -24,6 +24,15 @@ HOW TO USE:
 
 TO DO:
 
+knob design
+	make tick other colour than arcs
+
+symbols for parameter lock and parameter modulation
+
+buttons
+	reduced contrast onSelected sucks
+		outline or fill interactable colour?
+
 add layout function that paints a rectangle or something
 	with a descriptive text to the topLeft
 

@@ -1,4 +1,5 @@
 #pragma once
+#include "RadioButton.h"
 #include "EnvelopeGenerator.h"
 #include "Oscilloscope.h"
 
@@ -9,6 +10,55 @@ namespace gui
 		public Timer
     {
         using FlexKnob = std::unique_ptr<Knob>;
+		
+        struct ModeComp :
+            public Comp
+        {
+			ModeComp(Utils& u) :
+				Comp(u, "", CursorType::Default)
+            {}
+
+            void paint(Graphics& g)
+            {
+                auto thicc = utils.thicc;
+				Stroke stroke(thicc, Stroke::JointStyle::curved, Stroke::EndCapStyle::butt);
+				auto bounds = getLocalBounds().toFloat().reduced(thicc);
+				g.setColour(Colours::c(ColourID::Hover));
+                drawRectEdges(g, bounds, thicc * 2.f, stroke);
+            }
+        };
+
+        struct ModeCompGain :
+            public ModeComp
+        {
+            ModeCompGain(Utils& u) :
+                ModeComp(u),
+                lowerLim(u),
+				upperLim(u)
+            {
+				addAndMakeVisible(lowerLim);
+				addAndMakeVisible(upperLim);
+				
+				makeParameter(lowerLim, PID::ModeGainLowerLimit, "Lower Limit");
+				makeParameter(upperLim, PID::ModeGainUpperLimit, "Upper Limit");
+
+                layout.init
+                (
+                    { 1, 1 },
+                    { 1 }
+                );
+            }
+
+            void resized() override
+            {
+                layout.resized();
+
+                layout.place(lowerLim, 0, 0, 1, 1, false);
+				layout.place(upperLim, 1, 0, 1, 1, false);
+            }
+
+            Knob lowerLim, upperLim;
+        };
 
         LowLevel(Utils& u) :
             Comp(u, "", CursorType::Default),
@@ -23,6 +73,8 @@ namespace gui
 				PID::EnvGenReleaseBeats,
                 PID::EnvGenTempoSync, PID::EnvGenLockDcyRls
             ),
+			mode(u),
+			modeComp(),
             atk(u), sus(u), atkBeats(u),
             dcy(), rls(), dcyBeats(), rlsBeats(),
             lockDcyRls(u),
@@ -33,6 +85,54 @@ namespace gui
             velo(u)
         {
             addAndMakeVisible(envGen);
+			
+            addAndMakeVisible(mode);
+            {
+                mode.makeParameter(PID::EnvGenMode);
+                mode.vertical = false;
+				
+                const auto& modeParam = *u.getParam(PID::EnvGenMode);
+                const auto valDenorm = static_cast<int>(std::round(modeParam.getValModDenorm() - modeParam.range.start));
+
+                switch (valDenorm)
+                {
+                case 0:
+                    modeComp = std::make_unique<ModeComp>(u);
+                    break;
+                case 1:
+                    modeComp = std::make_unique<ModeCompGain>(u);
+                    break;
+                default:
+                    modeComp = std::make_unique<ModeComp>(u);
+                    break;
+                }
+
+                addAndMakeVisible(*modeComp);
+                mode.onChange.push_back([&]()
+                {
+                    enum { DirectOut, Gain, Filter, NumModes };
+                    const auto& modeParam = *u.getParam(PID::EnvGenMode);
+					const auto valDenorm = static_cast<int>(std::round(modeParam.getValModDenorm() - modeParam.range.start));
+                    
+                    removeChildComponent(modeComp.get());
+
+                    switch (valDenorm)
+                    {
+                    case 0:
+                        modeComp = std::make_unique<ModeComp>(u);
+                        break;
+                    case 1:
+                        modeComp = std::make_unique<ModeCompGain>(u);
+                        break;
+                    default:
+                        modeComp = std::make_unique<ModeComp>(u);
+                        break;
+                    }
+
+                    addAndMakeVisible(*modeComp);
+                    resized();
+                });
+            }
 
             makeParameter(atk, PID::EnvGenAttack, "Attack", true);
             addChildComponent(atk);
@@ -55,7 +155,7 @@ namespace gui
 			addAndMakeVisible(oscope);
             oscope.bipolar = false;
 
-            makeParameter(legato, PID::EnvGenLegato, ButtonSymbol::Legato);
+			makeParameter(legato, PID::EnvGenLegato, "Legato");
             addAndMakeVisible(legato);
 
             makeParameter(inverse, PID::EnvGenInverse, ButtonSymbol::InvertADSR);
@@ -69,8 +169,8 @@ namespace gui
 
             layout.init
             (
-                { 1, 2, 2, 2, 2, 1 },
-                { 8, 3, 1, 3, 2 }
+                { 1, 13, 13, 13, 13, 1 },
+                { 2, 3, 8, 3, 1, 3, 3 }
             );
 
             startTimerHz(12);
@@ -119,27 +219,30 @@ namespace gui
         {
             layout.resized();
 
-            layout.place(envGen, 1, 0, 4, 1);
+            layout.place(mode, 1, 0, 4, 1);
+			layout.place(*modeComp, 1, 1, 4, 1);
 
-            layout.place(atk, 1, 1, 1, 1);
-			layout.place(*dcy, 2, 1, 1, 1);
-			layout.place(sus, 3, 1, 1, 1);
-			layout.place(*rls, 4, 1, 1, 1);
+            layout.place(envGen, 1, 2, 4, 1);
+
+            layout.place(atk, 1, 3, 1, 1);
+			layout.place(*dcy, 2, 3, 1, 1);
+			layout.place(sus, 3, 3, 1, 1);
+			layout.place(*rls, 4, 3, 1, 1);
 
             atkBeats.setBounds(atk.getBounds());
 			dcyBeats->setBounds(dcy->getBounds());
             rlsBeats->setBounds(rls->getBounds());
 			
-			layout.place(lockDcyRls, 3, 2, 1, 1, true);
+			layout.place(lockDcyRls, 3, 4, 1, 1, true);
 
             const auto thicc = utils.thicc;
             const auto thicc5 = thicc * 5.f;
-            oscope.setBounds(layout(1, 3, 4, 1).reduced(thicc5).toNearestInt());
+            oscope.setBounds(layout(1, 5, 4, 1).reduced(thicc5).toNearestInt());
 
-            layout.place(legato, 1, 4, 1, 1, true);
-            layout.place(inverse, 2, 4, 1, 1, true);
-			layout.place(tempoSync, 3, 4, 1, 1, true);
-            layout.place(velo, 4, 4, 1, 1, false);
+            layout.place(legato, 1, 6, 1, 1, false);
+            layout.place(inverse, 2, 6, 1, 1, true);
+			layout.place(tempoSync, 3, 6, 1, 1, true);
+            layout.place(velo, 4, 6, 1, 1, false);
         }
 
         void timerCallback() override
@@ -155,11 +258,14 @@ namespace gui
 
     protected:
         EnvGenComp envGen;
+        RadioButton mode;
+        std::unique_ptr<ModeComp> modeComp;
 		Knob atk, sus, atkBeats;
         FlexKnob dcy, rls, dcyBeats, rlsBeats;
         Button lockDcyRls;
         Oscilloscope oscope;
-        Button legato, inverse, tempoSync;
+        Knob legato;
+        Button inverse, tempoSync;
         Knob velo;
 
         void switchDcyRlsParams(bool lockEnabled)

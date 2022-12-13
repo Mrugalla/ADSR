@@ -68,6 +68,7 @@ namespace gui
         {
             Default,
             VerticalSlider,
+            HorizontalSlider,
 			Knot,
             NumTypes
         };
