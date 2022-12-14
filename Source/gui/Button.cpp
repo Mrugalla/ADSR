@@ -272,6 +272,29 @@ namespace gui
 		};
 	}
 
+	namespace
+	{
+		static void paintActiveToggleState(Graphics& g, const BoundsF& area, bool withToggle, int tsBtn, int tsTarget, float thicc)
+		{
+			if (withToggle && tsBtn == tsTarget)
+			{
+				g.setColour(Colours::c(ColourID::Interact));
+				g.drawRoundedRectangle(area, thicc, thicc);
+			}
+		}
+
+		static void paintHoverState(Graphics& g, const BoundsF& bounds, const Button& btn, bool isDown, float thicc)
+		{
+			g.setColour(Colours::c(ColourID::Hover));
+			if (btn.isMouseOver())
+			{
+				g.fillRoundedRectangle(bounds, thicc);
+				if (isDown)
+					g.fillRoundedRectangle(bounds, thicc);
+			}
+		}
+	}
+
 	void makeTextButton(Button& b, const String& txt, bool withToggle, int targetToggleState)
 	{
 		b.enableLabel(txt);
@@ -294,19 +317,9 @@ namespace gui
 			g.setColour(col);
 			g.fillRoundedRectangle(area, thicc);
 
-			if (withToggle && button.toggleState == targetToggleState)
-			{
-				g.setColour(Colours::c(ColourID::Interact));
-				g.drawRoundedRectangle(area, thicc, thicc);
-			}
+			paintActiveToggleState(g, area, withToggle, button.toggleState, targetToggleState, thicc);
 
-			g.setColour(Colours::c(ColourID::Hover));
-			if (button.isMouseOver())
-			{
-				g.fillRoundedRectangle(area, thicc);
-				if (isDown)
-					g.fillRoundedRectangle(area, thicc);
-			}
+			paintHoverState(g, area, button, isDown, thicc);
 		});
 	}
 
@@ -332,19 +345,9 @@ namespace gui
 			g.setColour(col);
 			g.fillRoundedRectangle(area, thicc);
 
-			if (withToggle && button.toggleState == targetToggleState)
-			{
-				g.setColour(Colours::c(ColourID::Interact));
-				g.drawRoundedRectangle(area, thicc, thicc);
-			}
+			paintActiveToggleState(g, area, withToggle, button.toggleState, targetToggleState, thicc);
 
-			g.setColour(Colours::c(ColourID::Hover));
-			if (button.isMouseOver())
-			{
-				g.fillRoundedRectangle(area, thicc);
-				if (isDown)
-					g.fillRoundedRectangle(area, thicc);
-			}
+			paintHoverState(g, area, button, isDown, thicc);
 		});
 	}
 	
@@ -383,19 +386,9 @@ namespace gui
 			g.setColour(col);
 			g.fillRoundedRectangle(bounds, thicc);
 			
-			if (withToggle && button.toggleState == targetToggleState)
-			{
-				g.setColour(Colours::c(ColourID::Interact));
-				g.drawRoundedRectangle(bounds, thicc, thicc);
-			}
+			paintActiveToggleState(g, bounds, withToggle, button.toggleState, targetToggleState, thicc);
 
-			g.setColour(Colours::c(ColourID::Hover));
-			if (button.isMouseOver())
-			{
-				g.fillRoundedRectangle(bounds, thicc);
-				if (isDown)
-					g.fillRoundedRectangle(bounds, thicc);
-			}
+			paintHoverState(g, bounds, button, isDown, thicc);
 
 			bool abortable = symbol == ButtonSymbol::Settings || symbol == ButtonSymbol::TuningFork;
 			if (abortable && button.toggleState == 1 || symbol == ButtonSymbol::Abort)
