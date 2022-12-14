@@ -24,9 +24,6 @@ HOW TO USE:
 
 TO DO:
 
-knob design
-	make tick other colour than arcs
-
 symbols for parameter lock and parameter modulation
 
 buttons

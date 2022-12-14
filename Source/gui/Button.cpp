@@ -294,10 +294,13 @@ namespace gui
 			g.setColour(col);
 			g.fillRoundedRectangle(area, thicc);
 
-			g.setColour(Colours::c(ColourID::Hover));
 			if (withToggle && button.toggleState == targetToggleState)
-				g.fillRoundedRectangle(area, thicc);
+			{
+				g.setColour(Colours::c(ColourID::Interact));
+				g.drawRoundedRectangle(area, thicc, thicc);
+			}
 
+			g.setColour(Colours::c(ColourID::Hover));
 			if (button.isMouseOver())
 			{
 				g.fillRoundedRectangle(area, thicc);
@@ -329,10 +332,13 @@ namespace gui
 			g.setColour(col);
 			g.fillRoundedRectangle(area, thicc);
 
-			g.setColour(Colours::c(ColourID::Hover));
 			if (withToggle && button.toggleState == targetToggleState)
-				g.fillRoundedRectangle(area, thicc);
+			{
+				g.setColour(Colours::c(ColourID::Interact));
+				g.drawRoundedRectangle(area, thicc, thicc);
+			}
 
+			g.setColour(Colours::c(ColourID::Hover));
 			if (button.isMouseOver())
 			{
 				g.fillRoundedRectangle(area, thicc);
@@ -376,11 +382,14 @@ namespace gui
 
 			g.setColour(col);
 			g.fillRoundedRectangle(bounds, thicc);
+			
+			if (withToggle && button.toggleState == targetToggleState)
+			{
+				g.setColour(Colours::c(ColourID::Interact));
+				g.drawRoundedRectangle(bounds, thicc, thicc);
+			}
 
 			g.setColour(Colours::c(ColourID::Hover));
-			if (withToggle && button.toggleState == targetToggleState)
-				g.fillRoundedRectangle(bounds, thicc);
-
 			if (button.isMouseOver())
 			{
 				g.fillRoundedRectangle(bounds, thicc);

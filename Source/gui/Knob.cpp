@@ -208,7 +208,7 @@ namespace gui
                         radius + k.knobBounds.getY()
                     );
 
-                    const auto col = Colours::c(ColourID::Interact);
+                    auto col = Colours::c(ColourID::Txt);
 
                     if (hasMeter)
                     {
@@ -318,6 +318,8 @@ namespace gui
                             g.strokePath(modPath, strokeType);
                         }
                     };
+
+                    col = Colours::c(ColourID::Interact);
 					
                     { // paint tick
                         const auto tickLine = LineF::fromStartAndAngle(centre, radius, valAngle);
@@ -459,7 +461,7 @@ namespace gui
 
 							const auto valMod = values[ValMod];
                             const auto valModLength = valMod * wh[X];
-							const auto valModX = juce::jlimit(xy[X], btm[X], xy[X] + valMod * wh[X]);
+							const auto valModX = juce::jlimit(xy[X], btm[X], xy[X] + valModLength);
 							g.drawLine({ valModX, line0Y, valModX, line1Y }, thicc2);
 
 							const auto bias = values[ModBias];
