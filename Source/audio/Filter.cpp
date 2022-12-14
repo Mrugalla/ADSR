@@ -172,4 +172,144 @@ namespace audio
 	template struct FilterBandpassSlope<6>;
 	template struct FilterBandpassSlope<7>;
 	template struct FilterBandpassSlope<8>;
+
+	////////////////////////////////////////////////////////////////////
+
+	// IIR
+
+	IIR::IIR(float startVal) :
+		alpha(0.f),
+		cosOmega(0.f),
+
+		a0(0.f),
+		a1(0.f),
+		a2(0.f),
+		b0(0.f),
+		b1(0.f),
+		b2(0.f),
+		x1(0.f),
+		x2(0.f),
+		y1(startVal),
+		y2(startVal)
+	{
+
+	}
+
+	void IIR::clear() noexcept
+	{
+		x1 = 0.f;
+		x2 = 0.f;
+		y1 = 0.f;
+		y2 = 0.f;
+	}
+
+	void IIR::setFc(Type type, float fc, float q) noexcept
+	{
+		if (type == Type::LP)
+		{
+
+		}
+		else if (type == Type::HP)
+		{
+
+		}
+		else if (type == Type::BP)
+		{
+			const auto omega = Tau * fc;
+			cosOmega = -2.f * std::cos(omega);
+			const auto sinOmega = std::sin(omega);
+			alpha = sinOmega / (2.f * q);
+			const auto scale = 1.f + (q / 2.f);
+
+			a0 = alpha;
+			a1 = 0.f;
+			a2 = -alpha;
+
+			b1 = cosOmega;
+			b2 = 1.f - alpha;
+
+			b0 = 1.f + alpha;
+			const auto b0Inv = 1.f / b0;
+
+			a0 *= b0Inv * scale;
+			a1 *= b0Inv * scale;
+			a2 *= b0Inv * scale;
+			b1 *= b0Inv;
+			b2 *= b0Inv;
+		}
+		else if (type == Type::BR)
+		{
+
+		}
+		else if (type == Type::AP)
+		{
+
+		}
+		else if (type == Type::LS)
+		{
+
+		}
+		else if (type == Type::HS)
+		{
+
+		}
+		else if (type == Type::Notch)
+		{
+
+		}
+		else // type == Type::Bell
+		{
+
+		}
+	}
+
+	void IIR::copy(const IIR& other) noexcept
+	{
+		a0 = other.a0;
+		a1 = other.a1;
+		a2 = other.a2;
+		b0 = other.b0;
+		b1 = other.b1;
+		b2 = other.b2;
+	}
+
+	float IIR::operator()(float x0) noexcept
+	{
+		return processSample(x0);
+	}
+
+	float IIR::processSample(float x0) noexcept
+	{
+		auto y0 =
+			x0 * a0 +
+			x1 * a1 +
+			x2 * a2 -
+			y1 * b1 -
+			y2 * b2;
+
+		x2 = x1;
+		x1 = x0;
+		y2 = y1;
+		y1 = y0;
+
+		return y0;
+	}
+
+	std::complex<float> IIR::response(float scaledFreq) const noexcept
+	{
+		auto w = scaledFreq * Tau;
+		std::complex<float> z = { std::cos(w), -std::sin(w) };
+		std::complex<float> z2 = z * z;
+
+		return (a0 + z * a1 + z2 * a2) / (1.f + z * b1 + z2 * b2);
+	}
+
+	float IIR::responseDb(float scaledFreq) const noexcept
+	{
+		auto w = scaledFreq * Tau;
+		std::complex<float> z = { std::cos(w), -std::sin(w) };
+		std::complex<float> z2 = z * z;
+		auto energy = std::norm(a0 + z * a1 + z2 * a2) / std::norm(1.f + z * b1 + z2 * b2);
+		return 10.f * std::log10(energy);
+	}
 }

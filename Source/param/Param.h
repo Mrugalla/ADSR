@@ -81,10 +81,11 @@ namespace param
 		EnvGenMode,
 		ModeGainLowerLimit,
 		ModeGainUpperLimit,
-		//ModeFilterType,
-		//ModeFilterCutoff,
-		//ModeFilterQ,
+		ModeFilterType,
+		ModeFilterCutoff,
+		ModeFilterQ,
 		//ModeFilterSlope,
+		ModeFilterRange,
 
 		NumParams
 	};
@@ -134,6 +135,7 @@ namespace param
 		Slope,
 		Legato,
 		Custom,
+		FilterType,
 		NumUnits
 	};
 
@@ -250,7 +252,11 @@ namespace param
 		using AudioProcessor = juce::AudioProcessor;
 		using Parameters = std::vector<Param*>;
 
-		Params(AudioProcessor&, State&, const Xen&);
+		Params(AudioProcessor&, State&,
+#if PPDHasTuningEditor
+			const Xen&
+#endif
+		);
 
 		void loadPatch(juce::ApplicationProperties&);
 
@@ -282,8 +288,6 @@ namespace param
 
 	namespace strToVal
 	{
-		std::function<float(String, const float/*altVal*/)> parse();
-
 		StrToValFunc power();
 		StrToValFunc solo();
 		StrToValFunc mute();
@@ -307,6 +311,7 @@ namespace param
 		StrToValFunc slope();
 		StrToValFunc beats();
 		StrToValFunc legato();
+		StrToValFunc filterType();
 	}
 
 	namespace valToStr
@@ -336,6 +341,7 @@ namespace param
 		ValToStrFunc slope();
 		ValToStrFunc beats();
 		ValToStrFunc legato();
+		ValToStrFunc filterType();
 	}
 
 	struct MacroProcessor

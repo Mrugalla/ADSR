@@ -16,6 +16,7 @@
 
 #include "audio/EnvelopeGenerator.h"
 #include "audio/Oscilloscope.h"
+#include "audio/Filter.h"
 
 #include "audio/AudioUtils.h"
 
@@ -126,5 +127,7 @@ namespace audio
 
         EnvGenMIDI envGenMIDI;
 		Oscilloscope oscope;
+        std::array<IIR, 2> iir;
+        PRM cutoffParam;
     };
 }

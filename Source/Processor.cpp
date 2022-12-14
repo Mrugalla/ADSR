@@ -217,7 +217,9 @@ namespace audio
     Processor::Processor() :
         ProcessorBackEnd(),
 		envGenMIDI(),
-        oscope()
+        oscope(),
+		iir(),
+        cutoffParam(24.f)
 	{
     }
 
@@ -247,6 +249,9 @@ namespace audio
 
 		envGenMIDI.prepare(sampleRateF, maxBlockSize);
         oscope.prepare(sampleRateF, maxBlockSize);
+        for (auto& i : iir)
+            i.clear();
+        cutoffParam.prepare(sampleRateF, maxBlockSize, 10.f);
 
         dryWetMix.prepare(sampleRateF, maxBlockSize, latency);
 
@@ -459,9 +464,12 @@ namespace audio
 
         envGenMIDI.processBypassed(numSamples);
         oscope(envGenMIDI.data(), numSamples, playHeadPos);
-		
-        for (auto ch = 0; ch < numChannels; ++ch)
-            SIMD::copy(samples[ch], envGenMIDI.data(), numSamples);
+
+        const auto mode = static_cast<int>(std::rint(params[PID::EnvGenMode]->getValModDenorm()));
+        enum { DirectOut };
+		if(mode == DirectOut)
+            for (auto ch = 0; ch < numChannels; ++ch)
+                SIMD::copy(samples[ch], envGenMIDI.data(), numSamples);
 		
         ProcessorBackEnd::processBlockBypassed(buffer, midi);
     }
@@ -494,7 +502,9 @@ namespace audio
 		
         const auto mode = static_cast<int>(std::rint(params[PID::EnvGenMode]->getValModDenorm()));
         auto envGenData = envGenMIDI.data();
-        float lowerLimit, upperLimit, limitRange;
+        IIR::Type filterType;
+        float lowerLimit, upperLimit, limitRange, q, freqHz, freqFc, Fs;
+        float* cutoffBuf;
 
 		enum { DirectOut, Gain, Filter, NumModes };
         switch (mode)
@@ -513,6 +523,30 @@ namespace audio
 			for (auto ch = 0; ch < numChannels; ++ch)
 				SIMD::multiply(samples[ch], envGenData, numSamples);
 			break;
+		case Filter:
+            Fs = static_cast<float>(getSampleRate());
+            filterType = static_cast<IIR::Type>(static_cast<int>(params[PID::ModeFilterType]->getValModDenorm()));
+			lowerLimit = params[PID::ModeFilterCutoff]->getValModDenorm();
+            q = params[PID::ModeFilterQ]->getValModDenorm();
+            limitRange = params[PID::ModeFilterRange]->getValModDenorm() * 127.f;
+
+            cutoffBuf = cutoffParam(lowerLimit, numSamples);
+            
+            for (auto ch = 0; ch < numChannels; ++ch)
+            {
+                auto& filter = iir[ch];
+                auto smpls = samples[ch];
+
+                for (auto s = 0; s < numSamples; ++s)
+                {
+                    freqHz = xenManager.noteToFreqHz(juce::jlimit(0.f, 127.f, cutoffBuf[s] + limitRange * envGenData[s]));
+                    freqFc = freqHzInFc(freqHz, Fs);
+					
+                    filter.setFc(filterType, freqFc, q);
+                    smpls[s] = filter(smpls[s]);
+                }
+            }
+            break;
         default:
             for (auto ch = 0; ch < numChannels; ++ch)
                 SIMD::copy(samples[ch], envGenData, numSamples);

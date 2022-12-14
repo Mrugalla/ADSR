@@ -90,6 +90,10 @@ namespace param
 		case PID::EnvGenMode: return "EnvGen Mode";
 		case PID::ModeGainLowerLimit: return "Gain Lower Limit";
 		case PID::ModeGainUpperLimit: return "Gain Upper Limit";
+		case PID::ModeFilterType: return "Filter Type";
+		case PID::ModeFilterCutoff: return "Filter Cutoff";
+		case PID::ModeFilterQ: return "Filter Q";
+		case PID::ModeFilterRange: return "Filter Range";
 
 		default: return "Invalid Parameter Name";
 		}
@@ -186,6 +190,10 @@ namespace param
 		case PID::EnvGenMode: return "Define the mode of the envelope generator.";
 		case PID::ModeGainLowerLimit: return "Define the lower limit of the gain mode.";
 		case PID::ModeGainUpperLimit: return "Define the upper limit of the gain mode.";
+		case PID::ModeFilterType: return "Select the filter type.";
+		case PID::ModeFilterCutoff: return "Define the cutoff frequency of the filter.";
+		case PID::ModeFilterQ: return "Define the Q of the filter.";
+		case PID::ModeFilterRange: return "Define the range of the envelope's influence on the filter.";
 
 		default: return "Invalid Tooltip.";
 		}
@@ -219,6 +227,7 @@ namespace param
 		case Unit::Slope: return "db/oct";
 		case Unit::Legato: return "";
 		case Unit::Custom: return "";
+		case Unit::FilterType: return "";
 		default: return "";
 		}
 	}
@@ -517,7 +526,7 @@ namespace param
 
 namespace param::strToVal
 {
-	std::function<float(String, const float/*altVal*/)> parse()
+	static std::function<float(String, const float/*altVal*/)> parse()
 	{
 		return [](const String& txt, const float altVal)
 		{
@@ -864,6 +873,34 @@ namespace param::strToVal
 			return p(txt, 0.f);
 		};
 	}
+
+	StrToValFunc filterType()
+	{
+		return[p = parse()](const String& txt)
+		{
+			auto text = txt.toLowerCase();
+			if (text == "lp")
+				return 0.f;
+			else if (text == "hp")
+				return 1.f;
+			else if (text == "bp")
+				return 2.f;
+			else if (text == "br")
+				return 3.f;
+			else if (text == "ap")
+				return 4.f;
+			else if (text == "ls")
+				return 5.f;
+			else if (text == "hs")
+				return 6.f;
+			else if (text == "notch")
+				return 7.f;
+			else if (text == "bell")
+				return 8.f;
+			else
+				return p(text, 0.f);
+		};
+	}
 }
 
 namespace param::valToStr
@@ -1098,6 +1135,27 @@ namespace param::valToStr
 			return v < .5f ? String("Off") : v < 1.5f ? String("On") : String("On+Sus");
 		};
 	}
+
+	ValToStrFunc filterType()
+	{
+		return [](float v)
+		{
+			auto idx = static_cast<int>(std::round(v));
+			switch (idx)
+			{
+			case 0: return String("LP");
+			case 1: return String("HP");
+			case 2: return String("BP");
+			case 3: return String("BR");
+			case 4: return String("AP");
+			case 5: return String("LS");
+			case 6: return String("HS");
+			case 7: return String("Notch");
+			case 8: return String("Bell");
+			default: return String("");
+			}
+		};
+	}
 }
 
 namespace param
@@ -1192,6 +1250,10 @@ namespace param
 			valToStrFunc = valToStr::legato();
 			strToValFunc = strToVal::legato();
 			break;
+		case Unit::FilterType:
+			valToStrFunc = valToStr::filterType();
+			strToValFunc = strToVal::filterType();
+			break;
 		default:
 			valToStrFunc = valToStr::empty();
 			strToValFunc = strToVal::percent();
@@ -1228,7 +1290,11 @@ namespace param
 
 	// PARAMS
 
-	Params::Params(AudioProcessor& audioProcessor, State& _state, const Xen&) :
+	Params::Params(AudioProcessor& audioProcessor, State& _state
+#if PPDHasTuningEditor
+		, const Xen& xen
+#endif
+	) :
 		params(),
 		state(_state),
 		modDepthLocked(false)
@@ -1323,6 +1389,11 @@ namespace param
 		
 		params.push_back(makeParam(PID::ModeGainLowerLimit, state, -60.f, makeRange::lin(-60.f, 0.f), Unit::Decibel));
 		params.push_back(makeParam(PID::ModeGainUpperLimit, state, 0.f, makeRange::lin(-60.f, 0.f), Unit::Decibel));
+		
+		params.push_back(makeParam(PID::ModeFilterType, state, 2.f, makeRange::stepped(0.f, 2.f), Unit::FilterType));
+		params.push_back(makeParamPitch(PID::ModeFilterCutoff, state, 24.f, makeRange::lin(1.f, 127.f), xen));
+		params.push_back(makeParam(PID::ModeFilterQ, state, 12.f, makeRange::withCentre(1.f, 120.f, 12.f), Unit::Q));
+		params.push_back(makeParam(PID::ModeFilterRange, state, 0.f, makeRange::lin(-1.f, 1.f), Unit::Percent));
 		// LOW LEVEL PARAMS END
 
 		for (auto param : params)

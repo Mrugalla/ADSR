@@ -62,6 +62,48 @@ namespace gui
             Knob lowerLim, upperLim;
         };
 
+        struct ModeCompFilter :
+            public ModeComp
+        {
+            ModeCompFilter(Utils& u) :
+                ModeComp(u),
+                type(u),
+                freq(u),
+                q(u),
+                range(u)
+            {
+                addAndMakeVisible(type);
+                addAndMakeVisible(freq);
+                addAndMakeVisible(q);
+				addAndMakeVisible(range);
+
+                makeParameter(type, PID::ModeFilterType, "Type");
+                makeParameter(freq, PID::ModeFilterCutoff, "Pitch");
+				makeParameter(q, PID::ModeFilterQ, "Q");
+				makeParameter(range, PID::ModeFilterRange, "Range");
+
+                layout.init
+                (
+                    { 1, 1, 1, 1 },
+                    { 1 }
+                );
+            }
+
+            void paint(Graphics&) override {}
+
+            void resized() override
+            {
+                layout.resized();
+
+                layout.place(type, 0, 0, 1, 1, false);
+                layout.place(freq, 1, 0, 1, 1, false);
+                layout.place(q, 2, 0, 1, 1, false);
+                layout.place(range, 3, 0, 1, 1, false);
+            }
+
+            Knob type, freq, q, range;
+        };
+
         LowLevel(Utils& u) :
             Comp(u, "", CursorType::Default),
 			Timer(),
@@ -104,6 +146,9 @@ namespace gui
                 case 1:
                     modeComp = std::make_unique<ModeCompGain>(u);
                     break;
+				case 2:
+					modeComp = std::make_unique<ModeCompFilter>(u);
+					break;
                 default:
                     modeComp = std::make_unique<ModeComp>(u);
                     break;
@@ -126,6 +171,9 @@ namespace gui
                     case 1:
                         modeComp = std::make_unique<ModeCompGain>(u);
                         break;
+					case 2:
+						modeComp = std::make_unique<ModeCompFilter>(u);
+						break;
                     default:
                         modeComp = std::make_unique<ModeComp>(u);
                         break;

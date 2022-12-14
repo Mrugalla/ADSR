@@ -24,9 +24,6 @@ HOW TO USE:
 
 TO DO:
 
-radiobutton
-	sometimes skips value on mousewheel
-
 symbols for parameter lock and parameter modulation
 
 add layout function that paints a rectangle or something

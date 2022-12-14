@@ -57,4 +57,47 @@ namespace audio
 		std::array<FilterBandpass, NumFilters> filters;
 		int stage;
 	};
+
+	//////////////////////////////////////////////////////////////////
+
+	struct IIR
+	{
+		enum class Type
+		{
+			LP,
+			HP,
+			BP,
+			BR,
+			AP,
+			LS,
+			HS,
+			Notch,
+			Bell,
+			NumTypes
+		};
+
+		/* startVal */
+		IIR(float = 0.f);
+
+		void clear() noexcept;
+
+		/* type, frequency fc [0, .5[, q-factor q [1, 160..] */
+		void setFc(Type, float, float) noexcept;
+
+		void copy(const IIR&) noexcept;
+
+		float operator()(float) noexcept;
+
+		float processSample(float) noexcept;
+
+		/* scaledFreq */
+		std::complex<float> response(float) const noexcept;
+		/* scaledFreq */
+		float responseDb(float) const noexcept;
+
+	protected:
+		float alpha, cosOmega;
+		float a0, a1, a2, b0, b1, b2;
+		float     x1, x2, y1, y2;
+	};
 }
