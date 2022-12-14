@@ -2,7 +2,7 @@
 
 -------------------------------------------------------------------
 
-Welcome to DEFAULT PROJECT!
+Welcome to DEFAULT PROJECT TEMPLATE!
 
 This project contains my vision of a default JUCE VST plugin project. I made this so I can get started trying new ideas
 and finishing projects way faster than from a projucer-made template.
@@ -15,20 +15,19 @@ HOW TO USE:
 2. In Project.jucer
 	2.1 Rename plugin name
 	2.2 Define unique plugin ID
-	2.3 Configurate the pre processor definitions
-3. Code DSP in processBlockCustom
+	2.3 Configure the pre processor definitions
+3. Code DSP in processBlockCustom and processBlockDownsampled
 4. Code GUI in lowlevel.cpp/h
 5. Ship it!
 
-------------------------------------------------------------------- 
+-------------------------------------------------------------------
 
 TO DO:
 
-symbols for parameter lock and parameter modulation
+radiobutton
+	sometimes skips value on mousewheel
 
-buttons
-	reduced contrast onSelected sucks
-		outline or fill interactable colour?
+symbols for parameter lock and parameter modulation
 
 add layout function that paints a rectangle or something
 	with a descriptive text to the topLeft

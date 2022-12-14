@@ -88,8 +88,8 @@ namespace gui
             props->setValue(coloursID(), col.toString());
 
             setInternal(ColourID::Bg, col.darker(8.f).withMultipliedSaturation(.15f));
-            setInternal(ColourID::Txt, col.withRotatedHue(.1666667f).withMultipliedBrightness(2.f));
-            setInternal(ColourID::Mod, col.withRotatedHue(.3333f));
+            setInternal(ColourID::Txt, col.withRotatedHue(-1.f / 9.f).withMultipliedBrightness(2.f));
+            setInternal(ColourID::Mod, col.withRotatedHue(1.f / 3.f));
             setInternal(ColourID::Bias, col.withRotatedHue(.5f));
             setInternal(ColourID::Darken, col.darker(3.f).withMultipliedAlpha(.3f));
             setInternal(ColourID::Hover, col.withMultipliedSaturation(2.f).brighter(2.f).withMultipliedAlpha(.3f));

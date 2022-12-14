@@ -492,7 +492,7 @@ namespace audio
 
         oscope(envGenMIDI.data(), numSamples, playHeadPos);
 		
-        auto mode = static_cast<int>(std::rint(params[PID::EnvGenMode]->getValModDenorm()));
+        const auto mode = static_cast<int>(std::rint(params[PID::EnvGenMode]->getValModDenorm()));
         auto envGenData = envGenMIDI.data();
         float lowerLimit, upperLimit, limitRange;
 

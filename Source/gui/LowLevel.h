@@ -18,13 +18,13 @@ namespace gui
 				Comp(u, "", CursorType::Default)
             {}
 
-            void paint(Graphics& g)
+            void paint(Graphics& g) override
             {
                 auto thicc = utils.thicc;
-				Stroke stroke(thicc, Stroke::JointStyle::curved, Stroke::EndCapStyle::butt);
 				auto bounds = getLocalBounds().toFloat().reduced(thicc);
 				g.setColour(Colours::c(ColourID::Hover));
-                drawRectEdges(g, bounds, thicc * 2.f, stroke);
+                g.setFont(getFontLobster());
+                g.drawFittedText("Direct Out", bounds.toNearestInt(), Just::centred, 1);
             }
         };
 
@@ -48,6 +48,8 @@ namespace gui
                     { 1 }
                 );
             }
+
+			void paint(Graphics&) override {}
 
             void resized() override
             {
@@ -179,12 +181,25 @@ namespace gui
         void paint(Graphics& g) override
         {
             const auto thicc = utils.thicc;
+			Stroke stroke(thicc, Stroke::JointStyle::curved, Stroke::EndCapStyle::butt);
+
+            g.setColour(Colours::c(ColourID::Hover));
+
+            auto modeBounds = mode.getBounds().toFloat();
+			auto modeCompBounds = modeComp->getBounds().toFloat();
+            BoundsF modeBothBounds
+            (
+                modeBounds.getX(),
+                modeBounds.getY(),
+				modeBounds.getWidth(),
+				modeBounds.getHeight() + modeCompBounds.getHeight()
+            );
 			
+			drawRectEdges(g, modeBothBounds, thicc * 5.f, stroke);
+
             const auto dcyBounds = dcy->getBounds().toFloat();
             const auto rlsBounds = rls->getBounds().toFloat();
             const auto lockDcyRlsBounds = lockDcyRls.getBounds().toFloat();
-
-            g.setColour(Colours::c(ColourID::Hover));
 			
             const PointF dcyBoundsCentre
             (

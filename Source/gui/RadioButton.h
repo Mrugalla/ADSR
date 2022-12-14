@@ -49,8 +49,9 @@ namespace gui
 					const auto start = range.start;
 					const auto end = range.end;
 					const auto numValues = 1.f + end - start;
+					const auto deltaY = wheel.deltaY > 0.f ? 1.f : -1.f;
 					auto val = param.getValueDenorm();
-					val += (wheel.deltaY > 0.f ? 1.f : -1.f) * range.interval;
+					val += deltaY * range.interval;
 					if (val < range.start)
 						val += numValues;
 					else if (val > range.end)
@@ -73,13 +74,13 @@ namespace gui
 				if (locked != lockBtn.toggleState)
 				{
 					lockBtn.toggleState = locked;
-					auto alpha = 1.f - static_cast<float>(locked) * .9f;
+					auto alpha = 1.f - static_cast<float>(locked) * .8f;
 					setAlpha(alpha);
 					needsRepaint = true;
 				}
 				
 				const auto valDenorm = param.getValModDenorm() - param.range.start;
-				const auto index = static_cast<int>(valDenorm);
+				const auto index = static_cast<int>(std::round(valDenorm));
 				if (setSelected(index))
 					needsRepaint = true;
 
