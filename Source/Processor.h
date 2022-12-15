@@ -127,7 +127,5 @@ namespace audio
 
         EnvGenMIDI envGenMIDI;
 		Oscilloscope oscope;
-        std::array<IIR, 2> iir;
-        PRM cutoffParam;
     };
 }

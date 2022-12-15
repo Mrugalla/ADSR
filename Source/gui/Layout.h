@@ -79,10 +79,10 @@ namespace gui
 	void drawVerticalLine(Graphics&, int /*x*/, float /*top*/, float /*bottom*/, int /*thicc*/ = 1);
 
 	/* graphics, bounds, edgeWidth, edgeHeight, stroke */
-	void drawRectEdges(Graphics&, const BoundsF&, float, float, Stroke);
+	void drawRectEdges(Graphics&, const BoundsF&, float, float, const Stroke&);
 
 	/* graphics, bounds, edgeWidth, stroke */
-	void drawRectEdges(Graphics&, const BoundsF&, float, Stroke);
+	void drawRectEdges(Graphics&, const BoundsF&, float, const Stroke&);
 
 	/* graphics, bounds, text */
 	void drawHeadLine(Graphics&, const BoundsF&, const String&);

@@ -2,7 +2,7 @@
 
 namespace audio
 {
-	// FilterBandpass
+	// FilterBandpass (deprecated)
 	
 	FilterBandpass::FilterBandpass(float startVal) :
 		alpha(0.f),
@@ -110,7 +110,7 @@ namespace audio
 		return 10.f * std::log10(energy);
 	}
 
-	// FilterBandpassSlope
+	// FilterBandpassSlope (deprecated)
 
 	template<size_t NumFilters>
 	FilterBandpassSlope<NumFilters>::FilterBandpassSlope() :

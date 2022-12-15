@@ -24,7 +24,9 @@ HOW TO USE:
 
 TO DO:
 
-symbols for parameter lock and parameter modulation
+green outline must be white on lock
+
+symbol for parameter modulation
 
 add layout function that paints a rectangle or something
 	with a descriptive text to the topLeft

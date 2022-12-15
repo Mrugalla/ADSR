@@ -53,7 +53,7 @@ namespace gui
 		lockButton = std::make_unique<Button>(utils, "Click here to lock this parameter.");
 		addAndMakeVisible(*lockButton);
 
-		makeTextButton(*lockButton, "L", true);
+		makeSymbolButton(*lockButton, ButtonSymbol::Lock, 1);
 
 		lockButton->onClick.push_back([&parent = *this](Button& btn, const Mouse&)
 		{
@@ -276,10 +276,13 @@ namespace gui
 	{
 		static void paintActiveToggleState(Graphics& g, const BoundsF& area, bool withToggle, int tsBtn, int tsTarget, float thicc)
 		{
+			Stroke stroke(thicc, Stroke::JointStyle::curved, Stroke::EndCapStyle::rounded);
+			auto minDimen = std::min(area.getWidth(), area.getHeight());
+
 			if (withToggle && tsBtn == tsTarget)
 			{
 				g.setColour(Colours::c(ColourID::Interact));
-				g.drawRoundedRectangle(area, thicc, thicc);
+				drawRectEdges(g, area, minDimen * .25f, stroke);
 			}
 		}
 
@@ -640,7 +643,7 @@ namespace gui
 					}
 				}
 			}
-			else if (symbol == ButtonSymbol::ModDepthLock)
+			else if (symbol == ButtonSymbol::Lock)
 			{
 				const auto thicc3 = thicc * 3.f;
 

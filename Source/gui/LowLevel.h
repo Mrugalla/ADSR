@@ -11,28 +11,11 @@ namespace gui
     {
         using FlexKnob = std::unique_ptr<Knob>;
 		
-        struct ModeComp :
+        struct ModeCompGain :
             public Comp
         {
-			ModeComp(Utils& u) :
-				Comp(u, "", CursorType::Default)
-            {}
-
-            void paint(Graphics& g) override
-            {
-                auto thicc = utils.thicc;
-				auto bounds = getLocalBounds().toFloat().reduced(thicc);
-				g.setColour(Colours::c(ColourID::Hover));
-                g.setFont(getFontLobster());
-                g.drawFittedText("Direct Out", bounds.toNearestInt(), Just::centred, 1);
-            }
-        };
-
-        struct ModeCompGain :
-            public ModeComp
-        {
             ModeCompGain(Utils& u) :
-                ModeComp(u),
+                Comp(u, "", CursorType::Default),
                 lowerLim(u),
 				upperLim(u)
             {
@@ -62,48 +45,6 @@ namespace gui
             Knob lowerLim, upperLim;
         };
 
-        struct ModeCompFilter :
-            public ModeComp
-        {
-            ModeCompFilter(Utils& u) :
-                ModeComp(u),
-                type(u),
-                freq(u),
-                q(u),
-                range(u)
-            {
-                addAndMakeVisible(type);
-                addAndMakeVisible(freq);
-                addAndMakeVisible(q);
-				addAndMakeVisible(range);
-
-                makeParameter(type, PID::ModeFilterType, "Type");
-                makeParameter(freq, PID::ModeFilterCutoff, "Pitch");
-				makeParameter(q, PID::ModeFilterQ, "Q");
-				makeParameter(range, PID::ModeFilterRange, "Range");
-
-                layout.init
-                (
-                    { 1, 1, 1, 1 },
-                    { 1 }
-                );
-            }
-
-            void paint(Graphics&) override {}
-
-            void resized() override
-            {
-                layout.resized();
-
-                layout.place(type, 0, 0, 1, 1, false);
-                layout.place(freq, 1, 0, 1, 1, false);
-                layout.place(q, 2, 0, 1, 1, false);
-                layout.place(range, 3, 0, 1, 1, false);
-            }
-
-            Knob type, freq, q, range;
-        };
-
         LowLevel(Utils& u) :
             Comp(u, "", CursorType::Default),
 			Timer(),
@@ -118,7 +59,7 @@ namespace gui
                 PID::EnvGenTempoSync, PID::EnvGenLockDcyRls
             ),
 			mode(u),
-			modeComp(),
+			modeComp(u),
             atk(u), sus(u), atkBeats(u),
             dcy(), rls(), dcyBeats(), rlsBeats(),
             lockDcyRls(u),
@@ -131,57 +72,14 @@ namespace gui
             addAndMakeVisible(envGen);
 			
             addAndMakeVisible(mode);
+            makeParameter(mode, PID::EnvGenMode, "Gain\nMode", true);
             {
-                mode.makeParameter(PID::EnvGenMode);
-                mode.vertical = false;
+                addChildComponent(modeComp);
 				
                 const auto& modeParam = *u.getParam(PID::EnvGenMode);
                 const auto valDenorm = static_cast<int>(std::round(modeParam.getValModDenorm() - modeParam.range.start));
-
-                switch (valDenorm)
-                {
-                case 0:
-                    modeComp = std::make_unique<ModeComp>(u);
-                    break;
-                case 1:
-                    modeComp = std::make_unique<ModeCompGain>(u);
-                    break;
-				case 2:
-					modeComp = std::make_unique<ModeCompFilter>(u);
-					break;
-                default:
-                    modeComp = std::make_unique<ModeComp>(u);
-                    break;
-                }
-
-                addAndMakeVisible(*modeComp);
-                mode.onChange.push_back([&]()
-                {
-                    enum { DirectOut, Gain, Filter, NumModes };
-                    const auto& modeParam = *u.getParam(PID::EnvGenMode);
-					const auto valDenorm = static_cast<int>(std::round(modeParam.getValModDenorm() - modeParam.range.start));
-                    
-                    removeChildComponent(modeComp.get());
-
-                    switch (valDenorm)
-                    {
-                    case 0:
-                        modeComp = std::make_unique<ModeComp>(u);
-                        break;
-                    case 1:
-                        modeComp = std::make_unique<ModeCompGain>(u);
-                        break;
-					case 2:
-						modeComp = std::make_unique<ModeCompFilter>(u);
-						break;
-                    default:
-                        modeComp = std::make_unique<ModeComp>(u);
-                        break;
-                    }
-
-                    addAndMakeVisible(*modeComp);
-                    resized();
-                });
+                
+                setVisible(valDenorm == 1);
             }
 
             makeParameter(atk, PID::EnvGenAttack, "Attack", true);
@@ -220,7 +118,7 @@ namespace gui
             layout.init
             (
                 { 1, 13, 13, 13, 13, 1 },
-                { 2, 3, 8, 3, 1, 3, 3 }
+                { 2, 8, 3, 1, 2, 3 }
             );
 
             startTimerHz(12);
@@ -234,13 +132,13 @@ namespace gui
             g.setColour(Colours::c(ColourID::Hover));
 
             auto modeBounds = mode.getBounds().toFloat();
-			auto modeCompBounds = modeComp->getBounds().toFloat();
+			auto modeCompBounds = modeComp.getBounds().toFloat();
             BoundsF modeBothBounds
             (
                 modeBounds.getX(),
-                modeBounds.getY(),
-				modeBounds.getWidth(),
-				modeBounds.getHeight() + modeCompBounds.getHeight()
+                modeCompBounds.getY(),
+				modeBounds.getWidth() + modeCompBounds.getWidth(),
+				modeCompBounds.getHeight()
             );
 			
 			drawRectEdges(g, modeBothBounds, thicc * 5.f, stroke);
@@ -282,30 +180,35 @@ namespace gui
         {
             layout.resized();
 
-            layout.place(mode, 1, 0, 4, 1);
-			layout.place(*modeComp, 1, 1, 4, 1);
+            layout.place(mode, 1, 0, 1, 1, true);
+			layout.place(modeComp, 2, 0, 2, 1);
 
-            layout.place(envGen, 1, 2, 4, 1);
+            layout.place(envGen, 1, 1, 4, 1);
 
-            layout.place(atk, 1, 3, 1, 1);
-			layout.place(*dcy, 2, 3, 1, 1);
-			layout.place(sus, 3, 3, 1, 1);
-			layout.place(*rls, 4, 3, 1, 1);
+            layout.place(atk, 1, 2, 1, 1);
+			layout.place(*dcy, 2, 2, 1, 1);
+			layout.place(sus, 3, 2, 1, 1);
+			layout.place(*rls, 4, 2, 1, 1);
 
             atkBeats.setBounds(atk.getBounds());
 			dcyBeats->setBounds(dcy->getBounds());
             rlsBeats->setBounds(rls->getBounds());
 			
-			layout.place(lockDcyRls, 3, 4, 1, 1, true);
+			layout.place(lockDcyRls, 3, 3, 1, 1, true);
 
-            const auto thicc = utils.thicc;
-            const auto thicc5 = thicc * 5.f;
-            oscope.setBounds(layout(1, 5, 4, 1).reduced(thicc5).toNearestInt());
+            BoundsF oscopeBounds
+            (
+                static_cast<float>(envGen.getX()) + envGen.bounds.getX(),
+                layout.getY(4),
+				envGen.bounds.getWidth(),
+                layout.getH(4)
+            );
+            oscope.setBounds(oscopeBounds.toNearestInt());
 
-            layout.place(legato, 1, 6, 1, 1, false);
-            layout.place(inverse, 2, 6, 1, 1, true);
-			layout.place(tempoSync, 3, 6, 1, 1, true);
-            layout.place(velo, 4, 6, 1, 1, false);
+            layout.place(legato, 1, 5, 1, 1, false);
+            layout.place(inverse, 2, 5, 1, 1, true);
+			layout.place(tempoSync, 3, 5, 1, 1, true);
+            layout.place(velo, 4, 5, 1, 1, false);
         }
 
         void timerCallback() override
@@ -317,12 +220,18 @@ namespace gui
 			atkBeats.setVisible(isTempoSync);
 			dcyBeats->setVisible(isTempoSync);
 			rlsBeats->setVisible(isTempoSync);
+
+            enum { DirectOut, Gain, NumModes };
+            const auto& modeParam = *utils.getParam(PID::EnvGenMode);
+            const auto valDenorm = static_cast<int>(std::round(modeParam.getValModDenorm() - modeParam.range.start));
+
+            modeComp.setVisible(valDenorm == Gain);
         }
 
     protected:
         EnvGenComp envGen;
-        RadioButton mode;
-        std::unique_ptr<ModeComp> modeComp;
+        Button mode;
+        ModeCompGain modeComp;
 		Knob atk, sus, atkBeats;
         FlexKnob dcy, rls, dcyBeats, rlsBeats;
         Button lockDcyRls;

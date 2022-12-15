@@ -346,7 +346,7 @@ namespace gui
                     if (modulatable)
                     {
                         layout.place(*k.comps[ModDial], 1, 1, 1, 1, true);
-                        layout.place(*k.comps[LockButton], 2.f, 1.5f, 1.f, 1.f, true);
+                        layout.place(*k.comps[LockButton], 1.5f, 1.5f, 1.5f, 1.5f, true);
                     }
                 };
 
@@ -1054,7 +1054,7 @@ namespace gui
                 {
                     auto& lck = *lockButton;
 
-                    makeTextButton(lck, "L", true);
+                    makeSymbolButton(lck, ButtonSymbol::Lock, 1);
 
                     lck.onClick.push_back([pIDs](Button& btn, const Mouse&)
                     {

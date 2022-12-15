@@ -81,11 +81,6 @@ namespace param
 		EnvGenMode,
 		ModeGainLowerLimit,
 		ModeGainUpperLimit,
-		ModeFilterType,
-		ModeFilterCutoff,
-		ModeFilterQ,
-		//ModeFilterSlope,
-		ModeFilterRange,
 
 		NumParams
 	};
@@ -252,9 +247,9 @@ namespace param
 		using AudioProcessor = juce::AudioProcessor;
 		using Parameters = std::vector<Param*>;
 
-		Params(AudioProcessor&, State&,
+		Params(AudioProcessor&, State&
 #if PPDHasTuningEditor
-			const Xen&
+			, const Xen&
 #endif
 		);
 

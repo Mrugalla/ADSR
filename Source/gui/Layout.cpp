@@ -297,7 +297,7 @@ namespace gui
 	}
 
 	void drawRectEdges(Graphics& g, const BoundsF& bounds,
-		float edgeWidth, float edgeHeight, Stroke st)
+		float edgeWidth, float edgeHeight, const Stroke& st)
 	{
 		const auto x = bounds.getX();
 		const auto y = bounds.getY();
@@ -330,7 +330,7 @@ namespace gui
 	}
 
 	void drawRectEdges(Graphics& g, const BoundsF& bounds,
-		float edgeWidth, Stroke st)
+		float edgeWidth, const Stroke& st)
 	{
 		drawRectEdges(g, bounds, edgeWidth, edgeWidth, st);
 	}

@@ -93,7 +93,7 @@ namespace gui
 		Random,
 		Abort,
 		SwapParamModDepth,
-		ModDepthLock,
+		Lock,
 		Save,
 		Load,
 		Remove,

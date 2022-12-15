@@ -101,7 +101,7 @@ namespace gui
 					btn.toggleState = btn.toggleState == 0 ? 1 : 0;
 				});
 
-			makeSymbolButton(modDepthLocked, ButtonSymbol::ModDepthLock, 1);
+			makeSymbolButton(modDepthLocked, ButtonSymbol::Lock, 1);
 		}
 
 		addAndMakeVisible(swapParamWithModDepth);

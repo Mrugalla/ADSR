@@ -158,8 +158,8 @@ namespace gui
 
 			layout.init
 			(
-				{ 2, 21, 3, 2 },
-				{ 2, 8, 8, 13, 21, 2 }
+				{ 3, 34, 5, 3 },
+				{ 3, 13, 13, 21, 34, 3 }
 			);
 
 			startTimerHz(PPDFPSKnobs);
