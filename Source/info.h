@@ -18,25 +18,20 @@ HOW TO USE:
 	2.3 Configure the pre processor definitions
 3. Code DSP in processBlockCustom and processBlockDownsampled
 4. Code GUI in lowlevel.cpp/h
+5. Write a new text for welcome.txt
 5. Ship it!
 
 -------------------------------------------------------------------
 
 TO DO:
 
-green outline must be white on lock
-
-symbol for parameter modulation
-
 add layout function that paints a rectangle or something
 	with a descriptive text to the topLeft
 
 scroll/draggable buttons must also have click function
 
-make toast component
-	use for formulaparser error messages
-
 Formulaparser
+	send toast on error
 	wide when has focus
 	randomize button should postfix>>infix and infix>>string
 
@@ -74,8 +69,6 @@ Colours
 	figure out natural hue steps
 	if chosen white modulations not visible anymore
 	some dark colours make it too dark
-	when changing colours
-		default cursor needs update
 
 highlevel
 	"remove dc offset" switch (steep highpass)
@@ -133,10 +126,6 @@ All Params
 
 Oversampler
 	make less cpu demanding (FFT?)
-
-FirstTimeAction(s)
-	thing that only makes lookuptables when the plugin is started the first time
-	tutorials
 
 HighLevel UI Elements
 	undo/redo buttons

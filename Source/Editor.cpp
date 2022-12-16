@@ -47,6 +47,8 @@ namespace gui
 
         editorKnobs(utils),
 
+        toast(utils),
+
         bypassed(false),
         shadr(utils, *this)
 
@@ -88,6 +90,8 @@ namespace gui
         addAndMakeVisible(contextMenuButtons);
 
         addChildComponent(editorKnobs);
+		
+        addChildComponent(toast);
 
         updateBgImage(false);
 
@@ -151,6 +155,17 @@ namespace gui
             bgImage = bgImage.rescaled(lowLevel.getWidth(), getHeight(), Graphics::ResamplingQuality::lowResamplingQuality);
         else
             updateBgImage(true);
+		
+        const auto user = utils.audioProcessor.props.getUserSettings();
+        const auto firstTime = user->getBoolValue("firstTimeUwU", true);
+        if (firstTime)
+        {
+            const auto toastStr = String::fromUTF8(BinaryData::welcome_txt, BinaryData::welcome_txtSize);
+            notify(EvtType::Toast, &toastStr);
+        }
+		
+		if(toast.isVisible())
+            toast.updateBounds();
 
         saveBounds();
     }
@@ -197,11 +212,11 @@ namespace gui
                 auto user = props->getUserSettings();
                 if (user != nullptr)
                 {
-                    auto file = user->getFile();
-                    file = file.getParentDirectory();
+                    const auto& file = user->getFile();
+                    const auto nFile = file.getParentDirectory();
                     const auto findFiles = File::TypesOfFileToFind::findFiles;
                     const auto wildCard = "*.png";
-                    for (auto f : file.findChildFiles(findFiles, true, wildCard))
+                    for (const auto& f : nFile.findChildFiles(findFiles, true, wildCard))
                     {
                         if (f.getFileName() == "bgImage.png")
                         {
@@ -230,12 +245,11 @@ namespace gui
             auto user = props->getUserSettings();
             if (user != nullptr)
             {
-				auto file = user->getFile();
-				file = file.getParentDirectory();
-				file = file.getChildFile("bgImage.png");
-                if (file.exists())
-                    file.deleteFile();
-                juce::FileOutputStream stream(file);
+				const auto& file = user->getFile();
+				const auto nFile = file.getParentDirectory().getChildFile("bgImage.png");
+				if (nFile.exists())
+                    nFile.deleteFile();
+                juce::FileOutputStream stream(nFile);
                 juce::PNGImageFormat pngWriter;
                 pngWriter.writeImageToStream(bgImage, stream);
             }

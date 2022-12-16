@@ -127,7 +127,7 @@ namespace gui
 			}
 		});
 
-		onTimer.push_back([this](Button&)
+		onTimer.push_back([this](Button& btn)
 		{
 			bool shallRepaint = false;
 
@@ -137,7 +137,7 @@ namespace gui
 			if (locked != lckd)
 			{
 				locked = lckd;
-				label.textCID = locked ? ColourID::Inactive : ColourID::Interact;
+				btn.setAlpha(1.f - (locked ? .8f : 0.f));
 				shallRepaint = true;
 			}
 

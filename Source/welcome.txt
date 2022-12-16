@@ -1,0 +1,8 @@
+Welcome to ADSR!
+
+This plugin synthesizes a midi-triggered ADSR envelope generator.
+You can use it to modulate the gain of the input signal,
+or directly send it out as an 'audio' signal.
+
+Hope u enjoy :3
+Florian

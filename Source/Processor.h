@@ -33,6 +33,7 @@ namespace audio
         using AppProps = juce::ApplicationProperties;
 
         ProcessorBackEnd();
+		~ProcessorBackEnd();
 
         const String getName() const override;
         double getTailLengthSeconds() const override;

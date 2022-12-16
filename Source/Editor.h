@@ -4,6 +4,7 @@
 #include "gui/ContextMenu.h"
 #include "gui/HighLevel.h"
 #include "gui/Tooltip.h"
+#include "gui/ToastComponent.h"
 
 #if PPDHasTuningEditor
 #include "gui/TuningEditor.h"
@@ -55,6 +56,8 @@ protected:
         ContextMenuButtons contextMenuButtons;
 
         TextEditorKnobs editorKnobs;
+
+        ToastComp toast;
 
         bool bypassed;
         Shader shadr;

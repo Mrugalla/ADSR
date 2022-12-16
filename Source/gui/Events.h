@@ -19,6 +19,7 @@ namespace evt
         BrowserOpened,
         BrowserClosed,
         FormulaUpdated,
+        Toast,
         NumTypes
     };
 

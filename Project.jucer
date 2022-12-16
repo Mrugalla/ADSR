@@ -10,6 +10,7 @@
               maxBinaryFileSize="20971520" pluginAAXCategory="2048,32" pluginVSTCategory="kPlugCategGenerator">
   <MAINGROUP id="c82PPq" name="ADSR">
     <GROUP id="{329F0704-CF49-5A90-357A-72806BBA6C7A}" name="Source">
+      <FILE id="HNMgqj" name="welcome.txt" compile="0" resource="1" file="Source/welcome.txt"/>
       <GROUP id="{D379AB76-3EAE-A37D-31CD-FC91511F3FC1}" name="arch">
         <FILE id="Rwen3L" name="Conversion.h" compile="0" resource="0" file="Source/arch/Conversion.h"/>
         <FILE id="q6pZ17" name="FormulaParser2.cpp" compile="1" resource="0"
@@ -126,6 +127,8 @@
         <FILE id="abkRAU" name="nel19.ttf" compile="0" resource="1" file="Source/fonts/nel19.ttf"/>
       </GROUP>
       <GROUP id="{DA435779-5001-4379-F809-3E7C21D55DC0}" name="gui">
+        <FILE id="a1YpD3" name="ToastComponent.h" compile="0" resource="0"
+              file="Source/gui/ToastComponent.h"/>
         <FILE id="xQxWVP" name="RadioButton.h" compile="0" resource="0" file="Source/gui/RadioButton.h"/>
         <FILE id="q87WSH" name="Oscilloscope.h" compile="0" resource="0" file="Source/gui/Oscilloscope.h"/>
         <FILE id="S7OSxE" name="EnvelopeGenerator.h" compile="0" resource="0"

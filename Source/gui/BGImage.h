@@ -103,10 +103,12 @@ namespace gui
                 for (auto x0 = 0; x0 < bgImage.getWidth(); ++x0)
                 {
                     const auto pxl = bgImage.getPixelAt(x0, y0);
-                    juce::uint8 rgb[3];
-                    rgb[0] = pxl.getRed();
-                    rgb[1] = pxl.getGreen();
-                    rgb[2] = pxl.getBlue();
+                    juce::uint8 rgb[3] =
+                    {
+                        pxl.getRed(),
+                        pxl.getGreen(),
+                        pxl.getBlue()
+                    };
                     for (auto j = 0; j < 3; ++j)
                     {
                         const auto val = static_cast<float>(rgb[j]) * dInv;
@@ -208,7 +210,8 @@ namespace gui
             h * .5f
         };
 
-        while (paintedPercentage(bgImage) < .0008f)
+        auto timeOut = 1000;
+        while (paintedPercentage(bgImage) < .0008f && timeOut != 0)
         {
             auto ptStart = randPointAtEdge(bgImage);
             auto dir = rand.nextFloat() * Tau;
@@ -235,6 +238,8 @@ namespace gui
                 
                 ptStart = ptEnd;
             }
+
+            --timeOut;
         }
         
         bgImage = bgImage.rescaled(width, height, Graphics::mediumResamplingQuality);

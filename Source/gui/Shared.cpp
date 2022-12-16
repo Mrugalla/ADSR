@@ -67,7 +67,7 @@ namespace gui
 
     Colour Colours::defaultColour() noexcept
     {
-        return Colour(0xffeba021);
+        return Colour(0xffa8e753);
     }
 
     void Colours::init(Props* p)

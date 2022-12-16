@@ -78,6 +78,13 @@ namespace audio
         startTimerHz(6);
     }
 
+    ProcessorBackEnd::~ProcessorBackEnd()
+    {
+        auto user = props.getUserSettings();
+        user->setValue("firstTimeUwU", false);
+        user->save();
+    }
+
     const String ProcessorBackEnd::getName() const
     {
         return JucePlugin_Name;
