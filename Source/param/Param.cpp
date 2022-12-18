@@ -91,6 +91,9 @@ namespace param
 		case PID::ModeGainLowerLimit: return "Gain Lower Limit";
 		case PID::ModeGainUpperLimit: return "Gain Upper Limit";
 
+		case PID::ControllerChannel: return "Controller Channel";
+		case PID::ControllerCC: return "CC";
+
 		default: return "Invalid Parameter Name";
 		}
 	}
@@ -186,6 +189,8 @@ namespace param
 		case PID::EnvGenMode: return "Define the mode of the envelope generator.";
 		case PID::ModeGainLowerLimit: return "Define the lower limit of the gain mode.";
 		case PID::ModeGainUpperLimit: return "Define the upper limit of the gain mode.";
+		case PID::ControllerChannel: return "If this is not 0, the plugin outputs the envelope as MIDI CC.";
+		case PID::ControllerCC: return "Define the MIDI CC of the controller output.";
 
 		default: return "Invalid Tooltip.";
 		}
@@ -1247,8 +1252,11 @@ namespace param
 			strToValFunc = strToVal::filterType();
 			break;
 		default:
-			valToStrFunc = valToStr::empty();
-			strToValFunc = strToVal::percent();
+			valToStrFunc = [](float v) { return String(v); };
+			strToValFunc = [p = param::strToVal::parse()](const String& s)
+			{
+				return p(s, 0.f);
+			};
 			break;
 		}
 
@@ -1381,6 +1389,8 @@ namespace param
 		
 		params.push_back(makeParam(PID::ModeGainLowerLimit, state, -60.f, makeRange::lin(-60.f, 0.f), Unit::Decibel));
 		params.push_back(makeParam(PID::ModeGainUpperLimit, state, 0.f, makeRange::lin(-60.f, 0.f), Unit::Decibel));
+		params.push_back(makeParam(PID::ControllerChannel, state, 0.f, makeRange::stepped(0.f, 16.f), Unit::NumUnits));
+		params.push_back(makeParam(PID::ControllerCC, state, 0.f, makeRange::stepped(0.f, 127.f), Unit::NumUnits));
 		// LOW LEVEL PARAMS END
 
 		for (auto param : params)

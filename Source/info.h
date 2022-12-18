@@ -25,6 +25,11 @@ HOW TO USE:
 
 TO DO:
 
+rename ButtonState::UnityGain to ButtonState::Linked
+
+improve design of different modes
+	cc stuff needs lower n upper limits
+
 add layout function that paints a rectangle or something
 	with a descriptive text to the topLeft
 

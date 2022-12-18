@@ -32,7 +32,7 @@ namespace gui
                 );
             }
 
-			void paint(Graphics&) override {}
+			void paint(Graphics&) override { }
 
             void resized() override
             {
@@ -60,6 +60,7 @@ namespace gui
             ),
 			mode(u),
 			modeComp(u),
+			midiChannel(u), midiCC(u),
             atk(u), sus(u), atkBeats(u),
             dcy(), rls(), dcyBeats(), rlsBeats(),
             lockDcyRls(u),
@@ -81,6 +82,12 @@ namespace gui
                 
                 setVisible(valDenorm == 1);
             }
+			
+			makeParameter(midiChannel, PID::ControllerChannel, "MIDI Channel");
+            addAndMakeVisible(midiChannel);
+
+			makeParameter(midiCC, PID::ControllerCC, "CC");
+			addAndMakeVisible(midiCC);
 
             makeParameter(atk, PID::EnvGenAttack, "Attack", true);
             addChildComponent(atk);
@@ -127,21 +134,22 @@ namespace gui
         void paint(Graphics& g) override
         {
             const auto thicc = utils.thicc;
+            const auto thicc5 = thicc * 5.f;
+
 			Stroke stroke(thicc, Stroke::JointStyle::curved, Stroke::EndCapStyle::butt);
 
             g.setColour(Colours::c(ColourID::Hover));
 
-            auto modeBounds = mode.getBounds().toFloat();
-			auto modeCompBounds = modeComp.getBounds().toFloat();
+            const auto modeBounds = mode.getBounds().toFloat();
+            const auto modeCompBounds = modeComp.getBounds().toFloat();
             BoundsF modeBothBounds
             (
                 modeBounds.getX(),
                 modeCompBounds.getY(),
-				modeBounds.getWidth() + modeCompBounds.getWidth(),
+				modeCompBounds.getRight() - modeBounds.getX(),
 				modeCompBounds.getHeight()
             );
-			
-			drawRectEdges(g, modeBothBounds, thicc * 5.f, stroke);
+			drawRectEdges(g, modeBothBounds, thicc5, stroke);
 
             const auto dcyBounds = dcy->getBounds().toFloat();
             const auto rlsBounds = rls->getBounds().toFloat();
@@ -181,7 +189,10 @@ namespace gui
             layout.resized();
 
             layout.place(mode, 1, 0, 1, 1, true);
-			layout.place(modeComp, 2, 0, 2, 1);
+			layout.place(modeComp, 2, 0, 1, 1);
+
+			layout.place(midiChannel, 3, 0, 1, 1);
+			layout.place(midiCC, 4, 0, 1, 1);
 
             layout.place(envGen, 1, 1, 4, 1);
 
@@ -232,6 +243,7 @@ namespace gui
         EnvGenComp envGen;
         Button mode;
         ModeCompGain modeComp;
+        Knob midiChannel, midiCC;
 		Knob atk, sus, atkBeats;
         FlexKnob dcy, rls, dcyBeats, rlsBeats;
         Button lockDcyRls;

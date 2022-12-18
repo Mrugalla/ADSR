@@ -158,6 +158,10 @@ namespace gui
 				repaintWithChildren(this);
 		});
 
+		const auto& mainParam = *utils.getParam(pID[0]);
+
+		toggleState = static_cast<int>(std::round(mainParam.getValueDenorm() - mainParam.range.start));
+
 		setTooltip(param::toTooltip(pID[0]));
 
 		initLockButton();

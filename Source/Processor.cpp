@@ -530,6 +530,20 @@ namespace audio
                 SIMD::copy(samples[ch], envGenData, numSamples);
             break;
         }
+		
+		// output envGenData as midiCC
+        const auto ch = static_cast<int>(std::round(params[PID::ControllerChannel]->getValModDenorm()));
+        if (ch != 0)
+        {
+            const auto cc = static_cast<int>(std::round(params[PID::ControllerCC]->getValModDenorm()));
+            for (auto s = 0; s < numSamples; ++s)
+            {
+                const auto envScaled = std::round(envGenData[s] * 127.f);
+                const auto val = static_cast<juce::uint8>(envScaled);
+                const auto evt = MidiMessage::controllerEvent(ch, cc, val);
+                midi.addEvent(evt, s);
+            }
+        }
     }
 
     void Processor::processBlockUpsampled(float**, int, int

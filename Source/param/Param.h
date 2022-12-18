@@ -82,6 +82,9 @@ namespace param
 		ModeGainLowerLimit,
 		ModeGainUpperLimit,
 
+		ControllerChannel,
+		ControllerCC,
+
 		NumParams
 	};
 
