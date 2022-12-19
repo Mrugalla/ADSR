@@ -10,41 +10,9 @@ namespace gui
 		public Timer
     {
         using FlexKnob = std::unique_ptr<Knob>;
+
+        enum Mode { DirectOut, Gain, MIDICC, NumModes };
 		
-        struct ModeCompGain :
-            public Comp
-        {
-            ModeCompGain(Utils& u) :
-                Comp(u, "", CursorType::Default),
-                lowerLim(u),
-				upperLim(u)
-            {
-				addAndMakeVisible(lowerLim);
-				addAndMakeVisible(upperLim);
-				
-				makeParameter(lowerLim, PID::ModeGainLowerLimit, "Lower Limit");
-				makeParameter(upperLim, PID::ModeGainUpperLimit, "Upper Limit");
-
-                layout.init
-                (
-                    { 1, 1 },
-                    { 1 }
-                );
-            }
-
-			void paint(Graphics&) override { }
-
-            void resized() override
-            {
-                layout.resized();
-
-                layout.place(lowerLim, 0, 0, 1, 1, false);
-				layout.place(upperLim, 1, 0, 1, 1, false);
-            }
-
-            Knob lowerLim, upperLim;
-        };
-
         LowLevel(Utils& u) :
             Comp(u, "", CursorType::Default),
 			Timer(),
@@ -58,9 +26,7 @@ namespace gui
 				PID::EnvGenReleaseBeats,
                 PID::EnvGenTempoSync, PID::EnvGenLockDcyRls
             ),
-			mode(u),
-			modeComp(u),
-			midiChannel(u), midiCC(u),
+			mode(u), lowerLimit(u), upperLimit(u), midiChannel(u), midiCC(u),
             atk(u), sus(u), atkBeats(u),
             dcy(), rls(), dcyBeats(), rlsBeats(),
             lockDcyRls(u),
@@ -73,21 +39,19 @@ namespace gui
             addAndMakeVisible(envGen);
 			
             addAndMakeVisible(mode);
-            makeParameter(mode, PID::EnvGenMode, "Gain\nMode", true);
-            {
-                addChildComponent(modeComp);
-				
-                const auto& modeParam = *u.getParam(PID::EnvGenMode);
-                const auto valDenorm = static_cast<int>(std::round(modeParam.getValModDenorm() - modeParam.range.start));
-                
-                setVisible(valDenorm == 1);
-            }
+            makeParameter(mode, PID::EnvGenMode, "Mode");
+            
+			addAndMakeVisible(lowerLimit);
+			makeParameter(lowerLimit, PID::LowerLimit, "Lower Limit");
+
+			addAndMakeVisible(upperLimit);
+			makeParameter(upperLimit, PID::UpperLimit, "Upper Limit");
 			
 			makeParameter(midiChannel, PID::ControllerChannel, "MIDI Channel");
-            addAndMakeVisible(midiChannel);
+            addChildComponent(midiChannel);
 
 			makeParameter(midiCC, PID::ControllerCC, "CC");
-			addAndMakeVisible(midiCC);
+            addChildComponent(midiCC);
 
             makeParameter(atk, PID::EnvGenAttack, "Attack", true);
             addChildComponent(atk);
@@ -124,7 +88,7 @@ namespace gui
 
             layout.init
             (
-                { 1, 13, 13, 13, 13, 1 },
+                { 2, 13, 13, 13, 13, 1 },
                 { 2, 8, 3, 1, 2, 3 }
             );
 
@@ -134,22 +98,7 @@ namespace gui
         void paint(Graphics& g) override
         {
             const auto thicc = utils.thicc;
-            const auto thicc5 = thicc * 5.f;
-
-			Stroke stroke(thicc, Stroke::JointStyle::curved, Stroke::EndCapStyle::butt);
-
             g.setColour(Colours::c(ColourID::Hover));
-
-            const auto modeBounds = mode.getBounds().toFloat();
-            const auto modeCompBounds = modeComp.getBounds().toFloat();
-            BoundsF modeBothBounds
-            (
-                modeBounds.getX(),
-                modeCompBounds.getY(),
-				modeCompBounds.getRight() - modeBounds.getX(),
-				modeCompBounds.getHeight()
-            );
-			drawRectEdges(g, modeBothBounds, thicc5, stroke);
 
             const auto dcyBounds = dcy->getBounds().toFloat();
             const auto rlsBounds = rls->getBounds().toFloat();
@@ -188,11 +137,11 @@ namespace gui
         {
             layout.resized();
 
-            layout.place(mode, 1, 0, 1, 1, true);
-			layout.place(modeComp, 2, 0, 1, 1);
-
-			layout.place(midiChannel, 3, 0, 1, 1);
-			layout.place(midiCC, 4, 0, 1, 1);
+            layout.place(mode, 1, 0, 1, 1);
+			layout.place(lowerLimit, 2.f, 0, 2.f / 3.f, 1);
+			layout.place(upperLimit, 2.f + 2.f / 3.f, 0, 2.f / 3.f, 1);
+            layout.place(midiChannel, 3.f + 1.f / 3.f, 0, 2.f / 3.f, 1);
+			layout.place(midiCC, 4.f, 0, 2.f / 3.f, 1);
 
             layout.place(envGen, 1, 1, 4, 1);
 
@@ -231,19 +180,18 @@ namespace gui
 			atkBeats.setVisible(isTempoSync);
 			dcyBeats->setVisible(isTempoSync);
 			rlsBeats->setVisible(isTempoSync);
-
-            enum { DirectOut, Gain, NumModes };
+			
             const auto& modeParam = *utils.getParam(PID::EnvGenMode);
-            const auto valDenorm = static_cast<int>(std::round(modeParam.getValModDenorm() - modeParam.range.start));
+            const auto modeVal = static_cast<int>(std::round(modeParam.getValModDenorm() - modeParam.range.start));
 
-            modeComp.setVisible(valDenorm == Gain);
+            bool isCCMode = modeVal == Mode::MIDICC;
+			midiChannel.setVisible(isCCMode);
+			midiCC.setVisible(isCCMode);
         }
 
     protected:
         EnvGenComp envGen;
-        Button mode;
-        ModeCompGain modeComp;
-        Knob midiChannel, midiCC;
+        Knob mode, lowerLimit, upperLimit, midiChannel, midiCC;
 		Knob atk, sus, atkBeats;
         FlexKnob dcy, rls, dcyBeats, rlsBeats;
         Button lockDcyRls;

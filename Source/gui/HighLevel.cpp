@@ -317,7 +317,7 @@ namespace gui
 #endif
 #endif
 #if PPDHasGainOut
-		makeParameter(gainOut, PID::Gain, "Out", true, &utils.getMeter(PPDHasGainIn ? 1 : 0));
+		makeParameter(gainOut, PID::Gain, "Wet", true, &utils.getMeter(PPDHasGainIn ? 1 : 0));
 		addAndMakeVisible(gainOut);
 #endif
 #if PPD_MixOrGainDry == 0

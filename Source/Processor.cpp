@@ -230,7 +230,9 @@ namespace audio
     Processor::Processor() :
         ProcessorBackEnd(),
 		envGenMIDI(),
-        oscope()
+        oscope(),
+		lowerLimit(0.f),
+		upperLimit(1.f)
 	{
     }
 
@@ -260,6 +262,8 @@ namespace audio
 
 		envGenMIDI.prepare(sampleRateF, maxBlockSize);
         oscope.prepare(sampleRateF, maxBlockSize);
+        lowerLimit.prepare(sampleRateF, maxBlockSize, 10.f);
+		upperLimit.prepare(sampleRateF, maxBlockSize, 10.f);
 
         dryWetMix.prepare(sampleRateF, maxBlockSize, latency);
 
@@ -496,7 +500,7 @@ namespace audio
 			params[PID::EnvGenAtkShape]->getValModDenorm(),
 			params[PID::EnvGenDcyShape]->getValModDenorm(),
 			params[PID::EnvGenRlsShape]->getValModDenorm(),
-			static_cast<int>(params[PID::EnvGenLegato]->getValModDenorm()),
+			static_cast<int>(std::round(params[PID::EnvGenLegato]->getValModDenorm())),
 			params[PID::EnvGenInverse]->getValModDenorm() > .5f,
             params[PID::EnvGenVelocity]->getValMod(),
 			params[PID::EnvGenTempoSync]->getValMod() > .5f,
@@ -506,43 +510,39 @@ namespace audio
             playHeadPos
         );
 
+        auto envGenData = envGenMIDI.data();
+
+        const auto lowerLimitBuf = lowerLimit(decibelToGain(params[PID::LowerLimit]->getValModDenorm(), -59.9f), numSamples);
+		const auto upperLimitBuf = upperLimit(decibelToGain(params[PID::UpperLimit]->getValModDenorm(), -59.9f), numSamples);
+        for (auto s = 0; s < numSamples; ++s)
+			envGenData[s] = lowerLimitBuf[s] + envGenData[s] * (upperLimitBuf[s] - lowerLimitBuf[s]);
+
         oscope(envGenMIDI.data(), numSamples, playHeadPos);
 		
-        const auto mode = static_cast<int>(std::rint(params[PID::EnvGenMode]->getValModDenorm()));
-        auto envGenData = envGenMIDI.data();
-        float lowerLimit, upperLimit, limitRange;
-
-		enum { DirectOut, Gain, NumModes };
+        const auto mode = static_cast<int>(std::round(params[PID::EnvGenMode]->getValModDenorm()));
+		enum { DirectOut, Gain, MIDICC, NumModes };
+        int midiCh, midiCC;
         switch (mode)
         {
 		case Gain:
-			lowerLimit = decibelToGain(params[PID::ModeGainLowerLimit]->getValModDenorm(), -59.9f);
-			upperLimit = decibelToGain(params[PID::ModeGainUpperLimit]->getValModDenorm(), -59.9f);
-			limitRange = upperLimit - lowerLimit;
-			for(auto s = 0; s < numSamples; ++s)
-				envGenData[s] = lowerLimit + envGenData[s] * limitRange;
-
 			for (auto ch = 0; ch < numChannels; ++ch)
 				SIMD::multiply(samples[ch], envGenData, numSamples);
 			break;
-        default: // DirectOut
-            for (auto ch = 0; ch < numChannels; ++ch)
-                SIMD::copy(samples[ch], envGenData, numSamples);
-            break;
-        }
-		
-		// output envGenData as midiCC
-        const auto ch = static_cast<int>(std::round(params[PID::ControllerChannel]->getValModDenorm()));
-        if (ch != 0)
-        {
-            const auto cc = static_cast<int>(std::round(params[PID::ControllerCC]->getValModDenorm()));
+		case MIDICC:
+            midiCh = static_cast<int>(std::round(params[PID::ControllerChannel]->getValModDenorm()));
+            midiCC = static_cast<int>(std::round(params[PID::ControllerCC]->getValModDenorm()));
             for (auto s = 0; s < numSamples; ++s)
             {
                 const auto envScaled = std::round(envGenData[s] * 127.f);
                 const auto val = static_cast<juce::uint8>(envScaled);
-                const auto evt = MidiMessage::controllerEvent(ch, cc, val);
+                const auto evt = MidiMessage::controllerEvent(midiCh, midiCC, val);
                 midi.addEvent(evt, s);
             }
+            break;
+        default: // DirectOut
+            for (auto ch = 0; ch < numChannels; ++ch)
+                SIMD::copy(samples[ch], envGenData, numSamples);
+            break;
         }
     }
 

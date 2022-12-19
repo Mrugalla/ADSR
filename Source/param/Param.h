@@ -79,8 +79,9 @@ namespace param
 		EnvGenLockDcyRls,
 		
 		EnvGenMode,
-		ModeGainLowerLimit,
-		ModeGainUpperLimit,
+		
+		LowerLimit,
+		UpperLimit,
 
 		ControllerChannel,
 		ControllerCC,

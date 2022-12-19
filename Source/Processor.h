@@ -128,5 +128,6 @@ namespace audio
 
         EnvGenMIDI envGenMIDI;
 		Oscilloscope oscope;
+        PRM lowerLimit, upperLimit;
     };
 }

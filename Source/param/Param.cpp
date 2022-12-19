@@ -88,8 +88,8 @@ namespace param
 		case PID::EnvGenLockDcyRls: return "EnvGen Lock Decay-Release";
 		
 		case PID::EnvGenMode: return "EnvGen Mode";
-		case PID::ModeGainLowerLimit: return "Gain Lower Limit";
-		case PID::ModeGainUpperLimit: return "Gain Upper Limit";
+		case PID::LowerLimit: return "Lower Limit";
+		case PID::UpperLimit: return "Upper Limit";
 
 		case PID::ControllerChannel: return "Controller Channel";
 		case PID::ControllerCC: return "CC";
@@ -187,9 +187,9 @@ namespace param
 		case PID::EnvGenReleaseBeats: return "Define the release time of the envelope generator in beats.";
 		case PID::EnvGenLockDcyRls: return "Lock the decay and release time of the envelope generator.";
 		case PID::EnvGenMode: return "Define the mode of the envelope generator.";
-		case PID::ModeGainLowerLimit: return "Define the lower limit of the gain mode.";
-		case PID::ModeGainUpperLimit: return "Define the upper limit of the gain mode.";
-		case PID::ControllerChannel: return "If this is not 0, the plugin outputs the envelope as MIDI CC.";
+		case PID::LowerLimit: return "Define the lower limit of the envelope follower's output.";
+		case PID::UpperLimit: return "Define the upper limit of the envelope follower's output.";
+		case PID::ControllerChannel: return "Define the MIDI Channel of th controller output.";
 		case PID::ControllerCC: return "Define the MIDI CC of the controller output.";
 
 		default: return "Invalid Tooltip.";
@@ -1371,7 +1371,7 @@ namespace param
 		
 		auto valToStrMode = [](float v)
 		{
-			return String(v < .5f ? "Direct Out" : v < 1.5f ? "Gain" : "Filter");
+			return String(v < .5f ? "Direct Out" : v < 1.5f ? "Gain" : "MIDI CC");
 		};
 		auto strToValMode = [p = strToVal::parse()](const String& s)
 		{
@@ -1379,17 +1379,17 @@ namespace param
 				return 0.f;
 			if (s == "Gain")
 				return 1.f;
-			if (s == "Filter")
+			if (s == "MIDI CC")
 				return 2.f;
 			auto val = p(s, 0.f);
 			return val;
 		};
 		
-		params.push_back(makeParam(PID::EnvGenMode, state, 1.f, makeRange::stepped(0.f, 1.f), valToStrMode, strToValMode));
+		params.push_back(makeParam(PID::EnvGenMode, state, 1.f, makeRange::stepped(0.f, 2.f), valToStrMode, strToValMode));
 		
-		params.push_back(makeParam(PID::ModeGainLowerLimit, state, -60.f, makeRange::lin(-60.f, 0.f), Unit::Decibel));
-		params.push_back(makeParam(PID::ModeGainUpperLimit, state, 0.f, makeRange::lin(-60.f, 0.f), Unit::Decibel));
-		params.push_back(makeParam(PID::ControllerChannel, state, 0.f, makeRange::stepped(0.f, 16.f), Unit::NumUnits));
+		params.push_back(makeParam(PID::LowerLimit, state, -60.f, makeRange::withCentre(-60.f, 0.f, -6.f), Unit::Decibel));
+		params.push_back(makeParam(PID::UpperLimit, state, 0.f, makeRange::withCentre(-60.f, 0.f, -6.f), Unit::Decibel));
+		params.push_back(makeParam(PID::ControllerChannel, state, 1.f, makeRange::stepped(1.f, 16.f), Unit::NumUnits));
 		params.push_back(makeParam(PID::ControllerCC, state, 0.f, makeRange::stepped(0.f, 127.f), Unit::NumUnits));
 		// LOW LEVEL PARAMS END
 
