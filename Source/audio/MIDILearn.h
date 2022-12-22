@@ -27,7 +27,7 @@ namespace audio
 
 		void processBlockInit() noexcept;
 
-		void processBlockMIDICC(const MidiMessage& msg) noexcept;
+		void processBlockMIDICC(const MIDIMessage& msg) noexcept;
 
 		void processBlockEnd() noexcept;
 

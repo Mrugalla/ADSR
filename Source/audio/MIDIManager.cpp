@@ -16,19 +16,19 @@ namespace audio
 		onNoEvt()
 	{
 		onInit.push_back([&learn = midiLearn](int)
-			{
-				learn.processBlockInit();
-			});
+		{
+			learn.processBlockInit();
+		});
 
-		onCC.push_back([&learn = midiLearn](const MidiMessage& msg, int)
-			{
-				learn.processBlockMIDICC(msg);
-			});
+		onCC.push_back([&learn = midiLearn](const MIDIMessage& msg, int)
+		{
+			learn.processBlockMIDICC(msg);
+		});
 
 		onEnd.push_back([&learn = midiLearn](int)
-			{
-				learn.processBlockEnd();
-			});
+		{
+			learn.processBlockEnd();
+		});
 	}
 
 	void MIDIManager::savePatch()
@@ -216,7 +216,7 @@ namespace audio
 				pitchbendBuffer.processInit();
 			});
 #if PPD_MIDINumVoices != 0
-		manager.onNoteOn.push_back([this](const MidiMessage& msg, int s)
+		manager.onNoteOn.push_back([this](const MIDIMessage& msg, int s)
 			{
 				for (auto v = 1; v < PPD_MIDINumVoices; ++v)
 				{
@@ -252,7 +252,7 @@ namespace audio
 				);
 			});
 
-		manager.onNoteOff.push_back([this](const MidiMessage& msg, int s)
+		manager.onNoteOff.push_back([this](const MIDIMessage& msg, int s)
 			{
 				auto noteNumber = msg.getNoteNumber();
 
@@ -267,7 +267,7 @@ namespace audio
 				}
 			});
 #endif
-		manager.onPitchbend.push_back([this](const MidiMessage& msg, int s)
+		manager.onPitchbend.push_back([this](const MIDIMessage& msg, int s)
 			{
 				const auto pwv = static_cast<float>(msg.getPitchWheelValue());
 				const auto pbNorm = (pwv - 8192.f) * .0001220703125f;

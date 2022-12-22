@@ -229,16 +229,16 @@ namespace audio
 
     Processor::Processor() :
         ProcessorBackEnd(),
-		envGenMIDI(),
+        envGenMIDI(),
         oscope(),
-		lowerLimit(0.f),
-		upperLimit(1.f)
-	{
-    }
+        lowerLimit(0.f), upperLimit(1.f),
+        wetLatencyCompensation(),
+        midiDelay()
+    {}
 
     void Processor::prepareToPlay(double sampleRate, int maxBlockSize)
     {
-        auto latency = 0;
+        auto latency = 0.f;
         //auto sampleRateUp = sampleRate;
         auto blockSizeUp = maxBlockSize;
 #if PPDHasHQ
@@ -261,20 +261,23 @@ namespace audio
 #endif
 
 		envGenMIDI.prepare(sampleRateF, maxBlockSize);
+#if PPDHasLookahead
+		auto envGenLatency = lookaheadEnabled ? msInSamples(envGenMIDI.MaxLatencyMs, sampleRateF) : 0.f;
+        latency += envGenLatency;
+        wetLatencyCompensation.prepare(maxBlockSize, static_cast<int>(std::round(envGenLatency)));
+#endif
         oscope.prepare(sampleRateF, maxBlockSize);
         lowerLimit.prepare(sampleRateF, maxBlockSize, 10.f);
 		upperLimit.prepare(sampleRateF, maxBlockSize, 10.f);
 
-        dryWetMix.prepare(sampleRateF, maxBlockSize, latency);
-
+		const auto latencyInt = static_cast<int>(latency);
+        dryWetMix.prepare(sampleRateF, maxBlockSize, latencyInt);
         meters.prepare(sampleRateF, maxBlockSize);
-
-        setLatencySamples(latency);
-
+        setLatencySamples(latencyInt);
         sus.prepareToPlay();
     }
 
-    void Processor::processBlock(AudioBuffer& buffer, juce::MidiBuffer& midi)
+    void Processor::processBlock(AudioBuffer& buffer, MIDIBuffer& midi)
     {
         const ScopedNoDenormals noDenormals;
 
@@ -507,6 +510,7 @@ namespace audio
 			params[PID::EnvGenAttackBeats]->getValModDenorm(),
 			params[PID::EnvGenDecayBeats]->getValModDenorm(),
 			params[PID::EnvGenReleaseBeats]->getValModDenorm(),
+            params[PID::Lookahead]->getValMod() > .5f,
             playHeadPos
         );
 
@@ -519,6 +523,14 @@ namespace audio
 
         oscope(envGenMIDI.data(), numSamples, playHeadPos);
 		
+        wetLatencyCompensation(samples, numChannels, numSamples);
+        midiDelay
+        (
+            midi,
+            numSamples,
+            static_cast<int>(envGenMIDI.maxLatencySamples - envGenMIDI.getAttackLength(numSamples - 1))
+        );
+
         const auto mode = static_cast<int>(std::round(params[PID::EnvGenMode]->getValModDenorm()));
 		enum { DirectOut, Gain, MIDICC, NumModes };
         int midiCh, midiCC;
@@ -535,7 +547,7 @@ namespace audio
             {
                 const auto envScaled = std::round(envGenData[s] * 127.f);
                 const auto val = static_cast<juce::uint8>(envScaled);
-                const auto evt = MidiMessage::controllerEvent(midiCh, midiCC, val);
+                const auto evt = MIDIMessage::controllerEvent(midiCh, midiCC, val);
                 midi.addEvent(evt, s);
             }
             break;

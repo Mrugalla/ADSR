@@ -8,6 +8,7 @@ namespace audio
 	struct EnvGen
 	{
 		static constexpr float MinVelocity = 1.f / 127.f;
+		static constexpr float MaxLatencyMs = 1000.f / 4.f;
 
 		struct Note
 		{
@@ -46,6 +47,7 @@ namespace audio
 			velocitySens(0.f),
 			atkP(0.f), dcyP(0.f), susP(0.f), rlsP(0.f),
 			atkShapeP(0.f), dcyShapeP(0.f), rlsShapeP(0.f),
+			lookahead(false),
 			note(),
 			noteIdx(0), noteOnCount(0), legatoSusIdx(0)
 		{
@@ -171,12 +173,12 @@ namespace audio
 		}
 
 		State state;
-		//bool noteOn;
 		LegatoMode legato;
 		float envRaw, env, noteOffVal, noteOnVal;
-		float velocitySens;// , veloGain;
+		float velocitySens;
 		PRM atkP, dcyP, susP, rlsP;
 		PRM atkShapeP, dcyShapeP, rlsShapeP;
+		bool lookahead;
 	protected:
 		std::array<Note, 128> note;
 		int noteIdx, noteOnCount, legatoSusIdx;
@@ -317,8 +319,11 @@ namespace audio
 
 	struct EnvGenMIDI
 	{
+		static constexpr float MaxLatencyMs = EnvGen::MaxLatencyMs;
+		
 		EnvGenMIDI() :
 			buffer(),
+			maxLatencySamples(0.f),
 			envGen(),
 			Fs(1.f)
 		{
@@ -329,19 +334,25 @@ namespace audio
 			Fs = _Fs;
 			envGen.prepare(Fs, blockSize);
 			buffer.resize(blockSize);
+			maxLatencySamples = msInSamples(MaxLatencyMs, Fs);
 		}
 		
 		/* midiBuffer, numSamples, atk [0, N]ms, dcy [0, N]ms, sus [0, 1], rls [0, N]ms,
 		attackShape [-1,1], decayShape [-1,1], releaseShape [-1,1], legato [0, 2], inverse [0, 1],
 		velocitySensitivity [0, 1], tempoSync[0, 1],
-		atkBeats [0, N]beats, dcyBeats[0, N], rlsBeats[0, N] */
+		atkBeats [0, N]beats, dcyBeats[0, N], lookahead [0, 1], rlsBeats[0, N] */
 		void operator()(MIDIBuffer& midi, int numSamples,
 			float _atk, float _dcy, float _sus, float _rls,
 			float _atkShape, float _dcyShape, float _rlsShape,
 			int _legato, bool _inverse, float _velo, bool _tempoSync,
-			float _atkBeats, float _dcyBeats, float _rlsBeats, const PlayHeadPos& playHead) noexcept
+			float _atkBeats, float _dcyBeats, float _rlsBeats, bool _lookahead,
+			const PlayHeadPos& playHead) noexcept
 		{
-			if (_tempoSync && playHead.bpm != 0.)
+			envGen.lookahead = _lookahead;
+
+			tempoSync = _tempoSync;
+
+			if (tempoSync && playHead.bpm != 0.)
 			{
 				const auto beatsPerMinute = static_cast<float>(playHead.bpm);
 				const auto beatsPerSec = beatsPerMinute * .0166666667f;
@@ -439,6 +450,12 @@ namespace audio
 					buffer[s] = 1.f - buffer[s];
 		}
 
+		float getAttackLength(int sampleIdx) noexcept
+		{
+			auto atk = 1.f / envGen.atkP[sampleIdx];
+			return atk;
+		}
+		
 		void processBypassed(int numSamples) noexcept
 		{
 			envGen.processBypassed(buffer.data(), numSamples);
@@ -465,9 +482,11 @@ namespace audio
 		}
 
 		std::vector<float> buffer;
+		float maxLatencySamples;
 	protected:
 		EnvGen envGen;
 		float Fs;
+		bool tempoSync;
 	};
 }
 

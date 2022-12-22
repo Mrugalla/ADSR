@@ -17,6 +17,8 @@
 #include "audio/EnvelopeGenerator.h"
 #include "audio/Oscilloscope.h"
 #include "audio/Filter.h"
+//#include "audio/Delay.h"
+#include "audio/MIDIDelay.h"
 
 #include "audio/AudioUtils.h"
 
@@ -129,5 +131,7 @@ namespace audio
         EnvGenMIDI envGenMIDI;
 		Oscilloscope oscope;
         PRM lowerLimit, upperLimit;
+        LatencyCompensation wetLatencyCompensation;
+        MIDIDelay midiDelay;
     };
 }

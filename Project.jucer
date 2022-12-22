@@ -7,7 +7,7 @@
               pluginDesc="Outputs a MIDI-triggered ADSR modulator as audio signal"
               pluginManufacturer="Mrugalla" pluginManufacturerCode="Mrug" pluginCode="ID12"
               pluginVSTNumMidiInputs="1" pluginVST3Category="Fx,Generator,Modulation,Tools"
-              cppLanguageStandard="20" pluginName="ADSR" defines="PPDEditorWidth=946&#10;PPDEditorHeight=574&#10;&#10;PPDHasEditor=true&#10;PPDHasPatchBrowser=true&#10;&#10;PPDHasSidechain=false&#10;&#10;PPDHasGainIn=false&#10;PPDHasUnityGain=false&#10;PPDHasGainOut=true&#10;PPDHasHQ=false&#10;PPDHasStereoConfig=false&#10;PPDHasPolarity=false&#10;PPDHasLookahead=false&#10;PPDHasDelta=false&#10;PPDHasClipper=false&#10;&#10;PPDFPSKnobs=40&#10;PPDFPSMeters=40&#10;PPDFPSTextEditor=3&#10;&#10;PPDMetersUseRMS=true&#10;&#10;PPDGainInDecibels=true&#10;PPD_GainIn_Min=-12&#10;PPD_GainIn_Max=12&#10;PPD_GainOut_Min=-12&#10;PPD_GainOut_Max=12&#10;PPD_UnityGainDefault=true&#10;&#10;PPD_MixOrGainDry=0&#10;PPD_MIDINumVoices=2&#10;PPDHasTuningEditor=false&#10;PPD_MaxXen=128"
+              cppLanguageStandard="20" pluginName="ADSR" defines="PPDEditorWidth=946&#10;PPDEditorHeight=574&#10;&#10;PPDHasEditor=true&#10;PPDHasPatchBrowser=true&#10;&#10;PPDHasSidechain=false&#10;&#10;PPDHasGainIn=false&#10;PPDHasUnityGain=false&#10;PPDHasGainOut=true&#10;PPDHasHQ=false&#10;PPDHasStereoConfig=false&#10;PPDHasPolarity=false&#10;PPDHasLookahead=true&#10;PPDHasDelta=false&#10;PPDHasClipper=false&#10;&#10;PPDFPSKnobs=40&#10;PPDFPSMeters=40&#10;PPDFPSTextEditor=3&#10;&#10;PPDMetersUseRMS=true&#10;&#10;PPDGainInDecibels=true&#10;PPD_GainIn_Min=-12&#10;PPD_GainIn_Max=12&#10;PPD_GainOut_Min=-12&#10;PPD_GainOut_Max=12&#10;PPD_UnityGainDefault=true&#10;&#10;PPD_MixOrGainDry=0&#10;PPD_MIDINumVoices=2&#10;PPDHasTuningEditor=false&#10;PPD_MaxXen=128"
               maxBinaryFileSize="20971520" pluginAAXCategory="2048,32" pluginVSTCategory="kPlugCategGenerator">
   <MAINGROUP id="c82PPq" name="ADSR">
     <GROUP id="{329F0704-CF49-5A90-357A-72806BBA6C7A}" name="Source">
@@ -29,6 +29,8 @@
         <FILE id="Uad8Jv" name="State.h" compile="0" resource="0" file="Source/arch/State.h"/>
       </GROUP>
       <GROUP id="{6A8CB2D6-E6E3-8D1E-1148-21BD24558A7A}" name="audio">
+        <FILE id="y6r046" name="MIDIDelay.h" compile="0" resource="0" file="Source/audio/MIDIDelay.h"/>
+        <FILE id="jiip83" name="Delay.h" compile="0" resource="0" file="Source/audio/Delay.h"/>
         <FILE id="GGGXFo" name="Oscilloscope.h" compile="0" resource="0" file="Source/audio/Oscilloscope.h"/>
         <FILE id="n7hGsR" name="EnvelopeGenerator.h" compile="0" resource="0"
               file="Source/audio/EnvelopeGenerator.h"/>

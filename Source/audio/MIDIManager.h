@@ -20,7 +20,7 @@ namespace audio
 		/* numSamples */
 		std::vector<std::function<void(int)>> onInit, onEnd, onSample;
 		/* midiMessage, sampleIndex */
-		std::vector<std::function<void(const MidiMessage&, int)>> onCC, onNoteOn, onNoteOff, onPitchbend;
+		std::vector<std::function<void(const MIDIMessage&, int)>> onCC, onNoteOn, onNoteOff, onPitchbend;
 		/* sampleIndex */
 		std::vector<std::function<void(int)>> onNoEvt;
 	protected:

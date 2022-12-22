@@ -154,7 +154,7 @@ namespace param
 		case PID::StereoConfig: return "Define the stereo-configuration. L/R or M/S.";
 #endif
 #if PPDHasLookahead
-		case PID::Lookahead: return "Switch on or off lookahead-related features. (Might increase latency.)";
+		case PID::Lookahead: return "Switch on or off lookahead-related features.";
 #endif
 #if PPDHasDelta
 		case PID::Delta: return "Listen to the difference between the dry and the wet signal.";
@@ -186,6 +186,7 @@ namespace param
 		case PID::EnvGenDecayBeats: return "Define the decay time of the envelope generator in beats.";
 		case PID::EnvGenReleaseBeats: return "Define the release time of the envelope generator in beats.";
 		case PID::EnvGenLockDcyRls: return "Lock the decay and release time of the envelope generator.";
+
 		case PID::EnvGenMode: return "Define the mode of the envelope generator.";
 		case PID::LowerLimit: return "Define the lower limit of the envelope follower's output.";
 		case PID::UpperLimit: return "Define the upper limit of the envelope follower's output.";

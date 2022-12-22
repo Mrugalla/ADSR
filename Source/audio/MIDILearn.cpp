@@ -59,7 +59,7 @@ namespace audio
 		c = -1;
 	}
 
-	void MIDILearn::processBlockMIDICC(const MidiMessage& msg) noexcept
+	void MIDILearn::processBlockMIDICC(const MIDIMessage& msg) noexcept
 	{
 		c = msg.getControllerNumber();
 		if (c < ccBuf.size())

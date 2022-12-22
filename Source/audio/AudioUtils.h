@@ -8,13 +8,15 @@ namespace audio
 {
     using AudioBuffer = juce::AudioBuffer<float>;
     using SIMD = juce::FloatVectorOperations;
+    
     using MIDIBuffer = juce::MidiBuffer;
-    using String = juce::String;
+    using MIDIMessage = juce::MidiMessage;
     using MIDIIt = juce::MidiBufferIterator;
     using MIDIRef = MIDIIt::reference;
+	
+    using String = juce::String;
     using Decibels = juce::Decibels;
     using ScopedNoDenormals = juce::ScopedNoDenormals;
-    using MidiMessage = juce::MidiMessage;
     using PlayHeadPos = juce::AudioPlayHead::CurrentPositionInfo;
 
     using Smooth = smooth::Smooth<float>;

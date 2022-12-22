@@ -5,7 +5,7 @@ namespace audio
 	template<typename Float>
 	struct PhaseInfo
 	{
-		PhaseInfo(Float, Float);
+		PhaseInfo(Float = static_cast<Float>(0), Float = static_cast<Float>(0));
 
 		Float phase;
 		bool retrig;
