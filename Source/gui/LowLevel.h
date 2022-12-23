@@ -34,7 +34,8 @@ namespace gui
             legato(u),
             inverse(u),
             tempoSync(u),
-            velo(u)
+            velo(u),
+            dcyRlsLinkEnabled(false)
         {
             addAndMakeVisible(envGen);
 			
@@ -58,12 +59,8 @@ namespace gui
 
             makeParameter(lockDcyRls, PID::EnvGenLockDcyRls, ButtonSymbol::UnityGain);
             addAndMakeVisible(lockDcyRls);
-            switchDcyRlsParams(lockDcyRls.toggleState == 1);
-            lockDcyRls.onClick.push_back([&](Button&, const Mouse&)
-            {
-                switchDcyRlsParams(lockDcyRls.toggleState == 1);
-                resized();
-            });
+            dcyRlsLinkEnabled = lockDcyRls.toggleState == 1;
+            switchDcyRlsParams(dcyRlsLinkEnabled);
 
 			makeParameter(sus, PID::EnvGenSustain, "Sustain", true);
 			addAndMakeVisible(sus);
@@ -187,6 +184,14 @@ namespace gui
             bool isCCMode = modeVal == Mode::MIDICC;
 			midiChannel.setVisible(isCCMode);
 			midiCC.setVisible(isCCMode);
+
+			auto _dcyRlsLinkEnabled = utils.getParam(PID::EnvGenLockDcyRls)->getValMod() > .5f;
+            if (dcyRlsLinkEnabled != _dcyRlsLinkEnabled)
+            {
+				dcyRlsLinkEnabled = _dcyRlsLinkEnabled;
+                switchDcyRlsParams(dcyRlsLinkEnabled);
+                resized();
+            }
         }
 
     protected:
@@ -199,6 +204,7 @@ namespace gui
         Knob legato;
         Button inverse, tempoSync;
         Knob velo;
+        bool dcyRlsLinkEnabled;
 
         void switchDcyRlsParams(bool lockEnabled)
         {
