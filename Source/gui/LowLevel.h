@@ -35,7 +35,8 @@ namespace gui
             inverse(u),
             tempoSync(u),
             velo(u),
-            dcyRlsLinkEnabled(false)
+            dcyRlsLinkEnabled(false),
+            atkExceedsLatency(false)
         {
             addAndMakeVisible(envGen);
 			
@@ -86,7 +87,7 @@ namespace gui
             layout.init
             (
                 { 2, 13, 13, 13, 13, 1 },
-                { 2, 8, 3, 1, 2, 3 }
+                { 5, 13, 5, 1, 3, 5 }
             );
 
             startTimerHz(12);
@@ -128,6 +129,13 @@ namespace gui
 			g.drawLine(x0, y1, x1, y1, thicc);
 			g.drawLine(x2, y1, x3, y1, thicc);
 			g.drawLine(x3, y1, x3, y0, thicc);
+			
+            if (atkExceedsLatency)
+            {
+                g.setColour(Colours::c(ColourID::Abort));
+                auto atkBounds = layout(1, 3.f, 1, .5f, true);
+                g.fillRect(atkBounds);
+            }
         }
 
         void resized() override
@@ -192,6 +200,21 @@ namespace gui
                 switchDcyRlsParams(dcyRlsLinkEnabled);
                 resized();
             }
+
+            {
+                bool _atkExceedsLatency = false;
+                if (utils.getParam(PID::Lookahead)->getValMod() > .5f)
+                {
+                    const auto maxLatency = utils.audioProcessor.envGenMIDI.maxLatencySamples;
+                    const auto atkTime = utils.audioProcessor.envGenMIDI.getAttackLength(0);
+                    _atkExceedsLatency = atkTime > maxLatency;
+                }
+                if (atkExceedsLatency != _atkExceedsLatency)
+                {
+                    atkExceedsLatency = _atkExceedsLatency;
+                    repaint();
+                }
+            }
         }
 
     protected:
@@ -204,7 +227,7 @@ namespace gui
         Knob legato;
         Button inverse, tempoSync;
         Knob velo;
-        bool dcyRlsLinkEnabled;
+        bool dcyRlsLinkEnabled, atkExceedsLatency;
 
         void switchDcyRlsParams(bool lockEnabled)
         {

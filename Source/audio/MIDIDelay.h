@@ -10,7 +10,7 @@ namespace audio
         struct Evt
         {
             Evt() :
-				msg(MIDIMessage::noteOn(0, 0, 0.f)),
+				msg(MIDIMessage::noteOn(1, 0, 0.f)),
                 time(0),
 				used(false)
             {}
