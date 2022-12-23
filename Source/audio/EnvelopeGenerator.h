@@ -8,7 +8,7 @@ namespace audio
 	struct EnvGen
 	{
 		static constexpr float MinVelocity = 1.f / 127.f;
-		static constexpr float MaxLatencyMs = 1000.f;
+		static constexpr float MaxLatencyMs = 1000.f / 4.f;
 
 		struct Note
 		{
@@ -489,6 +489,6 @@ namespace audio
 
 todo:
 
-test if changes in atk work on complex midi inputs with lookahead or notes stuck
+
 
 */

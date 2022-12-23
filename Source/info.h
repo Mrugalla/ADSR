@@ -25,6 +25,8 @@ HOW TO USE:
 
 TO DO:
 
+lock button over textbox of knob sometimes when interface smol
+
 rename ButtonState::UnityGain to ButtonState::Linked
 
 add layout function that paints a rectangle or something
