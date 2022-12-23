@@ -1335,7 +1335,7 @@ namespace param
 			params.push_back(makeParam(PID::StereoConfig, state, 1.f, makeRange::toggle(), Unit::StereoConfig));
 #endif
 #if PPDHasLookahead
-			params.push_back(makeParam(PID::Lookahead, state, 1.f, makeRange::toggle(), Unit::Power));
+			params.push_back(makeParam(PID::Lookahead, state, 0.f, makeRange::toggle(), Unit::Power));
 #endif
 #if PPDHasDelta
 			params.push_back(makeParam(PID::Delta, state, 0.f, makeRange::toggle(), Unit::Power));
