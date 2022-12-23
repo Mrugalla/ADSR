@@ -352,7 +352,7 @@ namespace audio
 			{
 				const auto beatsPerMinute = static_cast<float>(playHead.bpm);
 				const auto beatsPerSec = beatsPerMinute * .0166666667f;
-				const auto samplesPerBeat = Fs / beatsPerSec;
+				const auto samplesPerBeat = 4.f * Fs / beatsPerSec;
 				
 				if (_atkBeats == 0.f)
 					envGen.atkP(1.1f, numSamples);
