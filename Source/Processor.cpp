@@ -492,6 +492,18 @@ namespace audio
     void Processor::processBlockPreUpscaled(float** samples, int numChannels, int numSamples,
         MIDIBuffer& midi) noexcept
     {
+        if (params[PID::Lookahead]->getValMod() > .5f)
+        {
+            wetLatencyCompensation(samples, numChannels, numSamples);
+            const auto time = std::round(envGenMIDI.maxLatencySamples - envGenMIDI.getAttackLength(numSamples - 1));
+            midiDelay
+            (
+                midi,
+                numSamples,
+                static_cast<int>(time)
+            );
+        }
+		
         envGenMIDI
         (
             midi,
@@ -510,7 +522,6 @@ namespace audio
 			params[PID::EnvGenAttackBeats]->getValModDenorm(),
 			params[PID::EnvGenDecayBeats]->getValModDenorm(),
 			params[PID::EnvGenReleaseBeats]->getValModDenorm(),
-            params[PID::Lookahead]->getValMod() > .5f,
             playHeadPos
         );
 
@@ -523,14 +534,6 @@ namespace audio
 
         oscope(envGenMIDI.data(), numSamples, playHeadPos);
 		
-        wetLatencyCompensation(samples, numChannels, numSamples);
-        midiDelay
-        (
-            midi,
-            numSamples,
-            static_cast<int>(envGenMIDI.maxLatencySamples - envGenMIDI.getAttackLength(numSamples - 1))
-        );
-
         const auto mode = static_cast<int>(std::round(params[PID::EnvGenMode]->getValModDenorm()));
 		enum { DirectOut, Gain, MIDICC, NumModes };
         int midiCh, midiCC;

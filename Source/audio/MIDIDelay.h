@@ -3,17 +3,28 @@
 
 namespace audio
 {
-    struct MIDIDelay
+    class MIDIDelay
 	{
-        static constexpr int NumEvents = 1024;
+        static constexpr int NumEvents = 64;
 
+        struct Evt
+        {
+            Evt() :
+				msg(MIDIMessage::noteOn(0, 0, 0.f)),
+                time(0),
+				used(false)
+            {}
+
+            MIDIMessage msg;
+            int time;
+            bool used;
+        };
+
+    public:
 		MIDIDelay() :
-            list(),
-			used(),
+            evts(),
             outputBuffer()
 		{
-            for (auto& u : used)
-                u = false;
             outputBuffer.ensureSize(NumEvents);
         }
 
@@ -25,47 +36,64 @@ namespace audio
             for (auto itRef : midi)
             {
                 auto msg = itRef.getMessage();
-                addEvent(msg, itRef.samplePosition + delayTimeSamples);
+                midiToEvts(msg, itRef.samplePosition + delayTimeSamples);
             }
 
             outputBuffer.clear();
 
             for (auto s = 0; s < numSamples; ++s)
-                processEvents(s);
+                evtsToOutput(s);
             
             midi.swapWith(outputBuffer);
 		}
 
     protected:
-		std::array<MIDIMessage, NumEvents> list;
-        std::array<bool, NumEvents> used;
+		std::array<Evt, NumEvents> evts;
         MIDIBuffer outputBuffer;
 
-        void addEvent(MIDIMessage& msg, int timeStamp) noexcept
+        void midiToEvts(MIDIMessage& msg, int time) noexcept
         {
             for (auto i = 0; i < NumEvents; ++i)
-                if (!used[i])
+            {
+                auto& evt = evts[i];
+
+                if (!evt.used)
                 {
-                    msg.setTimeStamp(static_cast<double>(timeStamp));
-                    list[i] = msg;
-                    used[i] = true;
+                    evt.time = time;
+                    evt.msg = msg;
+                    evt.used = true;
                     return;
                 }
+            }
         }
 
-        void processEvents(int s) noexcept
+        void evtsToOutput(int s) noexcept
         {
             for (auto i = 0; i < NumEvents; ++i)
-                if (used[i])
+            {
+                auto& evt = evts[i];
+
+                if (evt.used)
                 {
-                    auto timeStamp = list[i].getTimeStamp() - 1.;
-                    if (timeStamp < 1.)
+                    --evt.time;
+                    if (evt.time < 1)
                     {
-                        outputBuffer.addEvent(list[i], s);
-                        used[i] = false;
+                        if (outputBuffer.addEvent(evt.msg, s))
+                        {
+                            evt.used = false;
+                        }
                     }
-                    list[i].setTimeStamp(timeStamp);
                 }
+            }
+                
         }
 	};
 }
+
+/*
+
+to do:
+
+if lookahead enabled, gui needs to show if attack parameter longer than possible latency
+
+*/

@@ -340,19 +340,15 @@ namespace audio
 		/* midiBuffer, numSamples, atk [0, N]ms, dcy [0, N]ms, sus [0, 1], rls [0, N]ms,
 		attackShape [-1,1], decayShape [-1,1], releaseShape [-1,1], legato [0, 2], inverse [0, 1],
 		velocitySensitivity [0, 1], tempoSync[0, 1],
-		atkBeats [0, N]beats, dcyBeats[0, N], lookahead [0, 1], rlsBeats[0, N] */
+		atkBeats [0, N]beats, dcyBeats[0, N], rlsBeats[0, N] */
 		void operator()(MIDIBuffer& midi, int numSamples,
 			float _atk, float _dcy, float _sus, float _rls,
 			float _atkShape, float _dcyShape, float _rlsShape,
 			int _legato, bool _inverse, float _velo, bool _tempoSync,
-			float _atkBeats, float _dcyBeats, float _rlsBeats, bool _lookahead,
+			float _atkBeats, float _dcyBeats, float _rlsBeats,
 			const PlayHeadPos& playHead) noexcept
 		{
-			envGen.lookahead = _lookahead;
-
-			tempoSync = _tempoSync;
-
-			if (tempoSync && playHead.bpm != 0.)
+			if (_tempoSync && playHead.bpm != 0.)
 			{
 				const auto beatsPerMinute = static_cast<float>(playHead.bpm);
 				const auto beatsPerSec = beatsPerMinute * .0166666667f;
@@ -486,17 +482,11 @@ namespace audio
 	protected:
 		EnvGen envGen;
 		float Fs;
-		bool tempoSync;
 	};
 }
 
 /*
 
 todo:
-
-modes
-	direct out
-	amplitude mod
-	filter mod
 
 */
