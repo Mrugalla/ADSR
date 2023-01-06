@@ -45,7 +45,7 @@ namespace audio
 		void prepare(float, int);
 
 		/* samples, numChannels, numSamples, drive[0,1], muffle[20,20k], pan[-1,1], scrap[0,1] */
-		void operator()(float**, int, int, float, float, float, float) noexcept;
+		void operator()(float* const*, int, int, float, float, float, float) noexcept;
 
 	private:
 		std::array<Filter, 2> filtr;
@@ -64,7 +64,7 @@ namespace audio
 		void processBlockMono(float*, int, const float*, const float*, Filter&, const float*) noexcept;
 
 		/* samples, numChannels, numSamples, muffleBuf, driveBuf, pan, scrapBuf */
-		void processBlockStereo(float**, int, int, const float*, const float*, float, const float*) noexcept;
+		void processBlockStereo(float* const*, int, int, const float*, const float*, float, const float*) noexcept;
 
 		/* x, p, xy */
 		float waveshape(float, float, float) const noexcept;

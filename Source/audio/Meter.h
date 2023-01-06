@@ -31,15 +31,15 @@ namespace audio
 	
 		Meters();
 
-		/*sampleRate, blockSize*/
+		/* sampleRate, blockSize */
 		void prepare(float, int);
 
 #if PPDHasGainIn
-		/*samples,numChannels,numSamples*/
-		void processIn(const float**, int, int) noexcept;
+		/* samples, numChannels, numSamples */
+		void processIn(const float* const*, int, int) noexcept;
 #endif
-		/*samples,numChannels,numSamples*/
-		void processOut(const float**, int, int) noexcept;
+		/* samples, numChannels, numSamples */
+		void processOut(const float* const*, int, int) noexcept;
 
 		const std::atomic<float>& operator()(int i) const noexcept;
 
@@ -50,7 +50,7 @@ namespace audio
 		int length;
 
 	private:
-		/*val,samples,numChannels,numSamples*/
-		void process(Val&, const float**, int, int) noexcept;
+		/* val, samples, numChannels, numSamples */
+		void process(Val&, const float* const*, int, int) noexcept;
 	};
 }

@@ -20,7 +20,7 @@ namespace audio
 			void prepare(float, int);
 
 			//samples, numChannels, numSamples, wHead, feedbackBuffer[-1,1], dampBuf, readHead
-			void operator()(float**, int, int, const int*, const float*, const float*, const float**) noexcept;
+			void operator()(float* const*, int, int, const int*, const float*, const float*, const float* const*) noexcept;
 
 		protected:
 			AudioBuffer ringBuffer;
@@ -37,7 +37,7 @@ namespace audio
 		void prepare(float, int);
 
 		/* samples, numChannels, numSamples, feedback ]-1,1[, damp ]0, 22050[hz, retune [-n,n]semi */
-		void operator()(float**, int, int, float, float, float) noexcept;
+		void operator()(float* const*, int, int, float, float, float) noexcept;
 
 	protected:
 		MIDIVoices& midiVoices;

@@ -308,7 +308,7 @@ namespace audio
 	public:
 		static float getSkewed(float x, float bias) noexcept
 		{
-			const auto b2 = 2.f * bias;
+			const auto b2 = bias + bias;
 			const auto bM = 1.f - bias;
 			const auto xy = bM - x + b2 * x;
 			if (xy == 0.f)

@@ -197,8 +197,10 @@ namespace audio
 			shallForcePrepare = true;
 #endif
 
-        if (shallForcePrepare)
-			forcePrepareToPlay();
+        if (!shallForcePrepare)
+            return;
+
+		forcePrepareToPlay();
     }
 
     void ProcessorBackEnd::processBlockBypassed(AudioBuffer& buffer, juce::MidiBuffer&)
@@ -279,6 +281,7 @@ namespace audio
 
     void Processor::processBlock(AudioBuffer& buffer, MIDIBuffer& midi)
     {
+        ///*
         const ScopedNoDenormals noDenormals;
 
         macroProcessor();
@@ -309,7 +312,8 @@ namespace audio
         const auto _playHead = getPlayHead();
         const auto _playHeadPos = _playHead->getPosition();
         const bool playHeadValid = _playHeadPos.hasValue();
-        if (playHeadValid)
+        if (playHeadValid && _playHeadPos->getBpm() && _playHeadPos->getPpqPosition()
+            && _playHeadPos->getIsPlaying() && _playHeadPos->getTimeInSamples())
         {
 			playHeadPos.bpm = *_playHeadPos->getBpm();
 			playHeadPos.ppqPosition = *_playHeadPos->getPpqPosition();
@@ -376,7 +380,6 @@ namespace audio
         auto resampledBuf = &buffer;
 #endif
         auto resampledMainBuf = mainBus->getBusBuffer(*resampledBuf);
-
 #if PPDHasSidechain
         if (wrapperType != wrapperType_Standalone)
         {
@@ -469,6 +472,7 @@ namespace audio
             }
         }
 #endif
+        //*/
     }
 
     void Processor::processBlockBypassed(AudioBuffer& buffer, juce::MidiBuffer& midi)
@@ -489,7 +493,7 @@ namespace audio
         ProcessorBackEnd::processBlockBypassed(buffer, midi);
     }
 
-    void Processor::processBlockPreUpscaled(float** samples, int numChannels, int numSamples,
+    void Processor::processBlockPreUpscaled(float* const* samples, int numChannels, int numSamples,
         MIDIBuffer& midi) noexcept
     {
         if (params[PID::Lookahead]->getValMod() > .5f)
@@ -534,8 +538,9 @@ namespace audio
 
         oscope(envGenMIDI.data(), numSamples, playHeadPos);
 		
-        const auto mode = static_cast<int>(std::round(params[PID::EnvGenMode]->getValModDenorm()));
-		enum { DirectOut, Gain, MIDICC, NumModes };
+        //const auto mode = static_cast<int>(std::round(params[PID::EnvGenMode]->getValModDenorm()));
+        const auto mode = static_cast<int>(params[PID::EnvGenMode]->getValModDenorm() + .5f);
+        enum { DirectOut, Gain, MIDICC, NumModes };
         int midiCh, midiCC;
         switch (mode)
         {
@@ -561,7 +566,7 @@ namespace audio
         }
     }
 
-    void Processor::processBlockUpsampled(float**, int, int
+    void Processor::processBlockUpsampled(float* const*, int, int
 #if PPDHasSidechain
         , float**, int
 #endif

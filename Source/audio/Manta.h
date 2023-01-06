@@ -25,7 +25,7 @@ namespace audio
 			Filter();
 
 			/* laneBuf, samples, numChannels, numSamples, fcBuf, resoBuf, stage */
-			void operator()(float**, float**, int, int,
+			void operator()(float* const*, float* const*, int, int,
 				float*, float*, int) noexcept;
 
 		protected:
@@ -40,7 +40,7 @@ namespace audio
 			void prepare(int);
 
 			/* samples, numChannels, numSamples, wHead, rHead, feedback */
-			void operator()(float**, int, int, const int*, const float*, const float*) noexcept;
+			void operator()(float* const*, int, int, const int*, const float*, const float*) noexcept;
 
 			AudioBuffer ringBuffer;
 			int size;
@@ -58,7 +58,7 @@ namespace audio
 			void prepare(float, int);
 
 			/* samples, numChannels, numSamples, rmDepth, freqHz */
-			void operator()(float**, int, int, float*, float*) noexcept;
+			void operator()(float* const*, int, int, float*, float*) noexcept;
 
 			WT waveTable;
 		protected:
@@ -75,7 +75,7 @@ namespace audio
 
 			/* samples, numChannels, numSamples, enabled, pitch, resonance, slope, drive, feedback,
 			oct, semi, rmOct, rmSemi, rmDepth, gain, wHead, xen */
-			void operator()(float**, int, int, bool, float, float, int, float, float,
+			void operator()(float* const*, int, int, bool, float, float, int, float, float,
 				float, float, float, float, float, float, const int*, const XenManager&) noexcept;
 
 			/* state, laneIndex */
@@ -85,7 +85,7 @@ namespace audio
 			void loadPatch(sta::State&, int);
 
 			/* samples, numChannels, numSamples */
-			void addTo(float**, int, int) noexcept;
+			void addTo(float* const*, int, int) noexcept;
 
 			RingMod ringMod;
 		protected:
@@ -103,10 +103,10 @@ namespace audio
 			float distort(float, float) const noexcept;
 
 			/* samples, numChannels, numSamples, driveBuf */
-			void distort(float**, int, int, const float*) noexcept;
+			void distort(float* const*, int, int, const float*) noexcept;
 
 			/* samples, numChannels, numSamples, gainBuf */
-			void applyGain(float**, int, int, const float*) noexcept;
+			void applyGain(float* const*, int, int, const float*) noexcept;
 		};
 
 	public:
@@ -120,7 +120,7 @@ namespace audio
 		* l2Enabled [0, 1], l2Snap, l2Pitch [12, N]note, l2Resonance [1, N]q, l2Slope [1, 4]db/oct, l2Drive [0, 1]%, l2Feedback [0, 1]%, l2Oct[-3,3], l2Semi[-12,12], l2RMOct[-3,3], l2RMSemi[-12,12], l2RMDepth[0,1], l2Gain [-60, 60]db
 		* l3Enabled [0, 1], l3Snap, l3Pitch [12, N]note, l3Resonance [1, N]q, l3Slope [1, 4]db/oct, l3Drive [0, 1]%, l3Feedback [0, 1]%, l3Oct[-3,3], l3Semi[-12,12], l3RMOct[-3,3], l3RMSemi[-12,12], l3RMDepth[0,1], l3Gain [-60, 60]db
 		*/
-		void operator()(float**, int, int,
+		void operator()(float* const*, int, int,
 			bool, bool, float, float, int, float, float, float, float, float, float, float, float,
 			bool, bool, float, float, int, float, float, float, float, float, float, float, float,
 			bool, bool, float, float, int, float, float, float, float, float, float, float, float) noexcept;

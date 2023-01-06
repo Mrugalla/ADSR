@@ -31,7 +31,7 @@ namespace audio
 		/* sampleRate, blockSize */
 		using OnPrepare = std::function<void(float, int)>;
 		/* samples, numChannels, numSamples, valP */
-		using OnProcess = std::function<void(float**, int, int, float)>;
+		using OnProcess = std::function<void(float* const*, int, int, float)>;
 		using OnClear = std::function<void()>;
 		using Range = makeRange::Range;
 

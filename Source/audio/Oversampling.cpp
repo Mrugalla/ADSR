@@ -45,7 +45,14 @@ namespace audio
 
 	/////////////////////////////////////////////////////
 
-	std::vector<float> makeWindowedSinc(float Fs, float fc, float bw, bool upsampling)
+	/*
+	* Fs,fc,bw,upsampling
+	Nyquist == Fs / 2
+	fc < Nyquist
+	bw < Nyquist
+	fc + bw < Nyquist
+	*/
+	static std::vector<float> makeWindowedSinc(float Fs, float fc, float bw, bool upsampling)
 	{
 		const auto nyquist = Fs * .5f;
 		if (fc > nyquist || bw > nyquist || fc + bw > nyquist)
@@ -97,7 +104,12 @@ namespace audio
 		return ir;
 	}
 
-	std::vector<float> makeWindowedSinc(float Fs, float fc, bool upsampling)
+	/*
+	* Fs,fc,upsampling
+	Nyquist == Fs / 2
+	fc < Nyquist
+	*/
+	static std::vector<float> makeWindowedSinc(float Fs, float fc, bool upsampling)
 	{
 		return makeWindowedSinc(Fs, fc, Fs * .25f - fc - 1.f, upsampling);
 	}
@@ -118,7 +130,7 @@ namespace audio
 		ring.setSize(2 + (PPDHasSidechain ? 2 : 0), irSize, false, true, false);
 	}
 
-	void Convolver::processBlock(float** samples, int numChannels, int numSamples) noexcept
+	void Convolver::processBlock(float* const* samples, int numChannels, int numSamples) noexcept
 	{
 		for (auto ch = 0; ch < numChannels; ++ch)
 		{
@@ -155,7 +167,8 @@ namespace audio
 
 	/////////////////////////////////////////////////////
 	
-	void zeroStuff(float** samplesUp, const float** samplesIn, int numChannels, int numSamples1x) noexcept
+	/* samplesUp, samplesIn, numChannels, numSamples1x */
+	static void zeroStuff(float* const* samplesUp, const float* const* samplesIn, int numChannels, int numSamples1x) noexcept
 	{
 		for (auto ch = 0; ch < numChannels; ++ch)
 		{
@@ -171,7 +184,8 @@ namespace audio
 		}
 	}
 
-	void decimate(float** samplesOut, const float** samplesUp, int numChannels, int numSamples1x) noexcept
+	/* samplesOut, samplesUp, numChannels, numSamples1x */
+	static void decimate(float* const* samplesOut, const float* const* samplesUp, int numChannels, int numSamples1x) noexcept
 	{
 		for (auto ch = 0; ch < numChannels; ++ch)
 		{

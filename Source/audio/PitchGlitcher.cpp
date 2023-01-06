@@ -127,7 +127,7 @@ namespace audio
 			ch.resize(size + 4, 0.f);
 	}
 
-	void PitchGlitcher::Delay::operator()(float** samples, int numChannels, int numSamples,
+	void PitchGlitcher::Delay::operator()(float* const* samples, int numChannels, int numSamples,
 		const int* wHead, const float* readHead/*[0, size[*/,
 		const float* window, float feedback/*[-1,1]*/) noexcept
 	{
@@ -184,7 +184,7 @@ namespace audio
 		tuneParam.prepare(Fs, blockSize, 70.f);
 	}
 
-	void PitchGlitcher::Shifter::operator()(float** samples, int numChannels, int numSamples,
+	void PitchGlitcher::Shifter::operator()(float* const* samples, int numChannels, int numSamples,
 		const int* wHead, const float* grainBuf,
 		float tune, float feedback) noexcept
 	{
@@ -223,7 +223,7 @@ namespace audio
 		);
 	}
 
-	void PitchGlitcher::Shifter::copyTo(float** samples, int numChannels, int numSamples) noexcept
+	void PitchGlitcher::Shifter::copyTo(float* const* samples, int numChannels, int numSamples) noexcept
 	{
 		for (auto ch = 0; ch < numChannels; ++ch)
 		{
@@ -234,7 +234,7 @@ namespace audio
 		}
 	}
 
-	void PitchGlitcher::Shifter::addTo(float** samples, int numChannels, int numSamples) noexcept
+	void PitchGlitcher::Shifter::addTo(float* const* samples, int numChannels, int numSamples) noexcept
 	{
 		for (auto ch = 0; ch < numChannels; ++ch)
 		{
@@ -271,7 +271,7 @@ namespace audio
 		grainParam.prepare(Fs, _blockSize, 140.f);
 	}
 
-	void PitchGlitcher::operator()(float** samples, int numChannels, int numSamples,
+	void PitchGlitcher::operator()(float* const* samples, int numChannels, int numSamples,
 		float tuneP/*[-24,24]*/, float grainSizeP/*[0, sizeF]*/, float feedbackP/*[0,1]*/,
 		int numVoicesP/*[1,NumVoices]*/, float spreadTuneP/*[0,1]*/) noexcept
 	{

@@ -36,7 +36,7 @@ namespace audio
 		buffers.setSize(NumBufs, blockSize, false, true, false);
 	}
 
-	void DryWetMix::saveDry(float** samples, int numChannels, int numSamples,
+	void DryWetMix::saveDry(float* const* samples, int numChannels, int numSamples,
 #if PPDHasGainIn
 		float gainInP,
 #if PPDHasUnityGain
@@ -89,7 +89,7 @@ namespace audio
 #endif
 	}
 
-	void DryWetMix::processBypass(float** samples, int numChannels, int numSamples) noexcept
+	void DryWetMix::processBypass(float* const* samples, int numChannels, int numSamples) noexcept
 	{
 		latencyCompensation
 		(
@@ -109,7 +109,7 @@ namespace audio
 	}
 
 #if PPDHasGainOut
-	void DryWetMix::processOutGain(float** samples, int numChannels, int numSamples) const noexcept
+	void DryWetMix::processOutGain(float* const* samples, int numChannels, int numSamples) const noexcept
 	{
 		auto bufs = buffers.getArrayOfReadPointers();
 		const auto gainBuf = bufs[GainOut];
@@ -119,7 +119,7 @@ namespace audio
 	}
 #endif
 
-	void DryWetMix::processMix(float** samples, int numChannels, int numSamples
+	void DryWetMix::processMix(float* const* samples, int numChannels, int numSamples
 #if PPDHasDelta
 		, bool deltaP
 #endif

@@ -27,7 +27,7 @@ namespace audio
 		/* samples, numChannels, numSamples, gainInP, unityGainP, mixP, gainOutP, polarityP */
 		void saveDry
 		(
-			float**, int, int,
+			float* const*, int, int,
 #if PPDHasGainIn
 			float,
 #if PPDHasUnityGain
@@ -44,15 +44,15 @@ namespace audio
 		) noexcept;
 
 		/* samples, numChannels, numSamples */
-		void processBypass(float**, int, int) noexcept;
+		void processBypass(float* const*, int, int) noexcept;
 
 #if PPDHasGainOut
 		/* samples, numChannels, numSamples */
-		void processOutGain(float**, int, int) const noexcept;
+		void processOutGain(float* const*, int, int) const noexcept;
 #endif
 
 		/* samples, numChannels, numSamples, delta */
-		void processMix(float**, int, int
+		void processMix(float* const*, int, int
 #if PPDHasDelta
 			, bool
 #endif

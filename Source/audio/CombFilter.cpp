@@ -21,9 +21,9 @@ namespace audio
 			lp.makeFromDecayInHz(1000.f, Fs);
 	}
 
-	void CombFilter::DelayFeedback::operator()(float** samples, int numChannels, int numSamples,
+	void CombFilter::DelayFeedback::operator()(float* const* samples, int numChannels, int numSamples,
 		const int* wHead, const float* fbBuf, const float* dampBuf,
-		const float** readHead) noexcept
+		const float* const* readHead) noexcept
 	{
 		auto ringBuf = ringBuffer.getArrayOfWritePointers();
 
@@ -88,7 +88,7 @@ namespace audio
 		retuneP.prepare(sampleRate, blockSize, 10.f);
 	}
 
-	void CombFilter::operator()(float** samples, int numChannels, int numSamples,
+	void CombFilter::operator()(float* const* samples, int numChannels, int numSamples,
 		float _feedback, float _damp, float _retune) noexcept
 	{
 		writeHead(numSamples);

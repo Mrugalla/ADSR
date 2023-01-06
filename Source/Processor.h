@@ -105,10 +105,10 @@ namespace audio
         void processBlockBypassed(AudioBuffer&, juce::MidiBuffer&) override;
         
         /* samples, numChannels, numSamples, midi, samplesSC, numChannelsSC */
-        void processBlockPreUpscaled(float**, int numChannels, int numSamples, juce::MidiBuffer& midi) noexcept;
+        void processBlockPreUpscaled(float* const*, int numChannels, int numSamples, juce::MidiBuffer& midi) noexcept;
 
         /* samples, numChannels, numSamples, samplesSC, numChannelsSC */
-        void processBlockUpsampled(float**, int, int
+        void processBlockUpsampled(float* const*, int, int
 #if PPDHasSidechain
             , float**, int
 #endif

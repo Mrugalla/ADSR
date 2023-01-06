@@ -33,14 +33,14 @@ namespace audio
 	bw < Nyquist
 	fc + bw < Nyquist
 	*/
-	std::vector<float> makeWindowedSinc(float, float, float, bool);
+	//std::vector<float> makeWindowedSinc(float, float, float, bool);
 
 	/*
 	* Fs,fc,upsampling
 	Nyquist == Fs / 2
 	fc < Nyquist
 	*/
-	std::vector<float> makeWindowedSinc(float, float, bool);
+	//std::vector<float> makeWindowedSinc(float, float, bool);
 
 	struct Convolver
 	{
@@ -48,8 +48,8 @@ namespace audio
 
 		void prepare();
 
-		/*samples,numChannels,numSamples*/
-		void processBlock(float**, int, int) noexcept;
+		/* samples, numChannels, numSamples */
+		void processBlock(float* const*, int, int) noexcept;
 
 	protected:
 		AudioBuffer ring;
@@ -64,11 +64,11 @@ namespace audio
 		float processSample(float, float*, int) noexcept;
 	};
 
-	/*samplesUp,samplesIn,numChannels,numSamples1x*/
-	void zeroStuff(float**, const float**, int, int) noexcept;
+	/* samplesUp, samplesIn, numChannels, numSamples1x */
+	//void zeroStuff(float* const*, const float**, int, int) noexcept;
 
-	/*samplesOut,samplesUp,numChannels,numSamples1x*/
-	void decimate(float**, const float**, int, int) noexcept;
+	/* samplesOut, samplesUp, numChannels, numSamples1x */
+	//void decimate(float* const*, const float**, int, int) noexcept;
 
 	class Oversampler
 	{
